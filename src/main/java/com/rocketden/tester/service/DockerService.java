@@ -12,10 +12,14 @@ public class DockerService {
             // First ensure that docker image is built: docker build --tag 'tester' ../docker
             // TODO: figure out how to do this
 
-            // Create and run a new container with the given folder and scripts
-            // TODO: figure out how to do this
-            String[] runCommands = {"docker", "run", "tester"};
+            // Mount folder to docker container
+            String mount = String.format("$PWD/../temp/%s:/app", folder);
+
+            // Run docker container with copied folder, and delete container afterwards
+            String[] runCommands = {"docker", "run", "-v", mount, "-t", "tester", "--rm"};
             Runtime.getRuntime().exec(runCommands);
+
+            // TODO: check for output file with results
 
         } catch (IOException e) {
             // Error handling
