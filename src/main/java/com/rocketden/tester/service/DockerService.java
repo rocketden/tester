@@ -1,31 +1,55 @@
 package com.rocketden.tester.service;
 
+import com.rocketden.tester.dto.RunDto;
 import org.springframework.stereotype.Service;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 
 @Service
 public class DockerService {
 
-    public String spawnAndRun(String folder) {
+    public RunDto spawnAndRun(String folder) {
         try {
-            // First ensure that docker image is built: docker build --tag 'rocketden/tester' ../docker
-            // TODO: figure out how to do this
+            // Create and run disposable docker container with the given temp folder
+            ProcessBuilder builder = new ProcessBuilder(getRunCommands(folder));
+            builder.redirectErrorStream(true);
+            Process process = builder.start();
 
-            // Mount folder to docker container
-            String mount = String.format("$PWD/../temp/%s:/app", folder);
+            return captureOutput(process);
 
-            // Run docker container with copied folder, and delete container afterwards
-            String[] runCommands = {"docker", "run", "-v", mount, "-t", "rocketden/tester", "--rm"};
-            Runtime.getRuntime().exec(runCommands);
-
-            // TODO: check for output file with results
-
-        } catch (IOException e) {
+        } catch (Exception e) {
             // Error handling
             System.out.println("An error occurred");
         }
 
-        return "output";
+        // Error handling
+        return null;
+    }
+
+    // Given a process, return its status, console output, and error output
+    private RunDto captureOutput(Process process) throws IOException, InterruptedException {
+        BufferedReader stdInput = new BufferedReader(new
+                InputStreamReader(process.getInputStream()));
+
+        StringBuilder output = new StringBuilder();
+        String s;
+        while ((s = stdInput.readLine()) != null) {
+            output.append(s).append("\n");
+        }
+
+        int exitVal = process.waitFor();
+
+        RunDto runDto = new RunDto();
+        runDto.setStatus(exitVal);
+        runDto.setOutput(output.toString());
+
+        return runDto;
+    }
+
+    private String[] getRunCommands(String folder) {
+        String mountPath = String.format("\"$PWD/../temp/%s:/app/code\"", folder);
+        return new String[] {"docker", "run", "--rm", "-v", mountPath, "-t", "rocketden/tester"};
     }
 }

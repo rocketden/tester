@@ -27,12 +27,15 @@ public class SetupService {
                 // Error handling
                 System.out.println("An error occurred");
             }
+        } else {
+            // Error handling
+            System.out.println("An error occurred");
         }
 
         return folder;
     }
 
     private String generateRandomFolder() {
-        return "folder12";
+        return "folder12345";
     }
 }
