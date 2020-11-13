@@ -10,5 +10,5 @@ COPY entrypoint.sh .
 # Make entrypoint script executable
 RUN chmod +x entrypoint.sh
 
-# Run setup script to copy relevant files and test user code
-ENTRYPOINT ["/app/entrypoint.sh"]
+# Run entrypoint script to copy relevant files and test user code
+ENTRYPOINT ["bash", "entrypoint.sh"]
