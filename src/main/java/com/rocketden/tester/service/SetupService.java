@@ -1,6 +1,7 @@
 package com.rocketden.tester.service;
 
 import com.rocketden.tester.dto.RunRequest;
+import org.apache.commons.io.FileUtils;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -35,6 +36,15 @@ public class SetupService {
         }
 
         return folder;
+    }
+
+    public void deleteTempFolder(String folder) {
+        try {
+            FileUtils.deleteDirectory(new File(folder));
+        } catch (IOException e) {
+            // Error handling
+            System.out.println("An error occurred");
+        }
     }
 
     private String generateRandomFolder() {
