@@ -13,7 +13,9 @@ import java.nio.file.Paths;
 public class SetupService {
 
     public String createTempFolder(RunRequest request) {
-        String folder = generateRandomFolder();
+        String pwd = Paths.get("").toAbsolutePath().toString();
+        String relativePath = "src/main/java/com/rocketden/tester";
+        String folder = String.format("%s/%s/temp/%s", pwd, relativePath, generateRandomFolder());
         boolean success = new File(folder).mkdirs();
 
         if (success) {

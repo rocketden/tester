@@ -49,7 +49,7 @@ public class DockerService {
     }
 
     private String[] getRunCommands(String folder) {
-        String mountPath = String.format("\"$PWD/../temp/%s:/app/code\"", folder);
+        String mountPath = String.format("%s:/app/code", folder);
         return new String[] {"docker", "run", "--rm", "-v", mountPath, "-t", "rocketden/tester"};
     }
 }
