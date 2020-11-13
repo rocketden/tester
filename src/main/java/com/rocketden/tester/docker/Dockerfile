@@ -4,5 +4,8 @@ FROM bash:4.4
 # Specify working directory for created containers
 WORKDIR /app
 
-# Run provided driver script to test user code
-RUN bash run.sh
+# Copy setup script into container
+COPY setup.sh .
+
+# Run setup script to copy relevant files and test user code
+RUN bash setup.sh
