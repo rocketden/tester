@@ -42,7 +42,7 @@
 			</exclusions>
 		</dependency>
 
-		<!-- https://mvnrepository.com/artifact/commons-io/commons-io -->
+		<!-- Apache Commons IO library for file utility methods -->
 		<dependency>
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
