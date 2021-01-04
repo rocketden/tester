@@ -22,7 +22,7 @@ public class RunnerService {
         String folder = setupService.createTempFolder(request);
         System.out.println("folder" + folder);
         RunDto output = dockerService.spawnAndRun(folder, request.getLanguage());
-        setupService.deleteTempFolder(folder);
+        //setupService.deleteTempFolder(folder);
 
         return output;
     }

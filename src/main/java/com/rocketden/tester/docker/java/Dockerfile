@@ -1,9 +1,9 @@
 FROM frolvlad/alpine-java:jdk8-slim AS builder
 
-WORKDIR /app
+WORKDIR /app/code
 
 
 COPY . .
 
-CMD [ "javac", "./code/run.sh" ]
-CMD [ "java", "./code/run.java" ]
+CMD [ "javac", "./script.java" ]
+CMD [ "java", "Script" ]

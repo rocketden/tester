@@ -10,15 +10,11 @@ services:
     build: ./swift
   ruby: 
     build: ./ruby
-  scala: 
-    build: ./python 
   rust: 
-    build: ./python 
+    build: ./rust
   php: 
-    build: ./python 
+    build: ./php
   cpp: 
     build: ./cpp
   c: 
-    build: ./python 
-  cs: 
-    build: ./python 
+    build: ./gcc

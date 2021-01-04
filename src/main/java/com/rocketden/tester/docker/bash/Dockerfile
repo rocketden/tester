@@ -4,4 +4,4 @@ FROM bash:4.4
 WORKDIR /app
 
 # Run entrypoint script to call driver code
-CMD [ "bash", "./code/run.sh" ]
+CMD [ "bash", "./code/script.sh" ]

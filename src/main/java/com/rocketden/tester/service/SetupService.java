@@ -22,7 +22,40 @@ public class SetupService {
         if (success) {
             String code = request.getCode();
             System.out.println(code);
-            String driverFile = String.format("%s/run.sh", folder);
+            String extension = "";
+            String language = request.getLanguage();
+            System.out.println(language);
+            switch (language){
+                case "docker_python":
+                    extension = "py";
+                    break;
+                case "docker_ruby":
+                    extension = "rb";
+                    break; 
+                case "docker_swift":
+                    extension = "swift";
+                    break; 
+                case "docker_cpp":
+                    extension = "cpp";
+                    break;
+                case "docker_php":
+                    extension = "php";
+                    break;
+                case "docker_gcc":
+                    extension = "c";
+                    break;
+                case "docker_java":
+                    extension = "java";
+                    break;
+                case "docker_rust":
+                    extension = "rc";
+                    break;
+                case "docker_bash":
+                    extension = "sh";
+                    break;
+            }
+            System.out.println(extension);
+            String driverFile = String.format("%s/script.%s/", folder, extension);
 
             try {
                 // Create a file called run.sh with the contents of the code variable

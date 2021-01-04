@@ -1,8 +1,8 @@
 FROM python:3-alpine
 
-WORKDIR /app
+WORKDIR /app/code
 
 
 COPY . .
 
-CMD [ "python", "./code/run.sh" ]
+CMD [ "python", "./script.py" ]
