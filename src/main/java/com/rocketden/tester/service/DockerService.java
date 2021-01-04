@@ -21,7 +21,7 @@ public class DockerService {
 
         } catch (Exception e) {
             // Error handling
-            System.out.println("An error occurred");
+            System.err.println("Failed to create a docker container");
         }
 
         // Error handling
