@@ -1,7 +1,6 @@
 #!/bin/bash
 
 # Create and run a container from the given temp directory
-
 if [ $# -eq 0 ]
   then
     echo "Please supply a directory within temp/ to mount this container with"
