@@ -11,7 +11,7 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class DockerService {
 
-    private final static int TIME_LIMIT = 2;
+    private static final int TIME_LIMIT = 2;
 
     public RunDto spawnAndRun(String folder) {
         try {
