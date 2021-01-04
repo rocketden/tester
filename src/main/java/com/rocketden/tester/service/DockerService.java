@@ -6,9 +6,12 @@ import org.springframework.stereotype.Service;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class DockerService {
+
+    private final static int TIME_LIMIT = 2;
 
     public RunDto spawnAndRun(String folder) {
         try {
@@ -22,10 +25,8 @@ public class DockerService {
         } catch (Exception e) {
             // Error handling
             System.err.println("Failed to create a docker container");
+            return null;
         }
-
-        // Error handling
-        return null;
     }
 
     // Given a process, return its status, console output, and error output
@@ -39,10 +40,10 @@ public class DockerService {
             output.append(s).append("\n");
         }
 
-        int exitVal = process.waitFor();
+        boolean exitStatus = process.waitFor(TIME_LIMIT, TimeUnit.SECONDS);
 
         RunDto runDto = new RunDto();
-        runDto.setStatus(exitVal);
+        runDto.setStatus(exitStatus);
         runDto.setOutput(output.toString());
 
         return runDto;
