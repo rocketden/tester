@@ -10,10 +10,15 @@ import java.io.InputStreamReader;
 @Service
 public class DockerService {
 
-    public RunDto spawnAndRun(String folder) {
+    public RunDto spawnAndRun(String folder, String language) {
         try {
             // Create and run disposable docker container with the given temp folder
-            ProcessBuilder builder = new ProcessBuilder(getRunCommands(folder));
+            String[] commands = getRunCommands(folder, language);
+            for (String s: commands) {           
+                //Do your stuff here
+                System.out.println(s); 
+            }
+            ProcessBuilder builder = new ProcessBuilder(getRunCommands(folder, language));
             builder.redirectErrorStream(true);
             Process process = builder.start();
 
@@ -48,8 +53,9 @@ public class DockerService {
         return runDto;
     }
 
-    private String[] getRunCommands(String folder) {
+    private String[] getRunCommands(String folder, String language) {
         String mountPath = String.format("%s:/app/code", folder);
-        return new String[] {"docker", "run", "--rm", "-v", mountPath, "-t", "rocketden/tester"};
+        System.out.println("MountPath:" + mountPath);
+        return new String[] {"docker", "run", "--rm", "-v", mountPath, "-t", language};
     }
 }

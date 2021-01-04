@@ -1,0 +1,24 @@
+version: "3.9"
+services:
+  bash:
+    build: ./bash
+  python:
+    build: ./python
+  java: 
+    build: ./java
+  swift:
+    build: ./swift
+  ruby: 
+    build: ./ruby
+  scala: 
+    build: ./python 
+  rust: 
+    build: ./python 
+  php: 
+    build: ./python 
+  cpp: 
+    build: ./cpp
+  c: 
+    build: ./python 
+  cs: 
+    build: ./python 

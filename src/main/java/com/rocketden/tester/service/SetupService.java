@@ -21,6 +21,7 @@ public class SetupService {
 
         if (success) {
             String code = request.getCode();
+            System.out.println(code);
             String driverFile = String.format("%s/run.sh", folder);
 
             try {
