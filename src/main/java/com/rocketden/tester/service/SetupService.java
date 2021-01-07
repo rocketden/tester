@@ -14,47 +14,56 @@ import java.nio.file.Paths;
 public class SetupService {
 
     public String createTempFolder(RunRequest request) {
+        String extension = "";
+        String language = request.getLanguage();
+        String path = "";
+        switch (language){
+            case "docker_python":
+                extension = "py";
+                path = "python";
+                break;
+            case "docker_ruby":
+                extension = "rb";
+                path = "ruby";
+                break; 
+            case "docker_swift":
+                extension = "swift";
+                path = "swift";
+                break; 
+            case "docker_cpp":
+                extension = "cpp";
+                path = "cpp";
+                break;
+            case "docker_php":
+                extension = "php";
+                path = "php";
+                break;
+            case "docker_c":
+                extension = "c";
+                path = "gcc";
+                break;
+            case "docker_java":
+                extension = "java";
+                path = "java";
+                break;
+            case "docker_rust":
+                extension = "rc";
+                path = "rust";
+                break;
+            case "docker_bash":
+                path = "bash";
+                extension = "sh";
+                break;
+            }
+        
         String pwd = Paths.get("").toAbsolutePath().toString();
-        String relativePath = "src/main/java/com/rocketden/tester";
-        String folder = String.format("%s/%s/temp/%s", pwd, relativePath, generateRandomFolder());
+        String relativePath = String.format("src/main/docker/%s", path); 
+        String folder = String.format("%s/%s/%s", pwd, relativePath, generateRandomFolder());
         boolean success = new File(folder).mkdirs();
 
         if (success) {
             String code = request.getCode();
             System.out.println(code);
-            String extension = "";
-            String language = request.getLanguage();
-            System.out.println(language);
-            switch (language){
-                case "docker_python":
-                    extension = "py";
-                    break;
-                case "docker_ruby":
-                    extension = "rb";
-                    break; 
-                case "docker_swift":
-                    extension = "swift";
-                    break; 
-                case "docker_cpp":
-                    extension = "cpp";
-                    break;
-                case "docker_php":
-                    extension = "php";
-                    break;
-                case "docker_gcc":
-                    extension = "c";
-                    break;
-                case "docker_java":
-                    extension = "java";
-                    break;
-                case "docker_rust":
-                    extension = "rc";
-                    break;
-                case "docker_bash":
-                    extension = "sh";
-                    break;
-            }
-            System.out.println(extension);
             String driverFile = String.format("%s/script.%s/", folder, extension);
 
             try {
@@ -82,6 +91,6 @@ public class SetupService {
     }
 
     private String generateRandomFolder() {
-        return "folder12345";
+        return "code";
     }
 }

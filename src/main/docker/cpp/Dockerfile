@@ -8,15 +8,12 @@ RUN apt-get -y update && apt-get install -y
 RUN apt-get -y install clang
 
 # Copy the current folder which contains C++ source code to the Docker image under /usr/src
-COPY . /
-
+COPY . . 
 # Specify the working directory
-WORKDIR .
+WORKDIR /code
 
-CMD pwd
+ADD start.sh /
+RUN chmod +x /start.sh
 
-# Use Clang to compile the Test.cpp source file
-RUN clang++ -o Script script.cpp
+CMD ["/start.sh"]
 
-# Run the output program from the previous step
-CMD ["./script"]

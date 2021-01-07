@@ -1,7 +1,7 @@
 FROM bash:4.4
 
 # Specify working directory for created containers
-WORKDIR /app
+WORKDIR /code
 
 # Run entrypoint script to call driver code
-CMD [ "bash", "./code/script.sh" ]
+CMD [ "bash", "./script.sh" ]

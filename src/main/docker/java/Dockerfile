@@ -1,6 +1,6 @@
 FROM frolvlad/alpine-java:jdk8-slim AS builder
 
-WORKDIR /app/code
+WORKDIR /code
 
 
 COPY . .
