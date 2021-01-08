@@ -6,5 +6,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class RunDto {
-    private boolean success;
+    private boolean status;
+    private String output;
 }
