@@ -1,5 +1,7 @@
 FROM swift
 WORKDIR /code
 COPY . ./
-CMD swift package clean
-CMD swift run
+
+ADD start.sh /
+RUN chmod +x /start.sh
+CMD ["/start.sh"]

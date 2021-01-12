@@ -4,4 +4,4 @@ WORKDIR /code
 COPY . .
 
 
-CMD ["script"]
+CMD "cargo script"
