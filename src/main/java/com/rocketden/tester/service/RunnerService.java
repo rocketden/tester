@@ -18,9 +18,7 @@ public class RunnerService {
     }
 
     public RunDto run(RunRequest request) {
-        System.out.println(request);
         String folder = setupService.createTempFolder(request);
-        System.out.println("folder" + folder);
         RunDto output = dockerService.spawnAndRun(folder, request.getLanguage());
         setupService.deleteTempFolder(folder);
 

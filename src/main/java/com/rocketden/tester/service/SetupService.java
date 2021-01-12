@@ -63,7 +63,6 @@ public class SetupService {
 
         if (success) {
             String code = request.getCode();
-            System.out.println(code);
             String driverFile = String.format("%s/script.%s/", folder, extension);
 
             try {
