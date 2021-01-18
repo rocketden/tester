@@ -57,8 +57,10 @@ public class SetupService {
             }
         
         String pwd = Paths.get("").toAbsolutePath().toString();
-        String relativePath = String.format("src/main/docker/%s", path); 
-        String folder = String.format("%s/%s/%s", pwd, relativePath, generateRandomFolder());
+        // String relativePath = String.format("src/main/docker/%s", path); 
+        // String folder = String.format("%s/%s/%s", pwd, relativePath, generateRandomFolder());
+        String relativePath = "src/main/java/com/rocketden/tester";
+        String folder = String.format("%s/%s/temp/%s", pwd, relativePath, generateRandomFolderName());
         boolean success = new File(folder).mkdirs();
 
         if (success) {
@@ -70,11 +72,11 @@ public class SetupService {
                 Files.write(Paths.get(driverFile), code.getBytes(StandardCharsets.UTF_8));
             } catch (IOException e) {
                 // Error handling
-                System.out.println("An error occurred");
+                System.err.println("Failed to write user code to the disk");
             }
         } else {
             // Error handling
-            System.out.println("An error occurred");
+            System.err.println("Failed to create a temp folder for this request");
         }
 
         return folder;
@@ -89,7 +91,7 @@ public class SetupService {
         }
     }
 
-    private String generateRandomFolder() {
-        return "code";
+    private String generateRandomFolderName() {
+        return "folder12345";
     }
 }
