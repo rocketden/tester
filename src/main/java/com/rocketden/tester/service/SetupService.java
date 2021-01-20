@@ -47,7 +47,7 @@ public class SetupService {
                 path = "java";
                 break;
             case "docker_rust":
-                extension = "rc";
+                extension = "rs";
                 path = "rust";
                 break;
             case "docker_bash":
