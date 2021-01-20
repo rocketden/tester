@@ -6,15 +6,15 @@ services:
     build: ./python
   java: 
     build: ./java
-  swift:
-    build: ./swift
-  ruby: 
-    build: ./ruby
-  rust: 
-    build: ./rust
-  php: 
-    build: ./php
-  cpp: 
-    build: ./cpp
-  c: 
-    build: ./gcc
+  # swift:
+  #   build: ./swift
+  # ruby: 
+  #   build: ./ruby
+  # rust: 
+  #   build: ./rust
+  # php: 
+  #   build: ./php
+  # cpp: 
+  #   build: ./cpp
+  # c: 
+  #   build: ./gcc
