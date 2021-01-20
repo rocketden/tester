@@ -1,5 +1,7 @@
 package com.rocketden.tester.dto;
 
+import com.rocketden.tester.model.Language;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -7,5 +9,5 @@ import lombok.Setter;
 @Setter
 public class RunRequest {
     private String code;
-    private String language; 
+    private Language language; 
 }

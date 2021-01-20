@@ -1,6 +1,8 @@
 package com.rocketden.tester.service;
 
 import com.rocketden.tester.dto.RunDto;
+import com.rocketden.tester.model.Language;
+
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
@@ -13,7 +15,7 @@ public class DockerService {
 
     private static final int TIME_LIMIT = 2;
 
-    public RunDto spawnAndRun(String folder, String language) {
+    public RunDto spawnAndRun(String folder, Language language) {
         try {
             // Create and run disposable docker container with the given temp folder
             String[] commands = getRunCommands(folder, language);
@@ -50,8 +52,9 @@ public class DockerService {
         return runDto;
     }
 
-    private String[] getRunCommands(String folder, String language) {
+    private String[] getRunCommands(String folder, Language language) {
         String mountPath = folder + ":" + "/code";
-        return new String[] {"docker", "run", "--rm", "-v", mountPath, "-t", language};
+        // TODO: There may be an issue here... I am not returning the language but the path.
+        return new String[] {"docker", "run", "--rm", "-v", mountPath, "-t", language.getPath()};
     }
 }
