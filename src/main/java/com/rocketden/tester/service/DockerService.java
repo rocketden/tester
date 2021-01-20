@@ -53,8 +53,7 @@ public class DockerService {
     }
 
     private String[] getRunCommands(String folder, Language language) {
-        String mountPath = folder + ":" + "/code";
-        // TODO: There may be an issue here... I am not returning the language but the path.
+        String mountPath = String.format("%s:/code", folder);
         return new String[] {"docker", "run", "--rm", "-v", mountPath, "-t", String.format("docker_%s", language.getPath())};
     }
 }

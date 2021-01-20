@@ -19,8 +19,6 @@ public class SetupService {
         Language language = request.getLanguage();
         
         String pwd = Paths.get("").toAbsolutePath().toString();
-        // String relativePath = String.format("src/main/docker/%s", path); 
-        // String folder = String.format("%s/%s/%s", pwd, relativePath, generateRandomFolder());
         String relativePath = "src/main/java/com/rocketden/tester";
         String folder = String.format("%s/%s/temp/%s", pwd, relativePath, generateRandomFolderName());
         boolean success = new File(folder).mkdirs();
