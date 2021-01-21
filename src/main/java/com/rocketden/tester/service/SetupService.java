@@ -4,6 +4,7 @@ import com.rocketden.tester.dto.RunRequest;
 import com.rocketden.tester.model.Language;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.RandomStringUtils;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -52,6 +53,6 @@ public class SetupService {
     }
 
     private String generateRandomFolderName() {
-        return "folder12345";
+        return RandomStringUtils.randomAlphanumeric(10);
     }
 }
