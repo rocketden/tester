@@ -1,6 +1,8 @@
 package com.rocketden.tester.service;
 
 import com.rocketden.tester.dto.RunRequest;
+import com.rocketden.tester.exception.DockerSetupError;
+import com.rocketden.tester.exception.api.ApiException;
 import com.rocketden.tester.model.Language;
 
 import org.apache.commons.io.FileUtils;
@@ -32,12 +34,10 @@ public class SetupService {
                 // Create a file called run.sh with the contents of the code variable
                 Files.write(Paths.get(driverFile), code.getBytes(StandardCharsets.UTF_8));
             } catch (IOException e) {
-                // Error handling
-                System.err.println("Failed to write user code to the disk");
+                throw new ApiException(DockerSetupError.WRITE_USER_CODE);
             }
         } else {
-            // Error handling
-            System.err.println("Failed to create a temp folder for this request");
+            throw new ApiException(DockerSetupError.CREATE_TEMP_FOLDER);
         }
 
         return folder;
@@ -48,7 +48,7 @@ public class SetupService {
             FileUtils.deleteDirectory(new File(folder));
         } catch (IOException e) {
             // Error handling
-            System.out.println("An error occurred");
+            throw new ApiException(DockerSetupError.DELETE_TEMP_FOLDER);
         }
     }
 

@@ -1,6 +1,8 @@
 package com.rocketden.tester.service;
 
 import com.rocketden.tester.dto.RunDto;
+import com.rocketden.tester.exception.DockerSetupError;
+import com.rocketden.tester.exception.api.ApiException;
 import com.rocketden.tester.model.Language;
 
 import org.springframework.stereotype.Service;
@@ -26,9 +28,7 @@ public class DockerService {
             return captureOutput(process);
 
         } catch (Exception e) {
-            // Error handling
-            System.err.println("Failed to create a docker container");
-            return null;
+            throw new ApiException(DockerSetupError.BUILD_DOCKER_CONTAINER);
         }
     }
 
