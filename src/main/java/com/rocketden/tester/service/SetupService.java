@@ -28,11 +28,11 @@ public class SetupService {
 
         if (success) {
             String code = request.getCode();
-            String driverFile = String.format("%s/script.%s/", folder, language.getExtension());
+            String userFile = String.format("%s/script.%s/", folder, language.getExtension());
 
             try {
-                // Create a file called run.sh with the contents of the code variable
-                Files.write(Paths.get(driverFile), code.getBytes(StandardCharsets.UTF_8));
+                // Create a file with the contents of the code variable
+                Files.write(Paths.get(userFile), code.getBytes(StandardCharsets.UTF_8));
             } catch (IOException e) {
                 throw new ApiException(DockerSetupError.WRITE_USER_CODE);
             }
@@ -47,7 +47,6 @@ public class SetupService {
         try {
             FileUtils.deleteDirectory(new File(folder));
         } catch (IOException e) {
-            // Error handling
             throw new ApiException(DockerSetupError.DELETE_TEMP_FOLDER);
         }
     }
