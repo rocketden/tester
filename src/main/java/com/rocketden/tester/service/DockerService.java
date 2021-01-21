@@ -19,7 +19,7 @@ public class DockerService {
         try {
             // Create and run disposable docker container with the given temp folder
             String[] commands = getRunCommands(folder, language);
-            ProcessBuilder builder = new ProcessBuilder(getRunCommands(folder, language));
+            ProcessBuilder builder = new ProcessBuilder(commands);
             builder.redirectErrorStream(true);
             Process process = builder.start();
 
@@ -54,6 +54,6 @@ public class DockerService {
 
     private String[] getRunCommands(String folder, Language language) {
         String mountPath = String.format("%s:/code", folder);
-        return new String[] {"docker", "run", "--rm", "-v", mountPath, "-t", String.format("docker_%s", language.getPath())};
+        return new String[] {"docker", "run", "--rm", "-v", mountPath, "-t", language.getDockerContainer()};
     }
 }

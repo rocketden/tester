@@ -9,15 +9,16 @@ import lombok.Getter;
 @Getter
 public enum Language {
 
-    PYTHON("python", "py"), RUBY("ruby", "rb"), SWIFT("swift", "swift"),
-    CPP("cpp", "cpp"), PHP("php", "php"), C("gcc", "c"), JAVA("java", "java"),
-    RUST("rust", "rs"), BASH("bash", "sh");
+    PYTHON("docker_python", "py"), RUBY("docker_ruby", "rb"),
+    SWIFT("docker_swift", "swift"), CPP("docker_cpp", "cpp"),
+    PHP("docker_php", "php"), C("docker_c", "c"), JAVA("docker_java", "java"),
+    RUST("docker_rust", "rs"), BASH("docker_bash", "sh");
 
-    private final String path;
+    private final String dockerContainer;
     private final String extension;
 
-    Language(String path, String extension) {
-        this.path = path;
+    Language(String dockerContainer, String extension) {
+        this.dockerContainer = dockerContainer;
         this.extension = extension;
     }
 
