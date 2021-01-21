@@ -1,4 +1,4 @@
 #!/bin/bash
 
-clang++ -o ./myapp script.cpp
-./myapp
+clang++ -o ./script Solution.cpp
+./script

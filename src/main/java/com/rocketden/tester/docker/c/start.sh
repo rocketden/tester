@@ -1,4 +1,4 @@
 #!/bin/bash
 
-gcc -o ./myapp script.c
-./myapp
+gcc -o ./script Solution.c
+./script

@@ -1,4 +1,4 @@
 #!/bin/bash
 
-swiftc -o script script.swift
+swiftc -o script Solution.swift
 ./script

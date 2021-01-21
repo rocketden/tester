@@ -12,7 +12,8 @@ public enum Language {
     PYTHON("docker_python", "py"), RUBY("docker_ruby", "rb"),
     SWIFT("docker_swift", "swift"), CPP("docker_cpp", "cpp"),
     PHP("docker_php", "php"), C("docker_c", "c"), JAVA("docker_java", "java"),
-    RUST("docker_rust", "rs"), BASH("docker_bash", "sh");
+    JAVASCRIPT("docker_javascript", "js"), RUST("docker_rust", "rs"),
+    BASH("docker_bash", "sh");
 
     private final String dockerContainer;
     private final String extension;

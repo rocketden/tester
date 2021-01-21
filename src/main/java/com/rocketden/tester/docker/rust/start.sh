@@ -1,4 +1,4 @@
 #!/bin/bash
 
-rustc script.rs
-./script
+rustc Solution.rs
+./Solution

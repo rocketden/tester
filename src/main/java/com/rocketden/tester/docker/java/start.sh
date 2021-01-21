@@ -1,4 +1,4 @@
 #!/bin/bash
 
-javac ./script.java
-java script
+javac ./Solution.java
+java Solution

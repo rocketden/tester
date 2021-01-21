@@ -6,6 +6,8 @@ services:
     build: ./python
   java: 
     build: ./java
+  javascript:
+    build: ./javascript
   swift:
     build: ./swift
   ruby: 
@@ -17,4 +19,4 @@ services:
   cpp: 
     build: ./cpp
   c: 
-    build: ./gcc
+    build: ./c

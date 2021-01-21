@@ -4,4 +4,4 @@ FROM bash:4.4
 WORKDIR /code
 
 # Run script to call driver code
-CMD [ "bash", "./script.sh" ]
+CMD [ "bash", "./Solution.sh" ]

@@ -28,11 +28,11 @@ public class SetupService {
 
         if (success) {
             String code = request.getCode();
-            String userFile = String.format("%s/script.%s/", folder, language.getExtension());
+            String solutionFile = String.format("%s/Solution.%s/", folder, language.getExtension());
 
             try {
                 // Create a file with the contents of the code variable
-                Files.write(Paths.get(userFile), code.getBytes(StandardCharsets.UTF_8));
+                Files.write(Paths.get(solutionFile), code.getBytes(StandardCharsets.UTF_8));
             } catch (IOException e) {
                 throw new ApiException(DockerSetupError.WRITE_USER_CODE);
             }

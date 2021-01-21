@@ -1,4 +1,4 @@
 FROM python:3-alpine
 WORKDIR /code
 COPY . .
-CMD [ "python", "./script.py" ]
+CMD [ "python", "./Solution.py" ]
