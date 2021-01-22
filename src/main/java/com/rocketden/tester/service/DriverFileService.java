@@ -16,22 +16,12 @@ public class DriverFileService {
     public void writeDriverFile(String fileDirectory, Language language,
         Problem problem) {
 
-        // Create a file with the contents of the code variable.
-        FileWriter writer = null;
-        try {
-            writer = new FileWriter(fileDirectory);
+        // Open writer using try-with-resources.
+        try (FileWriter writer = new FileWriter(fileDirectory)) {
             writer.write("This is a test.");
             writer.write("This is a test now.");
         } catch (IOException e) {
             throw new ApiException(DockerSetupError.WRITE_CODE_TO_DISK);
-        } finally {
-            if (writer != null) {
-                try {
-                    writer.close();
-                } catch (IOException e) {
-                    throw new ApiException(DockerSetupError.WRITE_CODE_TO_DISK);
-                }
-            }
         }
     }
 }
