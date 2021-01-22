@@ -6,17 +6,17 @@ services:
     build: ./python
   java: 
     build: ./java
-  javascript:
-    build: ./javascript
-  swift:
-    build: ./swift
-  ruby: 
-    build: ./ruby
-  rust: 
-    build: ./rust
-  php: 
-    build: ./php
-  cpp: 
-    build: ./cpp
-  c: 
-    build: ./c
+  # javascript:
+  #   build: ./javascript
+  # swift:
+  #   build: ./swift
+  # ruby: 
+  #   build: ./ruby
+  # rust: 
+  #   build: ./rust
+  # php: 
+  #   build: ./php
+  # cpp: 
+  #   build: ./cpp
+  # c: 
+  #   build: ./c

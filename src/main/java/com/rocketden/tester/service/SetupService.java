@@ -38,7 +38,7 @@ public class SetupService {
 
         if (success) {
             String code = request.getCode();
-            String driverFile = String.format("%s/Driver.%s.", folder, language.getExtension());
+            String driverFile = String.format("%s/Driver.%s/", folder, language.getExtension());
             String solutionFile = String.format("%s/Solution.%s/", folder, language.getExtension());
 
             try {
