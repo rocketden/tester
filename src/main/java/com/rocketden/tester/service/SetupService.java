@@ -7,6 +7,7 @@ import com.rocketden.tester.model.Language;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.RandomStringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -17,6 +18,13 @@ import java.nio.file.Paths;
 
 @Service
 public class SetupService {
+
+    private final DriverFileService driverFileService;
+
+    @Autowired
+    public SetupService(DriverFileService driverFileService) {
+        this.driverFileService = driverFileService;
+    }
 
     public String createTempFolder(RunRequest request) {
         Language language = request.getLanguage();
