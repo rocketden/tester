@@ -9,7 +9,7 @@ public class ProblemTestCase {
     private Integer id;
     private String input;
     private String output;
-    private Boolean hidden = false;
+    private Boolean hidden;
     private Problem problem;
     private String explanation;
 }

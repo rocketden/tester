@@ -4,6 +4,7 @@ import com.rocketden.tester.dto.RunRequest;
 import com.rocketden.tester.exception.DockerSetupError;
 import com.rocketden.tester.exception.api.ApiException;
 import com.rocketden.tester.model.Language;
+import com.rocketden.tester.model.problem.Problem;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.RandomStringUtils;
@@ -28,6 +29,7 @@ public class SetupService {
 
     public String createTempFolder(RunRequest request) {
         Language language = request.getLanguage();
+        Problem problem = request.getProblem();
         
         String pwd = Paths.get("").toAbsolutePath().toString();
         String relativePath = "src/main/java/com/rocketden/tester";
@@ -36,13 +38,15 @@ public class SetupService {
 
         if (success) {
             String code = request.getCode();
+            String driverFile = String.format("%s/Driver.%s.", folder, language.getExtension());
             String solutionFile = String.format("%s/Solution.%s/", folder, language.getExtension());
 
             try {
                 // Create a file with the contents of the code variable
+                driverFileService.writeDriverFile(driverFile, language, problem);
                 Files.write(Paths.get(solutionFile), code.getBytes(StandardCharsets.UTF_8));
             } catch (IOException e) {
-                throw new ApiException(DockerSetupError.WRITE_USER_CODE);
+                throw new ApiException(DockerSetupError.WRITE_CODE_TO_DISK);
             }
         } else {
             throw new ApiException(DockerSetupError.CREATE_TEMP_FOLDER);
