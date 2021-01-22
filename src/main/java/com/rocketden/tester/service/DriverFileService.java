@@ -30,39 +30,20 @@ public class DriverFileService {
             // Get solutions from the user code.
             writer.write("\t\tSolution solution = new Solution();\n");
 
-            // First test case.
-            writer.write("\t\tSystem.out.println(\"Console (1):\");\n");
-            writer.write("\t\ttry {\n");
-            writer.write("\t\t\tInteger solution1 = solution.multiplyDouble(test1var1);\n");
-            writer.write("\t\t\tSystem.out.println(\"Solution (1):\");\n");
-            writer.write("\t\t\tSystem.out.println(solution1.toString());\n");
-            writer.write("\t\t} catch (Exception e) {\n");
-            writer.write("\t\t\tSystem.out.println(\"Error (1):\");\n");
-            writer.write("\t\t\tSystem.out.println(e.getMessage());\n");
-            writer.write("\t\t}\n");
-
-            // Second test case.
-            writer.write("\t\tSystem.out.println(\"Console (2):\");\n");
-            writer.write("\t\ttry {\n");
-            writer.write("\t\t\tInteger solution2 = solution.multiplyDouble(test2var1);\n");
-            writer.write("\t\t\tSystem.out.println(\"Solution (2):\");\n");
-            writer.write("\t\t\tSystem.out.println(solution2.toString());\n");
-            writer.write("\t\t} catch (Exception e) {\n");
-            writer.write("\t\t\tSystem.out.println(\"Error (2):\");\n");
-            writer.write("\t\t\tSystem.out.println(e.getMessage());\n");
-            writer.write("\t\t}\n");
-
-            // Third test case.
-            writer.write("\t\tSystem.out.println(\"Console (3):\");\n");
-            writer.write("\t\ttry {\n");
-            writer.write("\t\t\tInteger solution3 = solution.multiplyDouble(test3var1);\n");
-            writer.write("\t\t\tSystem.out.println(\"Solution (3):\");\n");
-            writer.write("\t\t\tSystem.out.println(solution3.toString());\n");
-            writer.write("\t\t} catch (Exception e) {\n");
-            writer.write("\t\t\tSystem.out.println(\"Error (3):\");\n");
-            writer.write("\t\t\tSystem.out.println(e.getMessage());\n");
-            writer.write("\t\t}\n");
-
+            // Write test cases.
+            for (int testCase = 1; testCase <= 3; testCase++) {
+                writer.write(String.format("\t\tSystem.out.println(\"Console (%d):\");%n", testCase));
+                // Use try-catch block to print any errors.
+                writer.write("\t\ttry {\n");
+                writer.write(String.format("\t\t\tInteger solution%d = solution.multiplyDouble(test%dvar1);%n", testCase, testCase));
+                writer.write(String.format("\t\t\tSystem.out.println(\"Solution (%d):\");%n", testCase));
+                writer.write(String.format("\t\t\tSystem.out.println(solution%d.toString());%n", testCase));
+                writer.write("\t\t} catch (Exception e) {\n");
+                writer.write(String.format("\t\t\tSystem.out.println(\"Error (%d):\");%n", testCase));
+                writer.write("\t\t\tSystem.out.println(e.getMessage());\n");
+                writer.write("\t\t}\n");
+            }
+            
             // Boilerplate ending setup.
             writer.write("\t}\n");
             writer.write("}\n");
