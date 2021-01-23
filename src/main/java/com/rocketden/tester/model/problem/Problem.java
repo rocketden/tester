@@ -18,7 +18,4 @@ public class Problem {
 
     // Additional fields added necessary for the creation of the driver file.
     private String methodName;
-    // private List<ObjectType> inputs;
-    // private ObjectType outputs;
-
 }
