@@ -1,0 +1,22 @@
+version: "3.9"
+services:
+  # bash:
+  #   build: ./bash
+  python:
+    build: ./python
+  java: 
+    build: ./java
+  javascript:
+    build: ./javascript
+  # swift:
+  #   build: ./swift
+  # ruby: 
+  #   build: ./ruby
+  # rust: 
+  #   build: ./rust
+  # php: 
+  #   build: ./php
+  # cpp: 
+  #   build: ./cpp
+  # c: 
+  #   build: ./c

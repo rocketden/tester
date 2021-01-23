@@ -1,7 +1,12 @@
 package com.rocketden.tester.service;
 
 import com.rocketden.tester.dto.RunRequest;
+import com.rocketden.tester.exception.DockerSetupError;
+import com.rocketden.tester.exception.api.ApiException;
+import com.rocketden.tester.model.Language;
+
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.RandomStringUtils;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -14,6 +19,8 @@ import java.nio.file.Paths;
 public class SetupService {
 
     public String createTempFolder(RunRequest request) {
+        Language language = request.getLanguage();
+        
         String pwd = Paths.get("").toAbsolutePath().toString();
         String relativePath = "src/main/java/com/rocketden/tester";
         String folder = String.format("%s/%s/temp/%s", pwd, relativePath, generateRandomFolderName());
@@ -21,18 +28,16 @@ public class SetupService {
 
         if (success) {
             String code = request.getCode();
-            String driverFile = String.format("%s/run.sh", folder);
+            String solutionFile = String.format("%s/Solution.%s/", folder, language.getExtension());
 
             try {
-                // Create a file called run.sh with the contents of the code variable
-                Files.write(Paths.get(driverFile), code.getBytes(StandardCharsets.UTF_8));
+                // Create a file with the contents of the code variable
+                Files.write(Paths.get(solutionFile), code.getBytes(StandardCharsets.UTF_8));
             } catch (IOException e) {
-                // Error handling
-                System.err.println("Failed to write user code to the disk");
+                throw new ApiException(DockerSetupError.WRITE_USER_CODE);
             }
         } else {
-            // Error handling
-            System.err.println("Failed to create a temp folder for this request");
+            throw new ApiException(DockerSetupError.CREATE_TEMP_FOLDER);
         }
 
         return folder;
@@ -42,12 +47,11 @@ public class SetupService {
         try {
             FileUtils.deleteDirectory(new File(folder));
         } catch (IOException e) {
-            // Error handling
-            System.out.println("An error occurred");
+            throw new ApiException(DockerSetupError.DELETE_TEMP_FOLDER);
         }
     }
 
     private String generateRandomFolderName() {
-        return "folder12345";
+        return RandomStringUtils.randomAlphanumeric(10);
     }
 }

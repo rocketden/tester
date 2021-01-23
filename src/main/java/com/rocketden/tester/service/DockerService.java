@@ -1,6 +1,10 @@
 package com.rocketden.tester.service;
 
 import com.rocketden.tester.dto.RunDto;
+import com.rocketden.tester.exception.DockerSetupError;
+import com.rocketden.tester.exception.api.ApiException;
+import com.rocketden.tester.model.Language;
+
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
@@ -13,19 +17,18 @@ public class DockerService {
 
     private static final int TIME_LIMIT = 2;
 
-    public RunDto spawnAndRun(String folder) {
+    public RunDto spawnAndRun(String folder, Language language) {
         try {
             // Create and run disposable docker container with the given temp folder
-            ProcessBuilder builder = new ProcessBuilder(getRunCommands(folder));
+            String[] commands = getRunCommands(folder, language);
+            ProcessBuilder builder = new ProcessBuilder(commands);
             builder.redirectErrorStream(true);
             Process process = builder.start();
 
             return captureOutput(process);
 
         } catch (Exception e) {
-            // Error handling
-            System.err.println("Failed to create a docker container");
-            return null;
+            throw new ApiException(DockerSetupError.BUILD_DOCKER_CONTAINER);
         }
     }
 
@@ -49,8 +52,8 @@ public class DockerService {
         return runDto;
     }
 
-    private String[] getRunCommands(String folder) {
-        String mountPath = String.format("%s:/app/code", folder);
-        return new String[] {"docker", "run", "--rm", "-v", mountPath, "-t", "rocketden/tester"};
+    private String[] getRunCommands(String folder, Language language) {
+        String mountPath = String.format("%s:/code", folder);
+        return new String[] {"docker", "run", "--rm", "-v", mountPath, "-t", language.getDockerContainer()};
     }
 }
