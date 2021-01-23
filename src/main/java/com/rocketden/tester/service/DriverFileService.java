@@ -40,7 +40,7 @@ public class DriverFileService {
                 writer.write(String.format("\t\t\tSystem.out.println(solution%d.toString());%n", testCase));
                 writer.write("\t\t} catch (Exception e) {\n");
                 writer.write(String.format("\t\t\tSystem.out.println(\"Error (%d):\");%n", testCase));
-                writer.write("\t\t\tSystem.out.println(e.getMessage());\n");
+                writer.write("\t\t\te.printStackTrace();\n");
                 writer.write("\t\t}\n");
             }
             
