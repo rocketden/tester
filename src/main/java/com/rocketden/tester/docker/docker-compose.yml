@@ -1,13 +1,13 @@
 version: "3.9"
 services:
-  bash:
-    build: ./bash
+  # bash:
+  #   build: ./bash
   python:
     build: ./python
   java: 
     build: ./java
-  # javascript:
-  #   build: ./javascript
+  javascript:
+    build: ./javascript
   # swift:
   #   build: ./swift
   # ruby: 
