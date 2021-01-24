@@ -16,15 +16,19 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Map;
 
 @Service
 public class SetupService {
 
     private final DriverFileService driverFileService;
+    private final Map<String, DriverGeneratorService> driverGeneratorServiceMap;
 
     @Autowired
-    public SetupService(DriverFileService driverFileService) {
+    public SetupService(DriverFileService driverFileService,
+        Map<String, DriverGeneratorService> driverGeneratorServiceMap) {
         this.driverFileService = driverFileService;
+        this.driverGeneratorServiceMap = driverGeneratorServiceMap;
     }
 
     public String createTempFolder(RunRequest request) {
@@ -43,7 +47,9 @@ public class SetupService {
 
             try {
                 // Create a file with the contents of the code variable
-                driverFileService.writeDriverFile(driverFile, language, problem);
+                DriverGeneratorService driverGeneratorService =
+                    driverGeneratorServiceMap.get("java");
+                driverGeneratorService.writeDriverFile(driverFile, problem);
                 Files.write(Paths.get(solutionFile), code.getBytes(StandardCharsets.UTF_8));
             } catch (IOException e) {
                 throw new ApiException(DockerSetupError.WRITE_CODE_TO_DISK);
