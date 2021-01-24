@@ -1,4 +1,4 @@
 #!/bin/bash
 
-clang++ -o ./script Solution.cpp
+clang++ -o ./script Driver.cpp
 ./script
