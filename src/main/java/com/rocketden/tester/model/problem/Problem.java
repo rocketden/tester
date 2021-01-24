@@ -14,7 +14,6 @@ public class Problem {
     private String name;
     private String description;
     private List<ProblemTestCase> testCases = new ArrayList<>();
-    private ProblemDifficulty difficulty;
 
     // Additional fields added necessary for the creation of the driver file.
     private String methodName;
