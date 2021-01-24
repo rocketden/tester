@@ -48,7 +48,7 @@ class RunnerTests {
         MvcResult result = this.mockMvc.perform(post(POST_RUNNER)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(jsonRequest))
-                .andDo(print()).andExpect(status().isOk())
+                .andDo(print()).andExpect(status().is(ERROR.getStatus().value()))
                 .andReturn();
 
         String response = result.getResponse().getContentAsString();
