@@ -26,6 +26,6 @@ public class SetupServiceTests {
 
     @Test
     public void deleteTempFolderInvalidFolder() {
-        
+
     }
 }
