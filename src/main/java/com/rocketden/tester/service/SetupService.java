@@ -23,18 +23,11 @@ import java.util.Map;
 @Service
 public class SetupService {
 
-    private final List<DriverGeneratorService> driverGeneratorServiceList;
-    private final Map<String, DriverGeneratorService> driverGeneratorServiceMap;
+    private final DriverFileService driverFileService;
 
     @Autowired
-    public SetupService(List<DriverGeneratorService> driverGeneratorServiceList) {
-        this.driverGeneratorServiceList = driverGeneratorServiceList;
-
-        // Create the map from the DriverGeneratorService list.
-        this.driverGeneratorServiceMap = new HashMap<>();
-        this.driverGeneratorServiceList.forEach(driverGeneratorService ->
-            this.driverGeneratorServiceMap.put(driverGeneratorService.getClass().getSimpleName(), driverGeneratorService)
-        );
+    public SetupService(DriverFileService driverFileService) {
+        this.driverFileService = driverFileService;
     }
 
     public String createTempFolder(RunRequest request) {
@@ -52,10 +45,8 @@ public class SetupService {
             String solutionFile = String.format("%s/Solution.%s/", folder, language.getExtension());
 
             try {
-                DriverGeneratorService driverGeneratorService =
-                    driverGeneratorServiceMap.get(language.getDriverGeneratorName());
                 // Create a file with the contents of the code variable
-                driverGeneratorService.writeDriverFile(driverFile, problem);
+                driverFileService.writeDriverFile(driverFile, language, problem);
                 Files.write(Paths.get(solutionFile), code.getBytes(StandardCharsets.UTF_8));
             } catch (IOException e) {
                 throw new ApiException(DockerSetupError.WRITE_CODE_TO_DISK);
