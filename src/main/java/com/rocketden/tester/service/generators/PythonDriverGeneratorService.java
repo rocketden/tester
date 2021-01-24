@@ -8,6 +8,9 @@ import com.rocketden.tester.exception.api.ApiException;
 import com.rocketden.tester.model.problem.Problem;
 import com.rocketden.tester.service.DriverGeneratorService;
 
+import org.springframework.stereotype.Service;
+
+@Service
 public class PythonDriverGeneratorService implements DriverGeneratorService {
     @Override
     public void writeDriverFile(String fileDirectory, Problem problem) {
