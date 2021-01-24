@@ -16,11 +16,42 @@ public class PythonDriverGeneratorService implements DriverGeneratorService {
     public void writeDriverFile(String fileDirectory, Problem problem) {
         // Open writer using try-with-resources.
         try (FileWriter writer = new FileWriter(fileDirectory)) {
-            writer.write("print('This script is not running another script.');");
+            // Boilerplate starting setup.
+            writer.write("import traceback\n");
+            writer.write("import os\n");
+            writer.write("os.chdir(os.getcwd())\n\n");
+
+            // Import requires method name.
+            writer.write("from Solution import multiplyDouble\n\n");
+            writer.write("def main():\n\n");
+
+            // Write test cases.
+            writer.write("\ttest1var1 = 2\n");
+            writer.write("\ttest2var1 = 5\n");
+            writer.write("\ttest3var1 = 13\n");
+
+            // Write test cases.
+            for (int testCase = 1; testCase <= 3; testCase++) {
+                writer.write(String.format("\tprint('Console (%d):')%n", testCase));
+                // Use try-catch block to print any errors.
+                writer.write("\ttry:\n");
+                writer.write(String.format("\t\tsolution%d = multiplyDouble(test%dvar1)%n", testCase, testCase));
+                writer.write(String.format("\t\tprint('Solution (%d):')%n", testCase));
+                writer.write(String.format("\t\tprint(solution%d)%n", testCase));
+                writer.write("\texcept Exception as e:\n");
+                writer.write(String.format("\t\tprint('Error (%d):')%n", testCase));
+                writer.write("\t\ttraceback.print_exc()\n");
+            }
+            
+            // Boilerplate ending setup.
+            writer.write("if __name__ == \"__main__\":\n");
+            writer.write("\tmain()\n");
         } catch (IOException e) {
             throw new ApiException(DockerSetupError.WRITE_CODE_TO_DISK);
         }
     }
+
+
 
     @Override
     public void writeStartingBoilerplate() {
