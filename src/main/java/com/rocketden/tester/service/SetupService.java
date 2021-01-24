@@ -27,8 +27,7 @@ public class SetupService {
     private final Map<String, DriverGeneratorService> driverGeneratorServiceMap;
 
     @Autowired
-    public SetupService(List<DriverGeneratorService>
-        driverGeneratorServiceList) {
+    public SetupService(List<DriverGeneratorService> driverGeneratorServiceList) {
         this.driverGeneratorServiceList = driverGeneratorServiceList;
 
         // Create the map from the DriverGeneratorService list.
