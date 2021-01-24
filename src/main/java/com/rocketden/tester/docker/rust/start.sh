@@ -1,4 +1,4 @@
 #!/bin/bash
 
-rustc Solution.rs
-./Solution
+rustc Driver.rs
+./Driver
