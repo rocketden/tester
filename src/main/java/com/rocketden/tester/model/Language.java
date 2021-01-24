@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.rocketden.tester.exception.LanguageError;
 import com.rocketden.tester.exception.api.ApiException;
 
+import org.apache.commons.lang.WordUtils;
+
 import lombok.Getter;
 
 @Getter
@@ -22,9 +24,11 @@ public enum Language {
 
     private final String dockerContainer;
     private final String extension;
+    private final String driverGeneratorName;
 
     Language(String extension) {
         this.dockerContainer = String.format("docker_%s", this.name().toLowerCase());
+        this.driverGeneratorName = String.format("%sDriverGeneratorService", WordUtils.capitalizeFully(this.name()));
         this.extension = extension;
     }
 
