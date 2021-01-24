@@ -14,7 +14,13 @@ public class RunnerServiceTests {
     private RunnerService runnerService;
 
     @Test
-    public void todo() {
+    public void runSuccess() {
 
+    }
+
+    @Test
+    public void runFails() {
+        // 1. Returns the given ApiError
+        // 2. deleteTempFolder is still called if an error occurs
     }
 }

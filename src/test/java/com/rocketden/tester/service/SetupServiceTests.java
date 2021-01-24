@@ -14,7 +14,18 @@ public class SetupServiceTests {
     private SetupService setupService;
 
     @Test
-    public void todo() {
+    public void createTempFolderSuccess() {
+        // Driver and Solution files are supposedly created (mocked)
+        // Returns correct folder path
+    }
 
+    @Test
+    public void deleteTempFolderSuccess() {
+
+    }
+
+    @Test
+    public void deleteTempFolderInvalidFolder() {
+        
     }
 }

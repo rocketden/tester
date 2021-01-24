@@ -14,7 +14,7 @@ public class DockerServiceTests {
     private DockerService dockerService;
 
     @Test
-    public void todo() {
-
+    public void spawnAndRunSuccess() {
+        // This will be very challenging to test (perhaps covered by the API tests)
     }
 }

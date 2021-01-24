@@ -50,4 +50,14 @@ class JavaTests {
         assertTrue(runDto.isStatus());
         assertEquals("hi", runDto.getOutput());
     }
+
+    @Test
+    public void runRequestWrongAnswer() throws Exception {
+
+    }
+
+    @Test
+    public void runRequestErrorOccurred() throws Exception {
+
+    }
 }

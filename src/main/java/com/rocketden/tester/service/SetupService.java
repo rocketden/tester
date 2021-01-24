@@ -69,6 +69,7 @@ public class SetupService {
     }
 
     public void deleteTempFolder(String folder) {
+        // TODO: add check to only allow folders inside temp to be deleted
         try {
             FileUtils.deleteDirectory(new File(folder));
         } catch (IOException e) {
