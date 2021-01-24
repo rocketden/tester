@@ -1,4 +1,4 @@
 #!/bin/bash
 
-gcc -o ./script Solution.c
+gcc -o ./script Driver.c
 ./script

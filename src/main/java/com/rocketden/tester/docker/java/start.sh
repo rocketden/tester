@@ -1,4 +1,4 @@
 #!/bin/bash
 
-javac ./Solution.java
-java Solution
+javac ./Driver.java
+java Driver

@@ -1,4 +1,4 @@
 #!/bin/bash
 
-swiftc -o script Solution.swift
+swiftc -o script Driver.swift
 ./script
