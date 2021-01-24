@@ -1,5 +1,6 @@
-package com.rocketden.tester;
+package com.rocketden.tester.api;
 
+import com.rocketden.tester.util.UtilityTestMethods;
 import com.rocketden.tester.dto.RunDto;
 import com.rocketden.tester.dto.RunRequest;
 import com.rocketden.tester.model.Language;
@@ -20,7 +21,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-class RunnerTests {
+class PythonTests {
 
 	@Autowired
 	private MockMvc mockMvc;

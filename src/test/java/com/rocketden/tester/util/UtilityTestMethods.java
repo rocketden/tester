@@ -1,6 +1,4 @@
-package com.rocketden.tester;
-
-import java.lang.reflect.Type;
+package com.rocketden.tester.util;
 
 import com.google.gson.Gson;
 
