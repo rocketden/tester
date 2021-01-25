@@ -10,6 +10,7 @@ import com.rocketden.tester.model.problem.Problem;
 import com.rocketden.tester.model.problem.ProblemIOType;
 import com.rocketden.tester.service.DriverGeneratorService;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -129,15 +130,15 @@ public class JavaDriverGeneratorService implements DriverGeneratorService {
             case BOOLEAN:
                 return String.format("%b", (Boolean) value);
             case ARRAY_STRING:
-                return "String[]";
+                return String.format("{%s}", String.join(", ", (String[]) value));
             case ARRAY_INTEGER:
-                return "int[]";
+                return String.format("{%s}", StringUtils.join((Integer[]) value, ", "));
             case ARRAY_DOUBLE:
-                return "double[]";
+                return String.format("{%s}", StringUtils.join((Double[]) value, ", "));
             case ARRAY_CHARACTER:
-                return "char[]";
+                return String.format("{%s}", StringUtils.join((Character[]) value, ", "));
             case ARRAY_BOOLEAN:
-                return "boolean[]";
+                return String.format("{%s}", StringUtils.join((Boolean[]) value, ", "));
             default:
                 return "";
         }
