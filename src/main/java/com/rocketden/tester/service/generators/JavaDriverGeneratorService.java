@@ -73,4 +73,10 @@ public class JavaDriverGeneratorService implements DriverGeneratorService {
         // TODO Auto-generated method stub
 
     }
+
+    @Override
+    public void writeToStringCode() {
+        // TODO Auto-generated method stub
+
+    }
 }

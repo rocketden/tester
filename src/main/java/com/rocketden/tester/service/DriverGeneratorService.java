@@ -16,5 +16,7 @@ public interface DriverGeneratorService {
     void writeExecuteTestCases(Problem problem);
 
     void writeEndingBoilerplate();
+
+    void writeToStringCode();
     
 }
