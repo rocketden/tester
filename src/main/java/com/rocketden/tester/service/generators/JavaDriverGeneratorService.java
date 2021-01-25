@@ -84,8 +84,30 @@ public class JavaDriverGeneratorService implements DriverGeneratorService {
 
     @Override
     public String typeInstantiationToString(ProblemIOType ioType) {
-        // TODO Auto-generated method stub
-        return null;
+        switch (ioType) {
+            case STRING:
+                return "String";
+            case INTEGER:
+                return "int";
+            case DOUBLE:
+                return "double";
+            case CHARACTER:
+                return "char";
+            case BOOLEAN:
+                return "boolean";
+            case ARRAY_STRING:
+                return "String[]";
+            case ARRAY_INTEGER:
+                return "int[]";
+            case ARRAY_DOUBLE:
+                return "double[]";
+            case ARRAY_CHARACTER:
+                return "char[]";
+            case ARRAY_BOOLEAN:
+                return "boolean[]";
+            default:
+                return "";
+        }
     }
 
     @Override
