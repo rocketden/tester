@@ -6,6 +6,7 @@ import java.io.IOException;
 import com.rocketden.tester.exception.DockerSetupError;
 import com.rocketden.tester.exception.api.ApiException;
 import com.rocketden.tester.model.problem.Problem;
+import com.rocketden.tester.model.problem.ProblemIOType;
 import com.rocketden.tester.service.DriverGeneratorService;
 
 import org.springframework.stereotype.Service;
@@ -42,7 +43,7 @@ public class PythonDriverGeneratorService implements DriverGeneratorService {
                 writer.write(String.format("\t\tprint('Error (%d):')%n", testCase));
                 writer.write("\t\ttraceback.print_exc()\n");
             }
-            
+
             // Boilerplate ending setup.
             writer.write("if __name__ == \"__main__\":\n");
             writer.write("\tmain()\n");
@@ -50,8 +51,6 @@ public class PythonDriverGeneratorService implements DriverGeneratorService {
             throw new ApiException(DockerSetupError.WRITE_CODE_TO_DISK);
         }
     }
-
-
 
     @Override
     public void writeStartingBoilerplate() {
@@ -81,5 +80,17 @@ public class PythonDriverGeneratorService implements DriverGeneratorService {
     public void writeToStringCode() {
         // TODO Auto-generated method stub
 
+    }
+
+    @Override
+    public String typeInstantiationToString(ProblemIOType ioType) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public String typeInitializationToString(ProblemIOType ioType, Object[] values) {
+        // TODO Auto-generated method stub
+        return null;
     }
 }

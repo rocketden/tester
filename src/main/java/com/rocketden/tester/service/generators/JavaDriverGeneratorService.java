@@ -6,6 +6,7 @@ import java.io.IOException;
 import com.rocketden.tester.exception.DockerSetupError;
 import com.rocketden.tester.exception.api.ApiException;
 import com.rocketden.tester.model.problem.Problem;
+import com.rocketden.tester.model.problem.ProblemIOType;
 import com.rocketden.tester.service.DriverGeneratorService;
 
 import org.springframework.stereotype.Service;
@@ -33,7 +34,8 @@ public class JavaDriverGeneratorService implements DriverGeneratorService {
                 writer.write(String.format("\t\tSystem.out.println(\"Console (%d):\");%n", testCase));
                 // Use try-catch block to print any errors.
                 writer.write("\t\ttry {\n");
-                writer.write(String.format("\t\t\tInteger solution%d = solution.multiplyDouble(test%dvar1);%n", testCase, testCase));
+                writer.write(String.format("\t\t\tInteger solution%d = solution.multiplyDouble(test%dvar1);%n",
+                        testCase, testCase));
                 writer.write(String.format("\t\t\tSystem.out.println(\"Solution (%d):\");%n", testCase));
                 writer.write(String.format("\t\t\tSystem.out.println(solution%d.toString());%n", testCase));
                 writer.write("\t\t} catch (Exception e) {\n");
@@ -41,7 +43,7 @@ public class JavaDriverGeneratorService implements DriverGeneratorService {
                 writer.write("\t\t\te.printStackTrace();\n");
                 writer.write("\t\t}\n");
             }
-            
+
             // Boilerplate ending setup.
             writer.write("\t}\n");
             writer.write("}\n");
@@ -78,5 +80,17 @@ public class JavaDriverGeneratorService implements DriverGeneratorService {
     public void writeToStringCode() {
         // TODO Auto-generated method stub
 
+    }
+
+    @Override
+    public String typeInstantiationToString(ProblemIOType ioType) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public String typeInitializationToString(ProblemIOType ioType, Object[] values) {
+        // TODO Auto-generated method stub
+        return null;
     }
 }
