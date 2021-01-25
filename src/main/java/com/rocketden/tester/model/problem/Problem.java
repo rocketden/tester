@@ -20,4 +20,3 @@ public class Problem {
     private Map<String, ProblemIOType> inputNameTypeMap;
     private ProblemIOType outputType;
 }
-
