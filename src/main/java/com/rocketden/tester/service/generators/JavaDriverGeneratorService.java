@@ -126,7 +126,7 @@ public class JavaDriverGeneratorService implements DriverGeneratorService {
             case DOUBLE:
                 return String.format("%f", (Double) value);
             case CHARACTER:
-                return String.format("%c", (Character) value);
+                return String.format("'%c'", (Character) value);
             case BOOLEAN:
                 return String.format("%b", (Boolean) value);
             case ARRAY_STRING:
