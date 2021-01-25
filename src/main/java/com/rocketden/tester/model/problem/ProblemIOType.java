@@ -36,7 +36,7 @@ public enum ProblemIOType {
         }
     }
 
-    public boolean typeMatches(ProblemIOType ioType, Object value) {
-        return value.getClass().equals(ioType.getClass());
+    public boolean typeMatches(Object value) {
+        return value.getClass().equals(this.getClassType());
     }
 }

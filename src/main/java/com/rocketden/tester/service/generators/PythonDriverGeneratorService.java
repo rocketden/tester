@@ -89,7 +89,7 @@ public class PythonDriverGeneratorService implements DriverGeneratorService {
     }
 
     @Override
-    public String typeInitializationToString(ProblemIOType ioType, Object[] values) {
+    public String typeInitializationToString(ProblemIOType ioType, Object value) {
         // TODO Auto-generated method stub
         return null;
     }

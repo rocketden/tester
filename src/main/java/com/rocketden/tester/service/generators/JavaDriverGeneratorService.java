@@ -4,6 +4,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 import com.rocketden.tester.exception.DockerSetupError;
+import com.rocketden.tester.exception.ProblemError;
 import com.rocketden.tester.exception.api.ApiException;
 import com.rocketden.tester.model.problem.Problem;
 import com.rocketden.tester.model.problem.ProblemIOType;
@@ -111,20 +112,22 @@ public class JavaDriverGeneratorService implements DriverGeneratorService {
     }
 
     @Override
-    public String typeInitializationToString(ProblemIOType ioType, Object[] values) {
-        Object[] valuesTest = new String[1];
-        valuesTest[0] = "test";
+    public String typeInitializationToString(ProblemIOType ioType, Object value) {
+        if (!ioType.typeMatches(value)) {
+            throw new ApiException(ProblemError.OBJECT_MATCH_IOTYPE);
+        }
+
         switch (ioType) {
             case STRING:
-                return "String";
+                return String.format("\"%s\"", (String) value);
             case INTEGER:
-                return "int";
+                return String.format("%d", (Integer) value);
             case DOUBLE:
-                return "double";
+                return String.format("%f", (Double) value);
             case CHARACTER:
-                return "char";
+                return String.format("%c", (Character) value);
             case BOOLEAN:
-                return "boolean";
+                return String.format("%b", (Boolean) value);
             case ARRAY_STRING:
                 return "String[]";
             case ARRAY_INTEGER:

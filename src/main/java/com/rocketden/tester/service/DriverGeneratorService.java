@@ -24,6 +24,6 @@ public interface DriverGeneratorService {
     String typeInstantiationToString(ProblemIOType ioType);
 
     // The implementation of the object's initialization.
-    String typeInitializationToString(ProblemIOType ioType, Object[] values);
+    String typeInitializationToString(ProblemIOType ioType, Object value);
 
 }

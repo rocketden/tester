@@ -9,7 +9,8 @@ import org.springframework.http.HttpStatus;
 public enum ProblemError implements ApiError {
 
     BAD_DIFFICULTY(HttpStatus.BAD_REQUEST, "Please choose either Easy, Medium, or Hard (or Random if choosing a room difficulty)."),
-    BAD_IOTYPE(HttpStatus.BAD_REQUEST, "Please choose a value Problem IO Type.");
+    BAD_IOTYPE(HttpStatus.BAD_REQUEST, "Please choose a value Problem IO Type."),
+    OBJECT_MATCH_IOTYPE(HttpStatus.BAD_REQUEST, "The provided object does not match the specified Problem IO Type.");
 
     private final HttpStatus status;
     private final ApiErrorResponse response;
