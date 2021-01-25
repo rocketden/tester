@@ -79,11 +79,16 @@ public class SetupServiceTests {
     @Test
     public void deleteTempFolderInvalidFolder() {
         String pwd = Paths.get("").toAbsolutePath().toString();
-        String relativePath = "src/main/java/com/rocketden/tester/nontempfolder";
+        String relativePath = "src/main/java/com/rocketden/tester";
 
-        String safeTestDeletePath = String.format("%s/%s", pwd, relativePath);
-        ApiException exception = assertThrows(ApiException.class, () -> setupService.deleteTempFolder(safeTestDeletePath));
+        String safeTestDeletePath1 = String.format("%s/%s/nontempfolder", pwd, relativePath);
+        ApiException exception = assertThrows(ApiException.class, () -> setupService.deleteTempFolder(safeTestDeletePath1));
 
-        assertEquals(DockerSetupError.DELETE_TEMP_FOLDER, exception.getError());
+        assertEquals(DockerSetupError.INVALID_DELETE_PATH, exception.getError());
+
+        String safeTestDeletePath2 = String.format("%s/%s/temp/../nontempfolder", pwd, relativePath);
+        exception = assertThrows(ApiException.class, () -> setupService.deleteTempFolder(safeTestDeletePath2));
+
+        assertEquals(DockerSetupError.INVALID_DELETE_PATH, exception.getError());
     }
 }

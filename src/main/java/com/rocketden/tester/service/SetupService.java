@@ -30,7 +30,7 @@ public class SetupService {
     public String createTempFolder(RunRequest request) {
         Language language = request.getLanguage();
         Problem problem = request.getProblem();
-        
+
         String pwd = Paths.get("").toAbsolutePath().toString();
         String relativePath = "src/main/java/com/rocketden/tester";
         String folder = String.format("%s/%s/temp/%s", pwd, relativePath, generateRandomFolderName());
@@ -38,8 +38,8 @@ public class SetupService {
 
         if (success) {
             String code = request.getCode();
-            String driverFile = String.format("%s/Driver.%s/", folder, language.getExtension());
-            String solutionFile = String.format("%s/Solution.%s/", folder, language.getExtension());
+            String driverFile = String.format("%s/Driver.%s", folder, language.getExtension());
+            String solutionFile = String.format("%s/Solution.%s", folder, language.getExtension());
 
             try {
                 // Create a file with the contents of the code variable
@@ -56,7 +56,10 @@ public class SetupService {
     }
 
     public void deleteTempFolder(String folder) {
-        // TODO: add check to only allow folders inside temp to be deleted
+        if (folder.contains("..") || !folder.contains("src/main/java/com/rocketden/tester/temp/")) {
+            throw new ApiException(DockerSetupError.INVALID_DELETE_PATH);
+        }
+
         try {
             FileUtils.deleteDirectory(new File(folder));
         } catch (IOException e) {
