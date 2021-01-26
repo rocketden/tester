@@ -2,7 +2,10 @@ package com.rocketden.tester.service.generators;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import com.rocketden.tester.exception.ProblemError;
+import com.rocketden.tester.exception.api.ApiException;
 import com.rocketden.tester.model.problem.ProblemIOType;
 
 import org.junit.jupiter.api.Test;
@@ -31,10 +34,18 @@ public class PythonDriverGeneratorServiceTests {
     private final static Character[] ARRAY_CHARACTER_INPUT = {'s', 'h', 'i'};
     private final static Boolean[] ARRAY_BOOLEAN_INPUT = {false, true, true};
 
+    /**
+     * INSTANTIATION TESTS
+     */
+
     @Test
     public void typeInstantiationToString() {
         assertNull(service.typeInstantiationToString(null));
     }
+
+    /**
+     * INITIALIZATION TESTS
+     */
 
     @Test
     public void typeInitializationToStringString() {
@@ -89,5 +100,21 @@ public class PythonDriverGeneratorServiceTests {
     public void typeInitializationToStringArrayBoolean() {
         assertEquals("[false, true, true]", 
             service.typeInitializationToString(ProblemIOType.ARRAY_BOOLEAN, ARRAY_BOOLEAN_INPUT));
+    }
+
+    @Test
+    public void typeInitializationToStringNullError() {
+        ApiException exception = assertThrows(ApiException.class, () ->
+            service.typeInitializationToString(null, ARRAY_BOOLEAN_INPUT));
+        assertEquals(ProblemError.OBJECT_MATCH_IOTYPE, exception.getError());
+        ;
+    }
+
+    @Test
+    public void typeInitializationToStringMismatchError() {
+        ApiException exception = assertThrows(ApiException.class, () ->
+            service.typeInitializationToString(ProblemIOType.STRING, CHARACTER_INPUT));
+        assertEquals(ProblemError.OBJECT_MATCH_IOTYPE, exception.getError());
+        ;
     }
 }

@@ -92,7 +92,7 @@ public class PythonDriverGeneratorService implements DriverGeneratorService {
 
     @Override
     public String typeInitializationToString(ProblemIOType ioType, Object value) {
-        if (!ioType.typeMatches(value)) {
+        if (ioType == null || value == null || !ioType.typeMatches(value)) {
             throw new ApiException(ProblemError.OBJECT_MATCH_IOTYPE);
         }
 
