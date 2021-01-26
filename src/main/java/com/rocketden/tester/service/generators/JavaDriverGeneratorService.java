@@ -8,7 +8,6 @@ import com.rocketden.tester.exception.ProblemError;
 import com.rocketden.tester.exception.api.ApiException;
 import com.rocketden.tester.model.problem.Problem;
 import com.rocketden.tester.model.problem.ProblemIOType;
-import com.rocketden.tester.service.DriverGeneratorService;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;

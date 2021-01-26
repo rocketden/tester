@@ -1,4 +1,4 @@
-package com.rocketden.tester.service;
+package com.rocketden.tester.service.generators;
 
 import com.rocketden.tester.model.problem.Problem;
 import com.rocketden.tester.model.problem.ProblemIOType;
