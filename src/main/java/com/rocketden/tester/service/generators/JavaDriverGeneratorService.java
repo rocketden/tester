@@ -9,6 +9,7 @@ import com.google.gson.Gson;
 import com.rocketden.tester.exception.DockerSetupError;
 import com.rocketden.tester.exception.ProblemError;
 import com.rocketden.tester.exception.api.ApiException;
+import com.rocketden.tester.model.Language;
 import com.rocketden.tester.model.problem.Problem;
 import com.rocketden.tester.model.problem.ProblemIOType;
 import com.rocketden.tester.model.problem.ProblemTestCase;
@@ -106,7 +107,7 @@ public class JavaDriverGeneratorService implements DriverGeneratorService {
             writer.write("\t\ttry {\n");
 
             // Write the base setup (w/o parameters) of calling user's solution.
-            writer.write(String.format("\t\t\t%s solution%d = solution.multiplyDouble(", outputType, testNum));
+            writer.write(String.format("\t\t\t%s solution%d = solution.%s(", outputType, testNum, problem.getMethodNames().get(Language.JAVA)));
             
             // Record the input (parameter) names for the function call.
             Iterator<Entry<String, ProblemIOType>> inputIterator = problem.getInputNameTypeMap().entrySet().iterator();

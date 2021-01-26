@@ -9,6 +9,7 @@ import com.google.gson.Gson;
 import com.rocketden.tester.exception.DockerSetupError;
 import com.rocketden.tester.exception.ProblemError;
 import com.rocketden.tester.exception.api.ApiException;
+import com.rocketden.tester.model.Language;
 import com.rocketden.tester.model.problem.Problem;
 import com.rocketden.tester.model.problem.ProblemIOType;
 import com.rocketden.tester.model.problem.ProblemTestCase;
@@ -23,7 +24,7 @@ public class PythonDriverGeneratorService implements DriverGeneratorService {
     public void writeDriverFile(String fileDirectory, Problem problem) {
         // Open writer using try-with-resources.
         try (FileWriter writer = new FileWriter(fileDirectory)) {
-            writeStartingBoilerplate(writer, problem.getMethodName());
+            writeStartingBoilerplate(writer, problem.getMethodNames().get(Language.PYTHON));
             writeTestCases(writer, problem);
             writeExecuteTestCases(writer, problem);
             writeEndingBoilerplate(writer);
