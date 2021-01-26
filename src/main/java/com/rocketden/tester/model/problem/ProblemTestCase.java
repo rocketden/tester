@@ -8,5 +8,4 @@ import lombok.Setter;
 public class ProblemTestCase {
     private String input;
     private String output;
-    private Problem problem;
 }

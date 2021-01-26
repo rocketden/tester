@@ -55,25 +55,25 @@ public class PythonDriverGeneratorService implements DriverGeneratorService {
     }
 
     @Override
-    public void writeStartingBoilerplate() {
+    public void writeStartingBoilerplate(FileWriter writer) throws IOException {
         // TODO Auto-generated method stub
 
     }
 
     @Override
-    public void writeTestCases(Problem problem) {
+    public void writeTestCases(FileWriter writer, Problem problem) throws IOException {
         // TODO Auto-generated method stub
 
     }
 
     @Override
-    public void writeExecuteTestCases(Problem problem) {
+    public void writeExecuteTestCases(FileWriter writer, Problem problem) throws IOException {
         // TODO Auto-generated method stub
 
     }
 
     @Override
-    public void writeEndingBoilerplate() {
+    public void writeEndingBoilerplate(FileWriter writer) throws IOException {
         // TODO Auto-generated method stub
 
     }
