@@ -31,6 +31,56 @@ public class JavaDriverGeneratorServiceTests {
     private final static Boolean[] ARRAY_BOOLEAN_INPUT = {false, true, true};
 
     @Test
+    public void typeInstantiationToStringString() {
+        assertEquals("String", service.typeInstantiationToString(ProblemIOType.STRING));
+    }
+
+    @Test
+    public void typeInstantiationToStringInteger() {
+        assertEquals("int", service.typeInstantiationToString(ProblemIOType.INTEGER));
+    }
+
+    @Test
+    public void typeInstantiationToStringDouble() {
+        assertEquals("double", service.typeInstantiationToString(ProblemIOType.DOUBLE));
+    }
+
+    @Test
+    public void typeInstantiationToStringCharacter() {
+        assertEquals("char", service.typeInstantiationToString(ProblemIOType.CHARACTER));
+    }
+
+    @Test
+    public void typeInstantiationToStringBoolean() {
+        assertEquals("boolean", service.typeInstantiationToString(ProblemIOType.BOOLEAN));
+    }
+
+    @Test
+    public void typeInstantiationToStringArrayString() {
+        assertEquals("String[]", service.typeInstantiationToString(ProblemIOType.ARRAY_STRING));
+    }
+
+    @Test
+    public void typeInstantiationToStringArrayInteger() {
+        assertEquals("int[]", service.typeInstantiationToString(ProblemIOType.ARRAY_INTEGER));
+    }
+
+    @Test
+    public void typeInstantiationToStringArrayDouble() {
+        assertEquals("double[]", service.typeInstantiationToString(ProblemIOType.ARRAY_DOUBLE));
+    }
+
+    @Test
+    public void typeInstantiationToStringArrayCharacter() {
+        assertEquals("char[]", service.typeInstantiationToString(ProblemIOType.ARRAY_CHARACTER));
+    }
+
+    @Test
+    public void typeInstantiationToStringArrayBoolean() {
+        assertEquals("boolean[]", service.typeInstantiationToString(ProblemIOType.ARRAY_BOOLEAN));
+    }
+
+    @Test
     public void typeInitializationToStringString() {
         assertEquals("\"input\"", service.typeInitializationToString(ProblemIOType.STRING, STRING_INPUT));
     }
