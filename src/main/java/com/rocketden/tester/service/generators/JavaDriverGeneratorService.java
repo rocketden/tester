@@ -2,6 +2,7 @@ package com.rocketden.tester.service.generators;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.Map.Entry;
 
 import com.google.gson.Gson;
@@ -90,41 +91,49 @@ public class JavaDriverGeneratorService implements DriverGeneratorService {
 
     @Override
     public void writeExecuteTestCases(FileWriter writer, Problem problem) throws IOException {
-        // Get solutions from the user code.
+        // Instantiate and initialize solution class object to call user code.
         writer.write("\t\tSolution solution = new Solution();\n");
 
-        // Write test cases.
-        int testNum = 1;
-        String output = typeInstantiationToString(problem.getOutputType());
-        for (ProblemTestCase tc : problem.getTestCases()) {
+        // Get output to hold the instantiation output (return) type.
+        String outputType = typeInstantiationToString(problem.getOutputType());
+
+        // Execute each of the test cases within separate try-catch blocks.
+        for (int testNum = 1; testNum <= problem.getTestCases().size(); testNum++) {
+            // Print line to predict any console output.
             writer.write(String.format("\t\tSystem.out.println(\"Console (%d):\");%n", testNum));
+
             // Use try-catch block to print any errors.
             writer.write("\t\ttry {\n");
-            writer.write(String.format("\t\t\t%s solution%d = solution.multiplyDouble(", output, testNum));
+
+            // Write the base setup (w/o parameters) of calling user's solution.
+            writer.write(String.format("\t\t\t%s solution%d = solution.multiplyDouble(", outputType, testNum));
             
-            // Record multiple inputs.
-            int inputNum = 1;
-            for (Entry<String, ProblemIOType> input : problem.getInputNameTypeMap().entrySet()) {
-                writer.write(String.format("%s%d", input.getKey(),
-                    testNum));
+            // Record the input (parameter) names for the function call.
+            Iterator<Entry<String, ProblemIOType>> inputIterator = problem.getInputNameTypeMap().entrySet().iterator();
+            while (inputIterator.hasNext()) {
+                Entry<String, ProblemIOType> input = inputIterator.next();
+
+                // Write the input (parameter) variable name.
+                writer.write(String.format("%s%d", input.getKey(), testNum));
 
                 // Add comma + space, if more inputs are present.
-                if (inputNum != problem.getInputNameTypeMap().size()) {
+                if (inputIterator.hasNext()) {
                     writer.write(", ");
                 }
-                
-                inputNum++;
             }
+
+            // End the call of the user's function / code.
             writer.write(");\n");
 
+            // Print line to predict, then print, any solution output.
             writer.write(String.format("\t\t\tSystem.out.println(\"Solution (%d):\");%n", testNum));
             writer.write(String.format("\t\t\tSystem.out.println(solution%d);%n", testNum));
+
+            // Catch and print any errors that arise from calling user's code.
             writer.write("\t\t} catch (Exception e) {\n");
             writer.write(String.format("\t\t\tSystem.out.println(\"Error (%d):\");%n", testNum));
             writer.write("\t\t\te.printStackTrace();\n");
             writer.write("\t\t}\n");
-
-            testNum++;
         }
     }
 
