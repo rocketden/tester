@@ -130,13 +130,13 @@ public class JavaDriverGeneratorService implements DriverGeneratorService {
             case BOOLEAN:
                 return String.format("%b", (Boolean) value);
             case ARRAY_STRING:
-                return String.format("{%s}", String.join(", ", (String[]) value));
+                return String.format("{\"%s\"}", String.join("\", \"", (String[]) value));
             case ARRAY_INTEGER:
                 return String.format("{%s}", StringUtils.join((Integer[]) value, ", "));
             case ARRAY_DOUBLE:
                 return String.format("{%s}", StringUtils.join((Double[]) value, ", "));
             case ARRAY_CHARACTER:
-                return String.format("{%s}", StringUtils.join((Character[]) value, ", "));
+                return String.format("{'%s'}", StringUtils.join((Character[]) value, "', '"));
             case ARRAY_BOOLEAN:
                 return String.format("{%s}", StringUtils.join((Boolean[]) value, ", "));
             default:
