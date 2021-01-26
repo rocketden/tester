@@ -23,12 +23,7 @@ public class PythonDriverGeneratorService implements DriverGeneratorService {
     public void writeDriverFile(String fileDirectory, Problem problem) {
         // Open writer using try-with-resources.
         try (FileWriter writer = new FileWriter(fileDirectory)) {
-            writeStartingBoilerplate(writer);
-
-            // Import requires method name.
-            writer.write(String.format("from Solution import %s%n%n", problem.getMethodName()));
-            writer.write("def main():\n");
-
+            writeStartingBoilerplate(writer, problem.getMethodName());
             writeTestCases(writer, problem);
             writeExecuteTestCases(writer, problem);
             writeEndingBoilerplate(writer);
@@ -38,10 +33,12 @@ public class PythonDriverGeneratorService implements DriverGeneratorService {
     }
 
     @Override
-    public void writeStartingBoilerplate(FileWriter writer) throws IOException {
+    public void writeStartingBoilerplate(FileWriter writer, String... params) throws IOException {
         writer.write("import traceback\n");
         writer.write("import os\n");
         writer.write("os.chdir(os.getcwd())\n\n");
+        writer.write(String.format("from Solution import %s%n%n", params[0]));
+        writer.write("def main():\n");
     }
 
     @Override

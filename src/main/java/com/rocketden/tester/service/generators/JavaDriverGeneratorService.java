@@ -33,7 +33,7 @@ public class JavaDriverGeneratorService implements DriverGeneratorService {
     }
 
     @Override
-    public void writeStartingBoilerplate(FileWriter writer) throws IOException {
+    public void writeStartingBoilerplate(FileWriter writer, String... params) throws IOException {
         writer.write("public class Driver {\n");
         writer.write("\tpublic static void main (String[] args) {\n");
     }
