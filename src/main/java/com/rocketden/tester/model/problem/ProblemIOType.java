@@ -13,7 +13,7 @@ public enum ProblemIOType {
     INTEGER(Integer.class),
     DOUBLE(Double.class),
     CHARACTER(Character.class),
-    BOOLEAN(Boolean[].class),
+    BOOLEAN(Boolean.class),
     ARRAY_STRING(String[].class),
     ARRAY_INTEGER(Integer[].class),
     ARRAY_DOUBLE(Double[].class),
