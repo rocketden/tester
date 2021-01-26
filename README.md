@@ -7,11 +7,11 @@ and runs it against a set of test cases.
 
 To manually set up, prepare, and test the Docker system used in this app, follow these steps:
 
-* Run `build.sh` in the `docker` folder any time you make changes to files in that folder
-  * This will build the Docker image that serves as a "template" for our disposable containers
-* Run `start.sh` in the `docker` folder passing in the name of a directory in `temp`
+* Run `docker-compose up` in the `docker` folder any time you make changes to files in that folder
+  * This will build the Docker images that serve as "templates" for our disposable containers
+* Run `start.sh` in the `docker` folder passing in the name of a directory in `temp` and language
   * This will create and run a disposable container that executes the code in the given folder
-  * e.g. `bash start.sh folder123`
+  * e.g. `bash start.sh folder123 java`
 
 ## Proposed Structure
 
