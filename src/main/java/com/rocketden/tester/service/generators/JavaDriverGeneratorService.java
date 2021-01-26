@@ -40,12 +40,15 @@ public class JavaDriverGeneratorService implements DriverGeneratorService {
     @Override
     public void writeTestCases(FileWriter writer, Problem problem) throws IOException {
 
-
         /**
-         * 
+         * Write the test case input parameter variables at the top of the file.
+         * Iterate through the test cases, and then each of the problem inputs;
+         * these are used to construct the input parameter variables.
          */
         int testNum = 1;
-        for (ProblemTestCase tc : problem.getTestCases()) {
+        for (ProblemTestCase testCase : problem.getTestCases()) {
+
+            // Iterate through the entries of inputs, which hold name and type.
             for (Entry<String, ProblemIOType> input : problem.getInputNameTypeMap().entrySet()) {
 
                 // Get instantiation to hold the input type.
@@ -60,7 +63,7 @@ public class JavaDriverGeneratorService implements DriverGeneratorService {
                     typeInitializationToString(
                         input.getValue(),
                         gson.fromJson(
-                            tc.getInput(),
+                            testCase.getInput(),
                             input.getValue().getClassType()
                         )
                     );
@@ -79,6 +82,8 @@ public class JavaDriverGeneratorService implements DriverGeneratorService {
                     )
                 );
             }
+
+            // Update the test number, used to distinguish the input params.
             testNum++;
         }
     }
