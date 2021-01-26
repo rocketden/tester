@@ -26,8 +26,8 @@ public class PythonDriverGeneratorService implements DriverGeneratorService {
             writeStartingBoilerplate(writer);
 
             // Import requires method name.
-            writer.write("from Solution import multiplyDouble\n\n");
-            writer.write("def main():\n\n");
+            writer.write(String.format("from Solution import %s%n%n", problem.getMethodName()));
+            writer.write("def main():\n");
 
             writeTestCases(writer, problem);
             writeExecuteTestCases(writer, problem);
@@ -93,9 +93,6 @@ public class PythonDriverGeneratorService implements DriverGeneratorService {
 
     @Override
     public void writeExecuteTestCases(FileWriter writer, Problem problem) throws IOException {
-        // Instantiate and initialize solution class object to call user code.
-        writer.write("\t\tSolution solution = new Solution();\n");
-
         // Execute each of the test cases within separate try-catch blocks.
         for (int testNum = 1; testNum <= problem.getTestCases().size(); testNum++) {
             // Print line to predict any console output.
@@ -105,7 +102,7 @@ public class PythonDriverGeneratorService implements DriverGeneratorService {
             writer.write("\ttry:\n");
 
             // Write the base setup (w/o parameters) of calling user's solution.
-            writer.write(String.format("\t\t\tsolution%d = multiplyDouble(", testNum));
+            writer.write(String.format("\t\tsolution%d = multiplyDouble(", testNum));
             
             // Record the input (parameter) names for the function call.
             Iterator<Entry<String, ProblemIOType>> inputIterator = problem.getInputNameTypeMap().entrySet().iterator();
@@ -131,7 +128,7 @@ public class PythonDriverGeneratorService implements DriverGeneratorService {
             // Catch and print any errors that arise from calling user's code.
             writer.write("\texcept Exception as e:\n");
             writer.write(String.format("\t\tprint('Error (%d):')%n", testNum));
-            writer.write("\t\ttraceback.print_exc()\n");
+            writer.write("\t\ttraceback.print_exc()\n\n");
         }
     }
 
