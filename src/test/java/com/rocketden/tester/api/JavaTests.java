@@ -53,11 +53,11 @@ class JavaTests {
 
     @Test
     public void runRequestWrongAnswer() throws Exception {
-
+        // TODO
     }
 
     @Test
     public void runRequestErrorOccurred() throws Exception {
-
+        // TODO
     }
 }
