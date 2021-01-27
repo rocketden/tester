@@ -1,7 +1,6 @@
 package com.rocketden.tester.service.generators;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.rocketden.tester.exception.ProblemError;
@@ -39,8 +38,11 @@ public class JavaDriverGeneratorServiceTests {
      */
 
     @Test
-    public void typeInstantiationToStringNullInput() {
-        assertNull(service.typeInstantiationToString(null));
+    public void typeInstantiationToStringNull() {
+        ApiException exception = assertThrows(ApiException.class, () ->
+            service.typeInstantiationToString(null));
+        assertEquals(ProblemError.BAD_IOTYPE, exception.getError());
+        ;
     }
     
     @Test
