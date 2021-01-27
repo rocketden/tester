@@ -67,7 +67,7 @@ public class InputParserTests {
     public void parseIntArray() {
         ProblemIOType expected = ProblemIOType.ARRAY_INTEGER;
 
-        Problem problem = testCaseGenerator("  [1   ,4, 99   ]", expected);
+        Problem problem = testCaseGenerator("  [1   ,4, 99,   ]", expected);
         ProblemTestCase testCase = problem.getTestCases().get(0);
 
         List<Object> output = inputParser.parseTestCase(problem, testCase);
@@ -120,21 +120,50 @@ public class InputParserTests {
 
     @Test
     public void parseFailsInvalidFormat() {
+        ProblemIOType expected = ProblemIOType.ARRAY_INTEGER;
 
+        Problem problem = testCaseGenerator("{1, 2, 3}", expected);
+        ProblemTestCase testCase = problem.getTestCases().get(0);
+
+        ApiException exception = assertThrows(ApiException.class, () -> inputParser.parseTestCase(problem, testCase));
+
+        assertEquals(ParserError.INVALID_INPUT, exception.getError());
     }
 
     @Test
     public void parseFailsTypeMismatch() {
-        // need to also test [1, "foo", true] mixed types
+        ProblemIOType expected = ProblemIOType.INTEGER;
+
+        Problem problem = testCaseGenerator("5.5", expected);
+        ProblemTestCase testCase = problem.getTestCases().get(0);
+
+        ApiException exception = assertThrows(ApiException.class, () -> inputParser.parseTestCase(problem, testCase));
+
+        assertEquals(ParserError.INVALID_INPUT, exception.getError());
     }
 
     @Test
     public void parseFailsArrayTypeMismatch() {
+        ProblemIOType expected = ProblemIOType.ARRAY_CHARACTER;
 
+        Problem problem = testCaseGenerator("[a, b, ccc]", expected);
+        ProblemTestCase testCase = problem.getTestCases().get(0);
+
+        ApiException exception = assertThrows(ApiException.class, () -> inputParser.parseTestCase(problem, testCase));
+
+        assertEquals(ParserError.INVALID_INPUT, exception.getError());
     }
 
     @Test
     public void parseFailsInvalidNumInputs() {
+        ProblemIOType type1 = ProblemIOType.STRING;
+        ProblemIOType type2 = ProblemIOType.INTEGER;
 
+        Problem problem = testCaseGenerator("hello", type1, type2);
+        ProblemTestCase testCase = problem.getTestCases().get(0);
+
+        ApiException exception = assertThrows(ApiException.class, () -> inputParser.parseTestCase(problem, testCase));
+
+        assertEquals(ParserError.INCORRECT_COUNT, exception.getError());
     }
 }
