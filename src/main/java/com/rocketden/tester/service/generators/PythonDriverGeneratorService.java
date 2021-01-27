@@ -35,11 +35,13 @@ public class PythonDriverGeneratorService implements DriverGeneratorService {
 
     @Override
     public void writeStartingBoilerplate(FileWriter writer) throws IOException {
-        writer.write("import traceback\n");
-        writer.write("import os\n");
-        writer.write("os.chdir(os.getcwd())\n");
-        writer.write("from Solution import Solution as solution\n\n");
-        writer.write("def main():\n");
+        writer.write(String.join("\n",
+            "import traceback",
+            "import os",
+            "os.chdir(os.getcwd())",
+            "from Solution import Solution as solution\n",
+            "def main():\n"
+        ));
     }
 
     @Override
@@ -119,21 +121,23 @@ public class PythonDriverGeneratorService implements DriverGeneratorService {
             // End the call of the user's function / code.
             writer.write(")\n");
 
-            // Print line to predict, then print, any solution output.
-            writer.write(String.format("\t\tprint('Solution (%d):')%n", testNum));
-            writer.write(String.format("\t\tprint(solution%d)%n", testNum));
-
-            // Catch and print any errors that arise from calling user's code.
-            writer.write("\texcept Exception as e:\n");
-            writer.write(String.format("\t\tprint('Error (%d):')%n", testNum));
-            writer.write("\t\ttraceback.print_exc()\n\n");
+            // Print solution output, catch errors that arise from method call.
+            writer.write(String.join("\n",
+                String.format("\t\tprint('Solution (%d):')", testNum),
+                String.format("\t\tprint(solution%d)", testNum),
+                "\texcept Exception as e:",
+                String.format("\t\tprint('Error (%d):')", testNum),
+                "\t\ttraceback.print_exc()\n\n"
+            ));
         }
     }
 
     @Override
     public void writeEndingBoilerplate(FileWriter writer) throws IOException {
-        writer.write("if __name__ == \"__main__\":\n");
-        writer.write("\tmain()\n");
+        writer.write(String.join("\n",
+            "if __name__ == \"__main__\":",
+            "\tmain()\n"
+        ));
     }
 
     @Override

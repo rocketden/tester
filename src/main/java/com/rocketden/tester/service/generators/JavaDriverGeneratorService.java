@@ -35,8 +35,10 @@ public class JavaDriverGeneratorService implements DriverGeneratorService {
 
     @Override
     public void writeStartingBoilerplate(FileWriter writer) throws IOException {
-        writer.write("public class Driver {\n");
-        writer.write("\tpublic static void main (String[] args) {\n");
+        writer.write(String.join("\n",
+            "public class Driver {",
+            "\tpublic static void main (String[] args) {\n"
+        ));
     }
 
     @Override
@@ -123,22 +125,24 @@ public class JavaDriverGeneratorService implements DriverGeneratorService {
             // End the call of the user's function / code.
             writer.write(");\n");
 
-            // Print line to predict, then print, any solution output.
-            writer.write(String.format("\t\t\tSystem.out.println(\"Solution (%d):\");%n", testNum));
-            writer.write(String.format("\t\t\tSystem.out.println(solution%d);%n", testNum));
-
-            // Catch and print any errors that arise from calling user's code.
-            writer.write("\t\t} catch (Exception e) {\n");
-            writer.write(String.format("\t\t\tSystem.out.println(\"Error (%d):\");%n", testNum));
-            writer.write("\t\t\te.printStackTrace();\n");
-            writer.write("\t\t}\n");
+            // Print solution output, catch errors that arise from method call.
+            writer.write(String.join("\n",
+                String.format("\t\t\tSystem.out.println(\"Solution (%d):\");", testNum),
+                String.format("\t\t\tSystem.out.println(solution%d);", testNum),
+                "\t\t} catch (Exception e) {",
+                String.format("\t\t\tSystem.out.println(\"Error (%d):\");", testNum),
+                "\t\t\te.printStackTrace();",
+                "\t\t}\n"
+            ));
         }
     }
 
     @Override
     public void writeEndingBoilerplate(FileWriter writer) throws IOException {
-        writer.write("\t}\n");
-        writer.write("}\n");
+        writer.write(String.join("\n",
+            "\t}",
+            "}\n"
+        ));
     }
 
     @Override
