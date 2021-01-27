@@ -10,6 +10,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -22,22 +23,38 @@ public class InputParserTests {
     @InjectMocks
     private InputParser inputParser;
 
-    @Test
-    public void parseDouble() {
+    // Helper method to create problem and inputs from given parameters
+    private Problem testCaseGenerator(String input, ProblemIOType... types) {
         ProblemTestCase testCase = new ProblemTestCase();
-        testCase.setInput("4");
+        testCase.setInput(input);
 
-        ProblemInput problemInput = new ProblemInput();
-        problemInput.setType(ProblemIOType.INTEGER);
+        List<ProblemInput> problemInputs = new ArrayList<>();
+        for (ProblemIOType type : types) {
+            ProblemInput problemInput = new ProblemInput();
+            problemInput.setType(type);
+
+            problemInputs.add(problemInput);
+        }
 
         Problem problem = new Problem();
+        problem.setProblemInputs(problemInputs);
         problem.setTestCases(Collections.singletonList(testCase));
-        problem.setProblemInputs(Collections.singletonList(problemInput));
+
+        return problem;
+    }
+
+    @Test
+    public void parseDouble() {
+        ProblemIOType expected = ProblemIOType.DOUBLE;
+
+        Problem problem = testCaseGenerator("56", expected);
+        ProblemTestCase testCase = problem.getTestCases().get(0);
 
         List<Object> output = inputParser.parseTestCase(problem, testCase);
 
         assertEquals(1, output.size());
-        assertEquals(ProblemIOType.INTEGER.getClassType(), output.get(0).getClass());
+        assertEquals(56.0, output.get(0));
+        assertEquals(expected.getClassType(), output.get(0).getClass());
 
     }
 
