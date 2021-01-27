@@ -14,13 +14,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 public class ProblemTests {
     @Test
     public void problemIOTypeSuccess() {
-        assertEquals(ProblemIOType.STRING, ProblemIOType.valueOf("string"));
+        assertEquals(ProblemIOType.STRING, ProblemIOType.fromString("string"));
     }
     
     @Test
     public void problemIOTypeBadType() {
         ApiException exception = assertThrows(ApiException.class, () ->
-            ProblemIOType.valueOf("nonexistenttype"));
+            ProblemIOType.fromString("nonexistenttype"));
         assertEquals(ProblemError.BAD_IOTYPE, exception.getError());
         ;
     }

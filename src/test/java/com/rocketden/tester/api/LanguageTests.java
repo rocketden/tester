@@ -14,13 +14,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 public class LanguageTests {
     @Test
     public void languageSuccess() {
-        assertEquals(Language.JAVA, Language.valueOf("java"));
+        assertEquals(Language.JAVA, Language.fromString("java"));
     }
     
     @Test
     public void languageBadType() {
         ApiException exception = assertThrows(ApiException.class, () ->
-            Language.valueOf("nonexistentlanguage"));
+            Language.fromString("nonexistentlanguage"));
         assertEquals(LanguageError.BAD_LANGUAGE, exception.getError());
         ;
     }
