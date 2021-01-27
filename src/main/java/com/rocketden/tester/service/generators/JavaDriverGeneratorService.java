@@ -92,9 +92,6 @@ public class JavaDriverGeneratorService implements DriverGeneratorService {
 
     @Override
     public void writeExecuteTestCases(FileWriter writer, Problem problem) throws IOException {
-        // Instantiate and initialize solution class object to call user code.
-        writer.write("\t\tSolution solution = new Solution();\n");
-
         // Get output to hold the instantiation output (return) type.
         String outputType = typeInstantiationToString(problem.getOutputType());
 
@@ -107,7 +104,7 @@ public class JavaDriverGeneratorService implements DriverGeneratorService {
             writer.write("\t\ttry {\n");
 
             // Write the base setup (w/o parameters) of calling user's solution.
-            writer.write(String.format("\t\t\t%s solution%d = solution.%s(", outputType, testNum, problem.getMethodNames().get(Language.JAVA)));
+            writer.write(String.format("\t\t\t%s solution%d = new Solution().%s(", outputType, testNum, problem.getMethodNames().get(Language.JAVA)));
             
             // Record the input (parameter) names for the function call.
             Iterator<ProblemInput> inputIterator = problem.getProblemInputs().iterator();
