@@ -1,10 +1,17 @@
 package com.rocketden.tester.service.parsers;
 
+import com.rocketden.tester.model.problem.Problem;
+import com.rocketden.tester.model.problem.ProblemIOType;
+import com.rocketden.tester.model.problem.ProblemInput;
+import com.rocketden.tester.model.problem.ProblemTestCase;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.Collections;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -17,6 +24,20 @@ public class InputParserTests {
 
     @Test
     public void parseDouble() {
+        ProblemTestCase testCase = new ProblemTestCase();
+        testCase.setInput("4");
+
+        ProblemInput problemInput = new ProblemInput();
+        problemInput.setType(ProblemIOType.INTEGER);
+
+        Problem problem = new Problem();
+        problem.setTestCases(Collections.singletonList(testCase));
+        problem.setProblemInputs(Collections.singletonList(problemInput));
+
+        List<Object> output = inputParser.parseTestCase(problem, testCase);
+
+        assertEquals(1, output.size());
+        assertEquals(ProblemIOType.INTEGER.getClassType(), output.get(0).getClass());
 
     }
 
@@ -53,14 +74,5 @@ public class InputParserTests {
     @Test
     public void parseFailsInvalidNumInputs() {
 
-    }
-
-    @Test
-    public void splitTestCaseIntoInputsSuccess() {
-        String input = "[1, 2, 3]\n4\ntrue";
-
-        String[] output = inputParser.splitTestCaseIntoInputs(input);
-
-        assertEquals(3, output.length);
     }
 }
