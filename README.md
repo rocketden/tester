@@ -54,28 +54,58 @@ have the following test case input (note how each individual line is JSON-parsab
 
 ## Driver Program
 
-General description of how it works. 
+After receiving a valid request, the tester service will generate a temporary
+folder where it will save the user's code in a `Solution.x` file (where `x` is
+the file extension for the given language) and generate a `Driver.x` file. The
+driver file contains the driver program that calls the user's solution code with
+each test case, capturing and returning the output of their program. After being
+run in an isolated docker container, the submission results are then returned 
+from the POST request and the temporary folder deleted.
 
-* Description of boilerplate code 
-* Description of input test case generation 
-* Description of generating call to method
-* Desription of capturing the output and saving it somehow (needs discussion)
-* Potential mention of solution code
-* Also mention error capturing and console print capturing
+### Driver Generation
+
+The driver program is dynamically generated based on the user's language of choice
+and by the details of the problem. For example, for a problem `int findMax(int[] array)`
+solved in Java, the driver program might be generated to look like the following:
+
+```java
+public class Driver {
+    public static void main(String[] args) {
+        int[] test_1_param_1 = {1, 2, 3};
+        int[] test_2_param_1 = {1, 2, 3};
+        ...
+        
+        try {
+            captureConsole();
+            int output_1 = new Solution().findMax(test_1_param_1);
+            captureOutput(output_1);
+        } catch (Exception e) {
+            captureError(e);
+        }
+
+        ...
+    }
+}
+```
+
+Above, `captureConsole`, `captureOutput`, and `captureError` are additional 
+generated methods that capture all 3 output types of the user's program, which
+will be evaluated and returned later on (TBD: how output will be saved).
 
 
 ## Supported Types 
 
-The following are the supported types for input and output of each method/problem: 
+The following are the supported types for method parameters and return type for 
+a problem: 
 
-* STRING
-* INTEGER
-* DOUBLE
-* CHARACTER
-* BOOLEAN
-* ARRAY_STRING
-* ARRAY_INTEGER
-* ARRAY_DOUBLE
-* ARRAY_CHARACTER
-* ARRAY_BOOLEAN
+* `STRING`
+* `INTEGER`
+* `DOUBLE`
+* `CHARACTER`
+* `BOOLEAN`
+* `ARRAY_STRING`
+* `ARRAY_INTEGER`
+* `ARRAY_DOUBLE`
+* `ARRAY_CHARACTER`
+* `ARRAY_BOOLEAN`
 
