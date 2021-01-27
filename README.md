@@ -20,12 +20,37 @@ To manually set up, prepare, and test the Docker system used in this app, follow
 * A docker container is created from this folder and executes the driver program
 * The output is captured and returned to the user
 
-## Input
+## Request Structure
 
-* Description of problem info (return, params)
-* Description of user code (in a Solution class auto generated on main)
-* Description of test cases (potentially JSON format, how it's parsed)
-* Potentially a solution file also submitted along with it
+The input for each POST request should contain three things: the problem, user code, and language.
+
+The problem provides several key pieces of information for judging: 
+
+* General name of method to implement (dynamic based on language, e.g. `sortList` vs. `sort_list`)
+* Names and types of method parameters (e.g. 1 param: "array", of type `ARRAY_INTEGER`)
+* Return type of method (e.g. `STRING`)
+* Test case inputs (format described below)
+* Test case outputs (TBD whether provided manually or through a solution file) 
+
+The boilerplate code for each problem is dynamically generated in Rocket Den's 
+[main](https://github.com/rocketden/main) repository, with the method typically
+residing in a `Solution` class or similar (depending on the language of choice). 
+Users are then responsible for implementing the method according to the problem
+description to pass the test cases.  
+
+### Input Format
+
+The test case inputs are created in a partial JSON format. If a problem has N
+method parameters, then a corresponding test case will be N lines long, with
+the ith line containing the JSON input for the ith method parameter. 
+
+e.g. A problem with method parameters `String[] values` and `Integer num` could 
+have the following test case input (note how each individual line is JSON-parsable): 
+
+```
+[hello, world]
+5
+```
 
 ## Driver Program
 

@@ -19,6 +19,7 @@ public class InputParser {
     private final Gson gson = new Gson();
 
     public List<Object> parseTestCase(Problem problem, ProblemTestCase testCase) {
+        // TODO: trim ending new lines
         List<ProblemInput> problemInputs = problem.getProblemInputs();
         String[] rawInputs = splitTestCaseIntoInputs(testCase.getInput());
 
