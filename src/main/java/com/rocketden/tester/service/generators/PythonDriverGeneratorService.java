@@ -24,7 +24,7 @@ public class PythonDriverGeneratorService implements DriverGeneratorService {
     public void writeDriverFile(String fileDirectory, Problem problem) {
         // Open writer using try-with-resources.
         try (FileWriter writer = new FileWriter(fileDirectory)) {
-            writeStartingBoilerplate(writer, problem.getMethodNames().get(Language.PYTHON));
+            writeStartingBoilerplate(writer);
             writeTestCases(writer, problem);
             writeExecuteTestCases(writer, problem);
             writeEndingBoilerplate(writer);
@@ -34,11 +34,11 @@ public class PythonDriverGeneratorService implements DriverGeneratorService {
     }
 
     @Override
-    public void writeStartingBoilerplate(FileWriter writer, String... params) throws IOException {
+    public void writeStartingBoilerplate(FileWriter writer) throws IOException {
         writer.write("import traceback\n");
         writer.write("import os\n");
-        writer.write("os.chdir(os.getcwd())\n\n");
-        writer.write(String.format("from Solution import %s%n%n", params[0]));
+        writer.write("os.chdir(os.getcwd())\n");
+        writer.write("from Solution import Solution as solution\n\n");
         writer.write("def main():\n");
     }
 
@@ -100,7 +100,7 @@ public class PythonDriverGeneratorService implements DriverGeneratorService {
             writer.write("\ttry:\n");
 
             // Write the base setup (w/o parameters) of calling user's solution.
-            writer.write(String.format("\t\tsolution%d = multiplyDouble(", testNum));
+            writer.write(String.format("\t\tsolution%d = solution.%s(", testNum, problem.getMethodNames().get(Language.PYTHON)));
             
             // Record the input (parameter) names for the function call.
             Iterator<ProblemInput> inputIterator = problem.getProblemInputs().iterator();

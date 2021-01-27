@@ -13,7 +13,7 @@ public interface DriverGeneratorService {
 
     void writeDriverFile(String fileDirectory, Problem problem);
 
-    void writeStartingBoilerplate(FileWriter writer, String... params) throws IOException;
+    void writeStartingBoilerplate(FileWriter writer) throws IOException;
 
     void writeTestCases(FileWriter writer, Problem problem) throws IOException;
 
