@@ -21,7 +21,6 @@ public class PythonDriverGeneratorServiceTests {
     @InjectMocks
     private PythonDriverGeneratorService service;
 
-    // TODO: Null inputs.
     // Default inputs for different data types.
     private final static String STRING_INPUT = "input";
     private final static Integer INTEGER_INPUT = 15;

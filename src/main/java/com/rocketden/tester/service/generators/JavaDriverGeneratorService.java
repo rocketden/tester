@@ -86,7 +86,7 @@ public class JavaDriverGeneratorService implements DriverGeneratorService {
     @Override
     public String typeInstantiationToString(ProblemIOType ioType) {
         if (ioType == null) {
-            return null;
+            throw new ApiException(ProblemError.BAD_IOTYPE);
         }
 
         switch (ioType) {
@@ -111,7 +111,7 @@ public class JavaDriverGeneratorService implements DriverGeneratorService {
             case ARRAY_BOOLEAN:
                 return "boolean[]";
             default:
-                return "";
+                throw new ApiException(ProblemError.BAD_IOTYPE);
         }
     }
 
