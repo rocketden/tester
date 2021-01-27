@@ -1,5 +1,7 @@
 package com.rocketden.tester.service.parsers;
 
+import com.rocketden.tester.exception.ParserError;
+import com.rocketden.tester.exception.api.ApiException;
 import com.rocketden.tester.model.problem.Problem;
 import com.rocketden.tester.model.problem.ProblemIOType;
 import com.rocketden.tester.model.problem.ProblemInput;
@@ -15,6 +17,9 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith(MockitoExtension.class)
 public class InputParserTests {
@@ -60,17 +65,57 @@ public class InputParserTests {
 
     @Test
     public void parseIntArray() {
+        ProblemIOType expected = ProblemIOType.ARRAY_INTEGER;
 
+        Problem problem = testCaseGenerator("  [1   ,4, 99   ]", expected);
+        ProblemTestCase testCase = problem.getTestCases().get(0);
+
+        List<Object> output = inputParser.parseTestCase(problem, testCase);
+
+        assertEquals(1, output.size());
+
+        Integer[] array = (Integer[]) output.get(0);
+        assertEquals(1, array[0]);
+        assertEquals(4, array[1]);
+        assertEquals(99, array[2]);
     }
 
     @Test
     public void parseBooleanArray() {
+        ProblemIOType expected = ProblemIOType.ARRAY_BOOLEAN;
 
+        Problem problem = testCaseGenerator("[true, \"true\", false, \"false\"]", expected);
+        ProblemTestCase testCase = problem.getTestCases().get(0);
+
+        List<Object> output = inputParser.parseTestCase(problem, testCase);
+
+        assertEquals(1, output.size());
+
+        Boolean[] array = (Boolean[]) output.get(0);
+        assertTrue(array[0]);
+        assertTrue(array[1]);
+        assertFalse(array[2]);
+        assertFalse(array[3]);
     }
 
     @Test
     public void parseMultipleArguments() {
+        String input = "test\n[a, b, c]\n5";
 
+        ProblemIOType type1 = ProblemIOType.STRING;
+        ProblemIOType type2 = ProblemIOType.ARRAY_CHARACTER;
+        ProblemIOType type3 = ProblemIOType.INTEGER;
+
+        Problem problem = testCaseGenerator(input, type1, type2, type3);
+        ProblemTestCase testCase = problem.getTestCases().get(0);
+
+        List<Object> output = inputParser.parseTestCase(problem, testCase);
+
+        assertEquals(3, output.size());
+
+        assertEquals("test", output.get(0));
+        assertEquals('a', ((Character[]) output.get(1))[0]);
+        assertEquals(5, output.get(2));
     }
 
     @Test
