@@ -6,6 +6,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 @ExtendWith(MockitoExtension.class)
 public class InputParserTests {
 
@@ -51,5 +53,14 @@ public class InputParserTests {
     @Test
     public void parseFailsInvalidNumInputs() {
 
+    }
+
+    @Test
+    public void splitTestCaseIntoInputsSuccess() {
+        String input = "[1, 2, 3]\n4\ntrue";
+
+        String[] output = inputParser.splitTestCaseIntoInputs(input);
+
+        assertEquals(3, output.length);
     }
 }
