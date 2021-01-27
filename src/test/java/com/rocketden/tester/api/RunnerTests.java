@@ -36,12 +36,7 @@ class RunnerTests {
 
     @Test
     public void runRequestBadLanguage() throws Exception {
-        RunRequest request = new RunRequest();
-        request.setCode(CODE);
-        request.setLanguage(LANGUAGE);
-        request.setProblem(new Problem());
-
-        String jsonRequest = "{\"code\": \"print('hi')\", \"language\": \"js\", \"problem\": \"{}\"}";
+        String jsonRequest = "{\"code\": \"print('hi')\", \"language\": \"nonexistent\", \"problem\": \"{}\"}";
 
         ApiError ERROR = LanguageError.BAD_LANGUAGE;
 
