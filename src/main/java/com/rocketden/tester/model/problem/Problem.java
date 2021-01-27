@@ -15,6 +15,6 @@ public class Problem {
 
     // Additional fields for the creation of the driver file.
     private Map<Language, String> methodNames;
-    private Map<String, ProblemIOType> inputNameTypeMap;
+    private List<ProblemInput> problemInputs;
     private ProblemIOType outputType;
 }
