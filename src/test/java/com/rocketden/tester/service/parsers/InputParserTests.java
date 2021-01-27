@@ -52,7 +52,7 @@ public class InputParserTests {
     public void parseDouble() {
         ProblemIOType expected = ProblemIOType.DOUBLE;
 
-        Problem problem = testCaseGenerator("56", expected);
+        Problem problem = testCaseGenerator("56\n", expected);
         ProblemTestCase testCase = problem.getTestCases().get(0);
 
         List<Object> output = inputParser.parseTestCase(problem, testCase);
@@ -67,7 +67,7 @@ public class InputParserTests {
     public void parseIntArray() {
         ProblemIOType expected = ProblemIOType.ARRAY_INTEGER;
 
-        Problem problem = testCaseGenerator("  [1   ,4, 99,   ]", expected);
+        Problem problem = testCaseGenerator(" \n [1   ,4, 99,   ]", expected);
         ProblemTestCase testCase = problem.getTestCases().get(0);
 
         List<Object> output = inputParser.parseTestCase(problem, testCase);
