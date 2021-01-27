@@ -3,6 +3,7 @@ package com.rocketden.tester.service.generators;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.List;
 
 import com.google.gson.Gson;
 import com.rocketden.tester.exception.DockerSetupError;
@@ -49,9 +50,9 @@ public class JavaDriverGeneratorService implements DriverGeneratorService {
          * Iterate through the test cases, and then each of the problem inputs;
          * these are used to construct the input parameter variables.
          */
-        int testNum = 1;
-        for (ProblemTestCase testCase : problem.getTestCases()) {
-
+        List<ProblemTestCase> testCases = problem.getTestCases();
+        for (int testNum = 1; testNum <= testCases.size(); testNum++) {
+            
             // Iterate through the entries of inputs, which hold name and type.
             for (ProblemInput input : problem.getProblemInputs()) {
 
@@ -67,7 +68,7 @@ public class JavaDriverGeneratorService implements DriverGeneratorService {
                     typeInitializationToString(
                         input.getType(),
                         gson.fromJson(
-                            testCase.getInput(),
+                            testCases.get(testNum - 1).getInput(),
                             input.getType().getClassType()
                         )
                     );
@@ -86,9 +87,6 @@ public class JavaDriverGeneratorService implements DriverGeneratorService {
                     )
                 );
             }
-
-            // Update the test number, used to distinguish the input params.
-            testNum++;
         }
     }
 
