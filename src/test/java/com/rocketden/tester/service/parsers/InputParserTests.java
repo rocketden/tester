@@ -34,17 +34,22 @@ public class InputParserTests {
     }
 
     @Test
-    public void parseFailsNotInvalidFormat() {
+    public void parseFailsInvalidFormat() {
 
     }
 
     @Test
     public void parseFailsTypeMismatch() {
-
+        // need to also test [1, "foo", true] mixed types
     }
 
     @Test
     public void parseFailsArrayTypeMismatch() {
-        
+
+    }
+
+    @Test
+    public void parseFailsInvalidNumInputs() {
+
     }
 }
