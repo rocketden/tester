@@ -2,6 +2,7 @@ package com.rocketden.tester.service;
 
 import com.rocketden.tester.dto.RunDto;
 import com.rocketden.tester.dto.RunRequest;
+import com.rocketden.tester.exception.api.ApiException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,9 +20,11 @@ public class RunnerService {
 
     public RunDto run(RunRequest request) {
         String folder = setupService.createTempFolder(request);
-        RunDto output = dockerService.spawnAndRun(folder, request.getLanguage());
-        setupService.deleteTempFolder(folder);
-
-        return output;
+        try {
+            return dockerService.spawnAndRun(folder, request.getLanguage());
+        } finally {
+            // Clean up temp folder regardless if above code throws an exception
+            setupService.deleteTempFolder(folder);
+        }
     }
 }

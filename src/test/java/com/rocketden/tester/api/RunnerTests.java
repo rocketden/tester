@@ -31,9 +31,6 @@ class RunnerTests {
 
     private static final String POST_RUNNER = "/api/v1/runner";
 
-    private static final String CODE = "public class Solution {}";
-    private static final Language LANGUAGE = Language.JAVA;
-
     @Test
     public void runRequestBadLanguage() throws Exception {
         String jsonRequest = "{\"code\": \"print('hi')\", \"language\": \"nonexistent\", \"problem\": \"{}\"}";
