@@ -3,7 +3,6 @@ package com.rocketden.tester.service.generators;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Iterator;
-import java.util.Map.Entry;
 
 import com.google.gson.Gson;
 import com.rocketden.tester.exception.DockerSetupError;
@@ -12,6 +11,7 @@ import com.rocketden.tester.exception.api.ApiException;
 import com.rocketden.tester.model.Language;
 import com.rocketden.tester.model.problem.Problem;
 import com.rocketden.tester.model.problem.ProblemIOType;
+import com.rocketden.tester.model.problem.ProblemInput;
 import com.rocketden.tester.model.problem.ProblemTestCase;
 import com.rocketden.tester.service.DriverGeneratorService;
 
@@ -54,19 +54,19 @@ public class PythonDriverGeneratorService implements DriverGeneratorService {
         for (ProblemTestCase testCase : problem.getTestCases()) {
 
             // Iterate through the entries of inputs, which hold name and type.
-            for (Entry<String, ProblemIOType> input : problem.getInputNameTypeMap().entrySet()) {
+            for (ProblemInput input : problem.getProblemInputs()) {
 
                 // Get the input parameter variable name.
-                String inputName = input.getKey();
+                String inputName = input.getName();
 
                 // Get initialization of input from its type and content.
                 Gson gson = new Gson();
                 String initialization = 
                     typeInitializationToString(
-                        input.getValue(),
+                        input.getType(),
                         gson.fromJson(
                             testCase.getInput(),
-                            input.getValue().getClassType()
+                            input.getType().getClassType()
                         )
                     );
 
@@ -103,12 +103,12 @@ public class PythonDriverGeneratorService implements DriverGeneratorService {
             writer.write(String.format("\t\tsolution%d = multiplyDouble(", testNum));
             
             // Record the input (parameter) names for the function call.
-            Iterator<Entry<String, ProblemIOType>> inputIterator = problem.getInputNameTypeMap().entrySet().iterator();
+            Iterator<ProblemInput> inputIterator = problem.getProblemInputs().iterator();
             while (inputIterator.hasNext()) {
-                Entry<String, ProblemIOType> input = inputIterator.next();
+                ProblemInput input = inputIterator.next();
 
                 // Write the input (parameter) variable name.
-                writer.write(String.format("%s%d", input.getKey(), testNum));
+                writer.write(String.format("%s%d", input.getName(), testNum));
 
                 // Add comma + space, if more inputs are present.
                 if (inputIterator.hasNext()) {
