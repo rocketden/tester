@@ -5,6 +5,7 @@ import com.rocketden.tester.exception.DockerSetupError;
 import com.rocketden.tester.exception.api.ApiError;
 import com.rocketden.tester.exception.api.ApiException;
 import com.rocketden.tester.model.Language;
+import com.rocketden.tester.util.ProblemTestMethods;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -31,12 +32,15 @@ public class RunnerServiceTests {
     private RunnerService runnerService;
 
     private static final String TEMP_FOLDER = "test";
-    private static final Language LANGUAGE = Language.JAVA;
+    private static final Language LANGUAGE = Language.PYTHON;
+    private static final String CODE = "print('hi')";
 
     @Test
     public void runSuccess() {
         RunRequest request = new RunRequest();
         request.setLanguage(LANGUAGE);
+        request.setCode(CODE);
+        request.setProblem(ProblemTestMethods.getFindMaxProblem("[]"));
 
         Mockito.doReturn(TEMP_FOLDER).when(setupService).createTempFolder(request);
         runnerService.run(request);
@@ -49,6 +53,8 @@ public class RunnerServiceTests {
     public void runFails() {
         RunRequest request = new RunRequest();
         request.setLanguage(LANGUAGE);
+        request.setCode(CODE);
+        request.setProblem(ProblemTestMethods.getFindMaxProblem("[]"));
 
         ApiError ERROR = DockerSetupError.BUILD_DOCKER_CONTAINER;
 
