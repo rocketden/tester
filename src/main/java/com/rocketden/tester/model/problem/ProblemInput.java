@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class ProblemTestCase {
-    private String input;
-    private String output;
+public class ProblemInput {
+    private String name;
+    private ProblemIOType type;
 }
