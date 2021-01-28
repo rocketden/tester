@@ -4,10 +4,13 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 import com.rocketden.tester.exception.DockerSetupError;
+import com.rocketden.tester.exception.ProblemError;
 import com.rocketden.tester.exception.api.ApiException;
 import com.rocketden.tester.model.problem.Problem;
+import com.rocketden.tester.model.problem.ProblemIOType;
 import com.rocketden.tester.service.DriverGeneratorService;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -42,7 +45,7 @@ public class PythonDriverGeneratorService implements DriverGeneratorService {
                 writer.write(String.format("\t\tprint('Error (%d):')%n", testCase));
                 writer.write("\t\ttraceback.print_exc()\n");
             }
-            
+
             // Boilerplate ending setup.
             writer.write("if __name__ == \"__main__\":\n");
             writer.write("\tmain()\n");
@@ -50,8 +53,6 @@ public class PythonDriverGeneratorService implements DriverGeneratorService {
             throw new ApiException(DockerSetupError.WRITE_CODE_TO_DISK);
         }
     }
-
-
 
     @Override
     public void writeStartingBoilerplate() {
@@ -81,5 +82,43 @@ public class PythonDriverGeneratorService implements DriverGeneratorService {
     public void writeToStringCode() {
         // TODO Auto-generated method stub
 
+    }
+
+    @Override
+    public String typeInstantiationToString(ProblemIOType ioType) {
+        // Python does not require type instantiation.
+        return null;
+    }
+
+    @Override
+    public String typeInitializationToString(ProblemIOType ioType, Object value) {
+        if (ioType == null || value == null || !ioType.typeMatches(value)) {
+            throw new ApiException(ProblemError.OBJECT_MATCH_IOTYPE);
+        }
+
+        switch (ioType) {
+            case STRING:
+                return String.format("\"%s\"", (String) value);
+            case INTEGER:
+                return String.format("%d", (Integer) value);
+            case DOUBLE:
+                return String.format("%f", (Double) value);
+            case CHARACTER:
+                return String.format("'%c'", (Character) value);
+            case BOOLEAN:
+                return String.format("%b", (Boolean) value);
+            case ARRAY_STRING:
+                return String.format("[\"%s\"]", String.join("\", \"", (String[]) value));
+            case ARRAY_INTEGER:
+                return String.format("[%s]", StringUtils.join((Integer[]) value, ", "));
+            case ARRAY_DOUBLE:
+                return String.format("[%s]", StringUtils.join((Double[]) value, ", "));
+            case ARRAY_CHARACTER:
+                return String.format("['%s']", StringUtils.join((Character[]) value, "', '"));
+            case ARRAY_BOOLEAN:
+                return String.format("[%s]", StringUtils.join((Boolean[]) value, ", "));
+            default:
+                return "";
+        }
     }
 }
