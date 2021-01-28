@@ -8,7 +8,6 @@ import com.google.gson.Gson;
 import com.rocketden.tester.exception.DockerSetupError;
 import com.rocketden.tester.exception.ProblemError;
 import com.rocketden.tester.exception.api.ApiException;
-import com.rocketden.tester.model.Language;
 import com.rocketden.tester.model.problem.Problem;
 import com.rocketden.tester.model.problem.ProblemIOType;
 import com.rocketden.tester.model.problem.ProblemInput;
@@ -102,7 +101,7 @@ public class PythonDriverGeneratorService implements DriverGeneratorService {
             writer.write("\ttry:\n");
 
             // Write the base setup (w/o parameters) of calling user's solution.
-            writer.write(String.format("\t\tsolution%d = solution.%s(", testNum, problem.getMethodNames().get(Language.PYTHON)));
+            writer.write(String.format("\t\tsolution%d = solution.solve(", testNum));
             
             // Record the input (parameter) names for the function call.
             Iterator<ProblemInput> inputIterator = problem.getProblemInputs().iterator();
