@@ -2,6 +2,7 @@ package com.rocketden.tester.service;
 
 import com.rocketden.tester.dto.RunDto;
 import com.rocketden.tester.dto.RunRequest;
+import com.rocketden.tester.exception.RequestError;
 import com.rocketden.tester.exception.api.ApiException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,10 @@ public class RunnerService {
     }
 
     public RunDto run(RunRequest request) {
+        if (request.getCode() == null || request.getLanguage() == null || request.getProblem() == null) {
+            throw new ApiException(RequestError.EMPTY_FIELD);
+        }
+
         String folder = setupService.createTempFolder(request);
         try {
             return dockerService.spawnAndRun(folder, request.getLanguage());

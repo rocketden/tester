@@ -1,6 +1,7 @@
 package com.rocketden.tester.api;
 
 import com.rocketden.tester.exception.LanguageError;
+import com.rocketden.tester.exception.RequestError;
 import com.rocketden.tester.exception.api.ApiError;
 import com.rocketden.tester.exception.api.ApiErrorResponse;
 import com.rocketden.tester.util.UtilityTestMethods;
@@ -31,6 +32,9 @@ class RunnerTests {
 
     private static final String POST_RUNNER = "/api/v1/runner";
 
+    private static final Language LANGUAGE = Language.PYTHON;
+    private static final String CODE = "print('hi')";
+
     @Test
     public void runRequestBadLanguage() throws Exception {
         String jsonRequest = "{\"code\": \"print('hi')\", \"language\": \"nonexistent\", \"problem\": \"{}\"}";
@@ -40,6 +44,26 @@ class RunnerTests {
         MvcResult result = this.mockMvc.perform(post(POST_RUNNER)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(jsonRequest))
+                .andDo(print()).andExpect(status().is(ERROR.getStatus().value()))
+                .andReturn();
+
+        String response = result.getResponse().getContentAsString();
+        ApiErrorResponse actual = UtilityTestMethods.toObject(response, ApiErrorResponse.class);
+
+        assertEquals(ERROR.getResponse(), actual);
+    }
+
+    @Test
+    public void runRequestMissingBaseField() throws Exception {
+        RunRequest request = new RunRequest();
+        request.setLanguage(LANGUAGE);
+        request.setCode(CODE);
+
+        ApiError ERROR = RequestError.EMPTY_FIELD;
+
+        MvcResult result = this.mockMvc.perform(post(POST_RUNNER)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(UtilityTestMethods.convertObjectToJsonString(request)))
                 .andDo(print()).andExpect(status().is(ERROR.getStatus().value()))
                 .andReturn();
 
