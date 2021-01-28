@@ -4,6 +4,8 @@ import com.rocketden.tester.dto.RunDto;
 import com.rocketden.tester.dto.RunRequest;
 import com.rocketden.tester.exception.RequestError;
 import com.rocketden.tester.exception.api.ApiException;
+import com.rocketden.tester.model.problem.Problem;
+import com.rocketden.tester.model.problem.ProblemIOType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +23,12 @@ public class RunnerService {
 
     public RunDto run(RunRequest request) {
         if (request.getCode() == null || request.getLanguage() == null || request.getProblem() == null) {
+            throw new ApiException(RequestError.EMPTY_FIELD);
+        }
+
+        Problem problem = request.getProblem();
+        if (problem.getMethodNames() == null || problem.getTestCases() == null ||
+                problem.getOutputType() == null || problem.getProblemInputs() == null) {
             throw new ApiException(RequestError.EMPTY_FIELD);
         }
 

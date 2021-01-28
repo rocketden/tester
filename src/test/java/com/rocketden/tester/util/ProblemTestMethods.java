@@ -37,7 +37,6 @@ public class ProblemTestMethods {
         problem.setTestCases(testCases);
         problem.setProblemInputs(problemInputs);
         problem.setOutputType(ProblemIOType.INTEGER);
-        problem.setMethodNames(methodNames);
 
         return problem;
     }

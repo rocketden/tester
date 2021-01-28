@@ -4,6 +4,7 @@ import com.rocketden.tester.exception.LanguageError;
 import com.rocketden.tester.exception.RequestError;
 import com.rocketden.tester.exception.api.ApiError;
 import com.rocketden.tester.exception.api.ApiErrorResponse;
+import com.rocketden.tester.util.ProblemTestMethods;
 import com.rocketden.tester.util.UtilityTestMethods;
 import com.rocketden.tester.dto.RunDto;
 import com.rocketden.tester.dto.RunRequest;
@@ -58,6 +59,28 @@ class RunnerTests {
         RunRequest request = new RunRequest();
         request.setLanguage(LANGUAGE);
         request.setCode(CODE);
+
+        ApiError ERROR = RequestError.EMPTY_FIELD;
+
+        MvcResult result = this.mockMvc.perform(post(POST_RUNNER)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(UtilityTestMethods.convertObjectToJsonString(request)))
+                .andDo(print()).andExpect(status().is(ERROR.getStatus().value()))
+                .andReturn();
+
+        String response = result.getResponse().getContentAsString();
+        ApiErrorResponse actual = UtilityTestMethods.toObject(response, ApiErrorResponse.class);
+
+        assertEquals(ERROR.getResponse(), actual);
+    }
+
+    @Test
+    public void runRequestMissingProblemField() throws Exception {
+        RunRequest request = new RunRequest();
+        request.setLanguage(LANGUAGE);
+        request.setCode(CODE);
+        request.setProblem(ProblemTestMethods.getFindMaxProblem("[1]"));
+        request.getProblem().setOutputType(null);
 
         ApiError ERROR = RequestError.EMPTY_FIELD;
 
