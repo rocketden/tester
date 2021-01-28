@@ -3,6 +3,7 @@ package com.rocketden.tester.api;
 import com.rocketden.tester.model.problem.ProblemIOType;
 import com.rocketden.tester.model.problem.ProblemInput;
 import com.rocketden.tester.model.problem.ProblemTestCase;
+import com.rocketden.tester.util.ProblemTestMethods;
 import com.rocketden.tester.util.UtilityTestMethods;
 import com.rocketden.tester.dto.RunDto;
 import com.rocketden.tester.dto.RunRequest;
@@ -51,33 +52,7 @@ class JavaTests {
         request.setCode(CODE);
         request.setLanguage(LANGUAGE);
 
-        Map<Language, String> methodNames = Map.of(
-                Language.JAVA, "findMax",
-                Language.PYTHON, "find_max"
-        );
-
-        List<ProblemTestCase> testCases = new ArrayList<>();
-        ProblemTestCase testCase = new ProblemTestCase();
-        testCase.setInput("[1, 3, 5, 7, 4, 2]");
-        testCases.add(testCase);
-
-        testCase = new ProblemTestCase();
-        testCase.setInput("[-5, 16, 0]");
-        testCases.add(testCase);
-
-        List<ProblemInput> problemInputs = new ArrayList<>();
-        ProblemInput problemInput = new ProblemInput();
-        problemInput.setType(ProblemIOType.ARRAY_INTEGER);
-        problemInput.setName("array");
-        problemInputs.add(problemInput);
-
-        Problem problem = new Problem();
-        problem.setMethodNames(methodNames);
-        problem.setTestCases(testCases);
-        problem.setProblemInputs(problemInputs);
-        problem.setOutputType(ProblemIOType.INTEGER);
-        problem.setMethodNames(methodNames);
-
+        Problem problem = ProblemTestMethods.getFindMaxProblem("[1, 3, 5, 7, 4, 2]", "[-5, 16, 0]");
         request.setProblem(problem);
 
         MvcResult result = this.mockMvc.perform(post(POST_RUNNER)
