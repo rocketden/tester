@@ -1,5 +1,8 @@
 package com.rocketden.tester.api;
 
+import com.rocketden.tester.model.problem.ProblemIOType;
+import com.rocketden.tester.model.problem.ProblemInput;
+import com.rocketden.tester.model.problem.ProblemTestCase;
 import com.rocketden.tester.util.UtilityTestMethods;
 import com.rocketden.tester.dto.RunDto;
 import com.rocketden.tester.dto.RunRequest;
@@ -12,6 +15,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -28,15 +35,50 @@ class JavaTests {
 
     private static final String POST_RUNNER = "/api/v1/runner";
 
-    private static final String CODE = "public class Solution {}";
     private static final Language LANGUAGE = Language.JAVA;
+    private static final String CODE = String.join("\n",
+            "import java.util.Arrays;",
+            "",
+            "public class Solution {",
+            "    public int findMax(int[] array) {",
+            "        return Arrays.stream(array).max().getAsInt();",
+            "    }",
+            "}");
 
     @Test
     public void runRequestSuccess() throws Exception {
         RunRequest request = new RunRequest();
         request.setCode(CODE);
         request.setLanguage(LANGUAGE);
-        request.setProblem(new Problem());
+
+        Map<Language, String> methodNames = Map.of(
+                Language.JAVA, "findMax",
+                Language.PYTHON, "find_max"
+        );
+
+        List<ProblemTestCase> testCases = new ArrayList<>();
+        ProblemTestCase testCase = new ProblemTestCase();
+        testCase.setInput("[1, 3, 5, 7, 4, 2]");
+        testCases.add(testCase);
+
+        testCase = new ProblemTestCase();
+        testCase.setInput("[-5, 16, 0]");
+        testCases.add(testCase);
+
+        List<ProblemInput> problemInputs = new ArrayList<>();
+        ProblemInput problemInput = new ProblemInput();
+        problemInput.setType(ProblemIOType.ARRAY_INTEGER);
+        problemInput.setName("array");
+        problemInputs.add(problemInput);
+
+        Problem problem = new Problem();
+        problem.setMethodNames(methodNames);
+        problem.setTestCases(testCases);
+        problem.setProblemInputs(problemInputs);
+        problem.setOutputType(ProblemIOType.INTEGER);
+        problem.setMethodNames(methodNames);
+
+        request.setProblem(problem);
 
         MvcResult result = this.mockMvc.perform(post(POST_RUNNER)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -47,8 +89,17 @@ class JavaTests {
         String response = result.getResponse().getContentAsString();
         RunDto runDto = UtilityTestMethods.toObject(response, RunDto.class);
 
+        String expected = String.join("\n",
+                "Console (1):",
+                "Solution (1):",
+                "7",
+                "Console (2):",
+                "Solution (2):",
+                "16",
+                "");
+
         assertTrue(runDto.isStatus());
-        assertEquals("hi", runDto.getOutput());
+        assertEquals(expected, runDto.getOutput());
     }
 
     @Test
