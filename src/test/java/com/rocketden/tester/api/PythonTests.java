@@ -1,5 +1,6 @@
 package com.rocketden.tester.api;
 
+import com.rocketden.tester.util.ProblemTestMethods;
 import com.rocketden.tester.util.UtilityTestMethods;
 import com.rocketden.tester.dto.RunDto;
 import com.rocketden.tester.dto.RunRequest;
@@ -28,15 +29,20 @@ class PythonTests {
 
 	private static final String POST_RUNNER = "/api/v1/runner";
 
-	private static final String CODE = "print('hello')";
 	private static final Language LANGUAGE = Language.PYTHON;
+	private static final String CODE = String.join("\n",
+			"class Solution:",
+			"    def find_max(array):",
+			"        return max(array)");
 
 	@Test
 	public void runRequestSuccess() throws Exception {
 		RunRequest request = new RunRequest();
 		request.setCode(CODE);
 		request.setLanguage(LANGUAGE);
-		request.setProblem(new Problem());
+
+		Problem problem = ProblemTestMethods.getFindMaxProblem("[1, 3, 5, 7, 4, 2]", "[-5, 16, 0]");
+		request.setProblem(problem);
 
 		MvcResult result = this.mockMvc.perform(post(POST_RUNNER)
 				.contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -47,8 +53,17 @@ class PythonTests {
 		String response = result.getResponse().getContentAsString();
 		RunDto runDto = UtilityTestMethods.toObject(response, RunDto.class);
 
+		String expected = String.join("\n",
+				"Console (1):",
+				"Solution (1):",
+				"7",
+				"Console (2):",
+				"Solution (2):",
+				"16",
+				"");
+
 		assertTrue(runDto.isStatus());
-		assertEquals("hi", runDto.getOutput());
+		assertEquals(expected, runDto.getOutput());
 	}
 
 	@Test
