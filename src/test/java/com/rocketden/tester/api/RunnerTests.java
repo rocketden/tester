@@ -1,6 +1,7 @@
 package com.rocketden.tester.api;
 
 import com.rocketden.tester.exception.LanguageError;
+import com.rocketden.tester.exception.ProblemError;
 import com.rocketden.tester.exception.RequestError;
 import com.rocketden.tester.exception.api.ApiError;
 import com.rocketden.tester.exception.api.ApiErrorResponse;
@@ -83,6 +84,49 @@ class RunnerTests {
         request.getProblem().setOutputType(null);
 
         ApiError ERROR = RequestError.EMPTY_FIELD;
+
+        MvcResult result = this.mockMvc.perform(post(POST_RUNNER)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(UtilityTestMethods.convertObjectToJsonString(request)))
+                .andDo(print()).andExpect(status().is(ERROR.getStatus().value()))
+                .andReturn();
+
+        String response = result.getResponse().getContentAsString();
+        ApiErrorResponse actual = UtilityTestMethods.toObject(response, ApiErrorResponse.class);
+
+        assertEquals(ERROR.getResponse(), actual);
+    }
+
+    @Test
+    public void runRequestEmptyTestCases() throws Exception {
+        RunRequest request = new RunRequest();
+        request.setLanguage(LANGUAGE);
+        request.setCode(CODE);
+        request.setProblem(ProblemTestMethods.getFindMaxProblem());
+
+        ApiError ERROR = RequestError.EMPTY_FIELD;
+
+        MvcResult result = this.mockMvc.perform(post(POST_RUNNER)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(UtilityTestMethods.convertObjectToJsonString(request)))
+                .andDo(print()).andExpect(status().is(ERROR.getStatus().value()))
+                .andReturn();
+
+        String response = result.getResponse().getContentAsString();
+        ApiErrorResponse actual = UtilityTestMethods.toObject(response, ApiErrorResponse.class);
+
+        assertEquals(ERROR.getResponse(), actual);
+    }
+
+    @Test
+    public void runRequestMissingProblemInputField() throws Exception {
+        RunRequest request = new RunRequest();
+        request.setLanguage(LANGUAGE);
+        request.setCode(CODE);
+        request.setProblem(ProblemTestMethods.getFindMaxProblem("[1]"));
+        request.getProblem().getProblemInputs().get(0).setName("");
+
+        ApiError ERROR = ProblemError.BAD_PARAMETER_SETTINGS;
 
         MvcResult result = this.mockMvc.perform(post(POST_RUNNER)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
