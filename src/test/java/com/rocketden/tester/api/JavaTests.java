@@ -1,8 +1,5 @@
 package com.rocketden.tester.api;
 
-import com.rocketden.tester.model.problem.ProblemIOType;
-import com.rocketden.tester.model.problem.ProblemInput;
-import com.rocketden.tester.model.problem.ProblemTestCase;
 import com.rocketden.tester.util.ProblemTestMethods;
 import com.rocketden.tester.util.UtilityTestMethods;
 import com.rocketden.tester.dto.RunDto;
@@ -16,10 +13,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
