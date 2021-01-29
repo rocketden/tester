@@ -34,4 +34,32 @@ public class ProblemTestMethods {
 
         return problem;
     }
+
+    public static Problem getSumProblem(String... inputs) {
+        List<ProblemTestCase> testCases = new ArrayList<>();
+
+        for (String input : inputs) {
+            ProblemTestCase testCase = new ProblemTestCase();
+            testCase.setInput(input);
+            testCases.add(testCase);
+        }
+
+        List<ProblemInput> problemInputs = new ArrayList<>();
+        ProblemInput problemInput = new ProblemInput();
+        problemInput.setType(ProblemIOType.INTEGER);
+        problemInput.setName("num1");
+        problemInputs.add(problemInput);
+
+        ProblemInput problemInput2 = new ProblemInput();
+        problemInput2.setType(ProblemIOType.INTEGER);
+        problemInput2.setName("num2");
+        problemInputs.add(problemInput2);
+
+        Problem problem = new Problem();
+        problem.setTestCases(testCases);
+        problem.setProblemInputs(problemInputs);
+        problem.setOutputType(ProblemIOType.INTEGER);
+
+        return problem;
+    }
 }

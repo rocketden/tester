@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 
-import com.google.gson.Gson;
 import com.rocketden.tester.exception.DockerSetupError;
 import com.rocketden.tester.exception.ProblemError;
 import com.rocketden.tester.exception.api.ApiException;
@@ -14,11 +13,21 @@ import com.rocketden.tester.model.problem.ProblemIOType;
 import com.rocketden.tester.model.problem.ProblemInput;
 import com.rocketden.tester.model.problem.ProblemTestCase;
 
+import com.rocketden.tester.service.parsers.InputParser;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class JavaDriverGeneratorService implements DriverGeneratorService {
+
+    private final InputParser inputParser;
+
+    @Autowired
+    public JavaDriverGeneratorService(InputParser inputParser) {
+        this.inputParser = inputParser;
+    }
+
     @Override
     public void writeDriverFile(String fileDirectory, Problem problem) {
         // Open writer using try-with-resources.
@@ -50,9 +59,12 @@ public class JavaDriverGeneratorService implements DriverGeneratorService {
          */
         List<ProblemTestCase> testCases = problem.getTestCases();
         for (int testNum = 1; testNum <= testCases.size(); testNum++) {
+
+            List<Object> parsedInputs = inputParser.parseTestCase(problem, testCases.get(testNum - 1));
             
             // Iterate through the entries of inputs, which hold name and type.
-            for (ProblemInput input : problem.getProblemInputs()) {
+            for (int i = 0; i < problem.getProblemInputs().size(); i++) {
+                ProblemInput input = problem.getProblemInputs().get(i);
 
                 // Get instantiation to hold the input type.
                 String instantiation = typeInstantiationToString(input.getType());
@@ -61,15 +73,7 @@ public class JavaDriverGeneratorService implements DriverGeneratorService {
                 String inputName = input.getName();
 
                 // Get initialization of input from its type and content.
-                Gson gson = new Gson();
-                String initialization = 
-                    typeInitializationToString(
-                        input.getType(),
-                        gson.fromJson(
-                            testCases.get(testNum - 1).getInput(),
-                            input.getType().getClassType()
-                        )
-                    );
+                String initialization = typeInitializationToString(input.getType(), parsedInputs.get(i));
 
                 /**
                  * Write the creation of the test input variable.
