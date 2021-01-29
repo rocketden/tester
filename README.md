@@ -30,7 +30,7 @@ The problem provides several key pieces of information for judging:
 * Names and types of method parameters (e.g. 1 param: "array", of type `ARRAY_INTEGER`)
 * Return type of method (e.g. `STRING`)
 * Test case inputs (format described below)
-* Test case outputs (TBD whether provided manually or through a solution file) 
+* Test case outputs (correct answers to each input)  
 
 The boilerplate code for each problem is dynamically generated in Rocket Den's 
 [main](https://github.com/rocketden/main) repository, with the method typically
@@ -76,11 +76,14 @@ public class Driver {
         ...
         
         try {
-            captureConsole();
+            System.out.println(DELIMITER_TEST_CASE);
             int output_1 = new Solution().findMax(test_1_param_1);
+
+            System.out.println(DELIMITER_SUCCESS);
             captureOutput(output_1);
         } catch (Exception e) {
-            captureError(e);
+            System.out.println(DELIMITER_FAILURE);
+            e.printStackTrace();
         }
 
         ...
@@ -88,17 +91,33 @@ public class Driver {
 }
 ```
 
-Above, `captureConsole`, `captureOutput`, and `captureError` are additional 
-generated methods that capture all 3 output types of the user's program, which
-will be evaluated and returned later on (TBD: how output will be saved).
+Above, `captureOutput`, and `captureError` is an additionally generated method 
+that serializes and prints the user return object to the console. The resulting
+output from the user program is then parsed, judged, and sent back to the user. 
+
+## Output Format
+
+The output of each driver program is used to judge the results of the user's
+program. The output follows a template similar to the following: 
+
+```
+TODO: template goes here
+
+``` 
+
+When serialized into strings, the returned objects are directly compared to the 
+given outputs for the problem. Therefore, both the serialization process and the
+user-provided outputs should follow a specific JSON-type format in order to 
+ensure proper judging. 
 
 
-## Supported Types 
+### Output Serialization Formats 
 
 The following are the supported types for method parameters and return type for 
-a problem: 
+a problem, as well as the desired serialization format: 
 
 * `STRING`
+  * TODO - give format 
 * `INTEGER`
 * `DOUBLE`
 * `CHARACTER`
