@@ -1,6 +1,7 @@
 package com.rocketden.tester.api;
 
 import com.rocketden.tester.exception.LanguageError;
+import com.rocketden.tester.exception.ParserError;
 import com.rocketden.tester.exception.ProblemError;
 import com.rocketden.tester.exception.RequestError;
 import com.rocketden.tester.exception.api.ApiError;
@@ -124,6 +125,48 @@ class RunnerTests {
         request.getProblem().getProblemInputs().get(0).setName("");
 
         ApiError ERROR = ProblemError.BAD_PARAMETER_SETTINGS;
+
+        MvcResult result = this.mockMvc.perform(post(POST_RUNNER)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(UtilityTestMethods.convertObjectToJsonString(request)))
+                .andDo(print()).andExpect(status().is(ERROR.getStatus().value()))
+                .andReturn();
+
+        String response = result.getResponse().getContentAsString();
+        ApiErrorResponse actual = UtilityTestMethods.toObject(response, ApiErrorResponse.class);
+
+        assertEquals(ERROR.getResponse(), actual);
+    }
+
+    @Test
+    public void runRequestBadTestCaseInputs() throws Exception {
+        RunRequest request = new RunRequest();
+        request.setLanguage(LANGUAGE);
+        request.setCode(CODE);
+        request.setProblem(ProblemTestMethods.getFindMaxProblem("[1, 2, hi]"));
+
+        ApiError ERROR = ParserError.INVALID_INPUT;
+
+        MvcResult result = this.mockMvc.perform(post(POST_RUNNER)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(UtilityTestMethods.convertObjectToJsonString(request)))
+                .andDo(print()).andExpect(status().is(ERROR.getStatus().value()))
+                .andReturn();
+
+        String response = result.getResponse().getContentAsString();
+        ApiErrorResponse actual = UtilityTestMethods.toObject(response, ApiErrorResponse.class);
+
+        assertEquals(ERROR.getResponse(), actual);
+    }
+
+    @Test
+    public void runRequestBadTestCaseIncorrectInputCount() throws Exception {
+        RunRequest request = new RunRequest();
+        request.setLanguage(LANGUAGE);
+        request.setCode(CODE);
+        request.setProblem(ProblemTestMethods.getSumProblem("5\n"));
+
+        ApiError ERROR = ParserError.INCORRECT_COUNT;
 
         MvcResult result = this.mockMvc.perform(post(POST_RUNNER)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
