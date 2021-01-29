@@ -32,7 +32,7 @@ class PythonTests {
 	private static final Language LANGUAGE = Language.PYTHON;
 	private static final String CODE = String.join("\n",
 			"class Solution:",
-			"    def find_max(array):",
+			"    def solve(array):",
 			"        return max(array)");
 
 	@Test

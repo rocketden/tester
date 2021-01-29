@@ -29,9 +29,8 @@ public class RunnerService {
 
         // Check fields of problem class for null or empty fields
         Problem problem = request.getProblem();
-        if (problem.getMethodNames() == null || problem.getTestCases() == null ||
-                problem.getOutputType() == null || problem.getProblemInputs() == null ||
-                problem.getMethodNames().isEmpty() || problem.getTestCases().isEmpty()) {
+        if (problem.getTestCases() == null || problem.getOutputType() == null
+                || problem.getProblemInputs() == null || problem.getTestCases().isEmpty()) {
             throw new ApiException(RequestError.EMPTY_FIELD);
         }
 

@@ -92,13 +92,4 @@ public class SetupServiceTests {
 
         assertEquals(DockerSetupError.INVALID_DELETE_PATH, exception.getError());
     }
-
-    @Test
-    public void test() {
-        try {
-            assertTrue(false);
-        } finally {
-            System.out.println("good");
-        }
-    }
 }

@@ -34,7 +34,7 @@ class JavaTests {
             "import java.util.Arrays;",
             "",
             "public class Solution {",
-            "    public int findMax(int[] array) {",
+            "    public int solve(int[] array) {",
             "        return Arrays.stream(array).max().getAsInt();",
             "    }",
             "}");

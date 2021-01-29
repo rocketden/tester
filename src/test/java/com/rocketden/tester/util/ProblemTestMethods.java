@@ -13,11 +13,6 @@ import java.util.Map;
 public class ProblemTestMethods {
 
     public static Problem getFindMaxProblem(String... inputs) {
-        Map<Language, String> methodNames = Map.of(
-                Language.JAVA, "findMax",
-                Language.PYTHON, "find_max"
-        );
-
         List<ProblemTestCase> testCases = new ArrayList<>();
 
         for (String input : inputs) {
@@ -33,7 +28,6 @@ public class ProblemTestMethods {
         problemInputs.add(problemInput);
 
         Problem problem = new Problem();
-        problem.setMethodNames(methodNames);
         problem.setTestCases(testCases);
         problem.setProblemInputs(problemInputs);
         problem.setOutputType(ProblemIOType.INTEGER);
