@@ -6,4 +6,4 @@ are auto-generated (e.g. `a94Fjl2flQ/`) and contain the following files:
 * `Driver.x`: The driver script that runs and tests user code
 * `Solution.x`: The file containing the user code
 
-After a user's code is judged, the temp folder will automatically be deleted. 
+After a user's code is judged, or if an error occurs, the temp folder will automatically be deleted. 
