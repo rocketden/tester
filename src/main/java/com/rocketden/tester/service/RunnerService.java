@@ -42,8 +42,9 @@ public class RunnerService {
             }
         });
 
-        String folder = setupService.createTempFolder(request);
+        String folder = setupService.createTempFolder();
         try {
+            setupService.populateTempFolder(folder, request);
             return dockerService.spawnAndRun(folder, request.getLanguage());
         } finally {
             // Clean up temp folder regardless if above code throws an exception
