@@ -36,14 +36,15 @@ public class SetupServiceTests {
     private static final Language LANGUAGE = Language.PYTHON;
 
     @Test
-    public void createTempFolderSuccess() {
+    public void createAndPopulateTempFolderSuccess() {
         RunRequest request = new RunRequest();
         request.setCode(CODE);
         request.setLanguage(LANGUAGE);
         Problem problem = new Problem();
         request.setProblem(problem);
 
-        String folder = setupService.createTempFolder(request);
+        String folder = setupService.createTempFolder();
+        setupService.populateTempFolder(folder, request);
 
         String driverFile = String.format("%s/Driver.%s", folder, LANGUAGE.getExtension());
         String solutionFile = String.format("%s/Solution.%s", folder, LANGUAGE.getExtension());
@@ -65,7 +66,7 @@ public class SetupServiceTests {
         Problem problem = new Problem();
         request.setProblem(problem);
 
-        String folder = setupService.createTempFolder(request);
+        String folder = setupService.createTempFolder();
 
         assertTrue(new File(folder).exists());
 

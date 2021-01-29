@@ -42,9 +42,10 @@ public class RunnerServiceTests {
         request.setCode(CODE);
         request.setProblem(ProblemTestMethods.getFindMaxProblem("[]"));
 
-        Mockito.doReturn(TEMP_FOLDER).when(setupService).createTempFolder(request);
+        Mockito.doReturn(TEMP_FOLDER).when(setupService).createTempFolder();
         runnerService.run(request);
 
+        verify(setupService).populateTempFolder(TEMP_FOLDER, request);
         verify(dockerService).spawnAndRun(TEMP_FOLDER, request.getLanguage());
         verify(setupService).deleteTempFolder(TEMP_FOLDER);
     }
@@ -56,10 +57,10 @@ public class RunnerServiceTests {
         request.setCode(CODE);
         request.setProblem(ProblemTestMethods.getFindMaxProblem("[]"));
 
-        ApiError ERROR = DockerSetupError.BUILD_DOCKER_CONTAINER;
+        ApiError ERROR = DockerSetupError.WRITE_CODE_TO_DISK;
 
-        Mockito.doReturn(TEMP_FOLDER).when(setupService).createTempFolder(request);
-        Mockito.doThrow(new ApiException(ERROR)).when(dockerService).spawnAndRun(Mockito.anyString(), Mockito.any());
+        Mockito.doReturn(TEMP_FOLDER).when(setupService).createTempFolder();
+        Mockito.doThrow(new ApiException(ERROR)).when(setupService).populateTempFolder(TEMP_FOLDER, request);
 
         ApiException exception = assertThrows(ApiException.class, () -> runnerService.run(request));
 
