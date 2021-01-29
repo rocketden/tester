@@ -99,8 +99,8 @@ public class JavaDriverGeneratorService implements DriverGeneratorService {
 
         // Execute each of the test cases within separate try-catch blocks.
         for (int testNum = 1; testNum <= problem.getTestCases().size(); testNum++) {
-            // Print line to predict any console output.
-            writer.write(String.format("\t\tSystem.out.println(\"Console (%d):\");%n", testNum));
+            // Denote beginning of a new test case
+            writer.write(String.format("\t\tSystem.out.println(\"%s\");%n", DELIMITER_TEST_CASE));
 
             // Use try-catch block to print any errors.
             writer.write("\t\ttry {\n");
@@ -127,10 +127,10 @@ public class JavaDriverGeneratorService implements DriverGeneratorService {
 
             // Print solution output, catch errors that arise from method call.
             writer.write(String.join("\n",
-                String.format("\t\t\tSystem.out.println(\"Solution (%d):\");", testNum),
+                String.format("\t\t\tSystem.out.println(\"%s\");", DELIMITER_SUCCESS),
                 String.format("\t\t\tSystem.out.println(solution%d);", testNum),
                 "\t\t} catch (Exception e) {",
-                String.format("\t\t\tSystem.out.println(\"Error (%d):\");", testNum),
+                    String.format("\t\t\tSystem.out.println(\"%s\");", DELIMITER_FAILURE),
                 "\t\t\te.printStackTrace();",
                 "\t\t}\n"
             ));

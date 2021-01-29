@@ -95,8 +95,8 @@ public class PythonDriverGeneratorService implements DriverGeneratorService {
     public void writeExecuteTestCases(FileWriter writer, Problem problem) throws IOException {
         // Execute each of the test cases within separate try-catch blocks.
         for (int testNum = 1; testNum <= problem.getTestCases().size(); testNum++) {
-            // Print line to predict any console output.
-            writer.write(String.format("\tprint('Console (%d):')%n", testNum));
+            // Denote beginning of a new test case
+            writer.write(String.format("\tprint('%s')%n", DELIMITER_TEST_CASE));
 
             // Use try-catch block to print any errors.
             writer.write("\ttry:\n");
@@ -123,10 +123,10 @@ public class PythonDriverGeneratorService implements DriverGeneratorService {
 
             // Print solution output, catch errors that arise from method call.
             writer.write(String.join("\n",
-                String.format("\t\tprint('Solution (%d):')", testNum),
+                String.format("\t\tprint('%s')", DELIMITER_SUCCESS),
                 String.format("\t\tprint(solution%d)", testNum),
                 "\texcept Exception as e:",
-                String.format("\t\tprint('Error (%d):')", testNum),
+                String.format("\t\tprint('%s')", DELIMITER_FAILURE),
                 "\t\ttraceback.print_exc()\n\n"
             ));
         }
