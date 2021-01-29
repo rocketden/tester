@@ -1,5 +1,8 @@
 package com.rocketden.tester.service.generators;
 
+import java.io.FileWriter;
+import java.io.IOException;
+
 import com.rocketden.tester.model.problem.Problem;
 import com.rocketden.tester.model.problem.ProblemIOType;
 
@@ -10,13 +13,13 @@ public interface DriverGeneratorService {
 
     void writeDriverFile(String fileDirectory, Problem problem);
 
-    void writeStartingBoilerplate();
+    void writeStartingBoilerplate(FileWriter writer) throws IOException;
 
-    void writeTestCases(Problem problem);
+    void writeTestCases(FileWriter writer, Problem problem) throws IOException;
 
-    void writeExecuteTestCases(Problem problem);
+    void writeExecuteTestCases(FileWriter writer, Problem problem) throws IOException;
 
-    void writeEndingBoilerplate();
+    void writeEndingBoilerplate(FileWriter writer) throws IOException;
 
     void writeToStringCode();
 

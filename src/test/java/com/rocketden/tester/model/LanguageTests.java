@@ -1,11 +1,10 @@
-package com.rocketden.tester.api;
+package com.rocketden.tester.model;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.rocketden.tester.exception.LanguageError;
 import com.rocketden.tester.exception.api.ApiException;
-import com.rocketden.tester.model.Language;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
