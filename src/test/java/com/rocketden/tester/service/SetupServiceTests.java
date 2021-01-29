@@ -44,18 +44,20 @@ public class SetupServiceTests {
         request.setProblem(problem);
 
         String folder = setupService.createTempFolder();
-        setupService.populateTempFolder(folder, request);
 
-        String driverFile = String.format("%s/Driver.%s", folder, LANGUAGE.getExtension());
-        String solutionFile = String.format("%s/Solution.%s", folder, LANGUAGE.getExtension());
+        try {
+            setupService.populateTempFolder(folder, request);
 
-        verify(driverFileService).writeDriverFile(eq(driverFile), eq(LANGUAGE), eq(problem));
-        assertTrue(new File(solutionFile).exists());
+            String driverFile = String.format("%s/Driver.%s", folder, LANGUAGE.getExtension());
+            String solutionFile = String.format("%s/Solution.%s", folder, LANGUAGE.getExtension());
 
-        assertTrue(folder.contains("src/main/java/com/rocketden/tester/temp"));
+            verify(driverFileService).writeDriverFile(eq(driverFile), eq(LANGUAGE), eq(problem));
+            assertTrue(new File(solutionFile).exists());
 
-        // Cleanup any files created (note: this will not always be reached if failures occur)
-        setupService.deleteTempFolder(folder);
+            assertTrue(folder.contains("src/main/java/com/rocketden/tester/temp"));
+        } finally {
+            setupService.deleteTempFolder(folder);
+        }
     }
 
     @Test
@@ -89,5 +91,14 @@ public class SetupServiceTests {
         exception = assertThrows(ApiException.class, () -> setupService.deleteTempFolder(safeTestDeletePath2));
 
         assertEquals(DockerSetupError.INVALID_DELETE_PATH, exception.getError());
+    }
+
+    @Test
+    public void test() {
+        try {
+            assertTrue(false);
+        } finally {
+            System.out.println("good");
+        }
     }
 }

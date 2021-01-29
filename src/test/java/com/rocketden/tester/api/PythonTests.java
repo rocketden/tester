@@ -73,6 +73,11 @@ class PythonTests {
 
 	@Test
 	public void runRequestErrorOccurred() throws Exception {
-		// TODO
+		// TODO - test error portions
+	}
+
+	@Test
+	public void runRequestConsoleOutput() throws Exception {
+		// TODO - test console output portions
 	}
 }
