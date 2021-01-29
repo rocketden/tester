@@ -61,7 +61,7 @@ public class PythonDriverGeneratorService implements DriverGeneratorService {
          * these are used to construct the input parameter variables.
          */
         List<ProblemTestCase> testCases = problem.getTestCases();
-        for (int testNum = 1; testNum < testCases.size(); testNum++) {
+        for (int testNum = 1; testNum <= testCases.size(); testNum++) {
 
             List<Object> parsedInputs = inputParser.parseTestCase(problem, testCases.get(testNum - 1));
 
@@ -88,9 +88,6 @@ public class PythonDriverGeneratorService implements DriverGeneratorService {
                     )
                 );
             }
-
-            // Update the test number, used to distinguish the input params.
-            testNum++;
         }
     }
 
