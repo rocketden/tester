@@ -62,4 +62,33 @@ public class ProblemTestMethods {
 
         return problem;
     }
+
+    public static Problem getAllTypesProblem(String... inputs) {
+        List<ProblemTestCase> testCases = new ArrayList<>();
+
+        for (String input : inputs) {
+            ProblemTestCase testCase = new ProblemTestCase();
+            testCase.setInput(input);
+            testCases.add(testCase);
+        }
+
+        List<ProblemInput> problemInputs = new ArrayList<>();
+
+        int count = 1;
+        for (ProblemIOType type : ProblemIOType.values()) {
+            ProblemInput problemInput = new ProblemInput();
+            problemInput.setType(ProblemIOType.INTEGER);
+            problemInput.setName(String.format("num%s", count));
+
+            problemInputs.add(problemInput);
+            count++;
+        }
+
+        Problem problem = new Problem();
+        problem.setTestCases(testCases);
+        problem.setProblemInputs(problemInputs);
+        problem.setOutputType(ProblemIOType.INTEGER);
+
+        return problem;
+    }
 }
