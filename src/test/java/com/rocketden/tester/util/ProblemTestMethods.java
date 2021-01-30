@@ -78,7 +78,7 @@ public class ProblemTestMethods {
         for (ProblemIOType type : ProblemIOType.values()) {
             ProblemInput problemInput = new ProblemInput();
             problemInput.setType(ProblemIOType.INTEGER);
-            problemInput.setName(String.format("num%s", count));
+            problemInput.setName(String.format("p%s", count));
 
             problemInputs.add(problemInput);
             count++;

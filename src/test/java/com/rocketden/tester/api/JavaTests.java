@@ -119,4 +119,51 @@ class JavaTests {
     public void runRequestConsoleOutput() throws Exception {
         // TODO - test console output portions
     }
+
+    @Test
+    public void runRequestTestAllParameterTypes() throws Exception {
+        String code = String.join("\n",
+                "public class Solution {",
+                "    public int solve(String p1, int p2, double p3, boolean p4, ",
+                "            String[] p5, int[] p6, double[] p7, char[] p8, boolean[] p9) {",
+                "        System.out.println(p1);",
+                "        System.out.println(String.valueOf(p2));",
+                "        System.out.println(String.valueOf(p3));",
+                "        System.out.println(String.valueOf(p4));",
+                "        System.out.println(p5[0]);",
+                "        System.out.println(String.valueOf(p6[0]));",
+                "        System.out.println(String.valueOf(p7[0]));",
+                "        System.out.println(String.valueOf(p8[0]));",
+                "        System.out.println(String.valueOf(p9[0]));",
+                "",
+                "        return 0;",
+                "    }",
+                "}");
+
+        RunRequest request = new RunRequest();
+        request.setCode(code);
+        request.setLanguage(LANGUAGE);
+
+        Problem problem = ProblemTestMethods.getSumProblem("2\n3\n");
+        request.setProblem(problem);
+
+        MvcResult result = this.mockMvc.perform(post(POST_RUNNER)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(UtilityTestMethods.convertObjectToJsonString(request)))
+                .andDo(print()).andExpect(status().isOk())
+                .andReturn();
+
+        String response = result.getResponse().getContentAsString();
+        RunDto runDto = UtilityTestMethods.toObject(response, RunDto.class);
+
+        // TODO
+        String expected = String.join("\n",
+                "Console (1):",
+                "Solution (1):",
+                "5",
+                "");
+
+        assertTrue(runDto.isStatus());
+        assertEquals(expected, runDto.getOutput());
+    }
 }
