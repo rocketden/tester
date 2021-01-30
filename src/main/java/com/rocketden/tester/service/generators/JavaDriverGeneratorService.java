@@ -33,7 +33,7 @@ public class JavaDriverGeneratorService implements DriverGeneratorService {
     public void writeDriverFile(String fileDirectory, Problem problem) {
         // Open writer using try-with-resources.
         try (FileWriter writer = new FileWriter(fileDirectory)) {
-            writeStartingBoilerplate(writer);
+            writeStartingBoilerplate(writer, problem);
             writeTestCases(writer, problem);
             writeExecuteTestCases(writer, problem);
             writeEndingBoilerplate(writer);
@@ -43,9 +43,12 @@ public class JavaDriverGeneratorService implements DriverGeneratorService {
     }
 
     @Override
-    public void writeStartingBoilerplate(FileWriter writer) throws IOException {
+    public void writeStartingBoilerplate(FileWriter writer, Problem problem) throws IOException {
         writer.write(String.join("\n",
             "public class Driver {",
+            "",
+            getToStringCode(problem.getOutputType()),
+            "",
             "\tpublic static void main (String[] args) {\n"
         ));
     }
@@ -129,7 +132,7 @@ public class JavaDriverGeneratorService implements DriverGeneratorService {
             // Print solution output, catch errors that arise from method call.
             writer.write(String.join("\n",
                 String.format("\t\t\tSystem.out.println(\"%s\");", OutputParser.DELIMITER_SUCCESS),
-                String.format("\t\t\tSystem.out.println(solution%d);", testNum),
+                String.format("\t\t\tSystem.out.println(serialize(solution%d));", testNum),
                 "\t\t} catch (Exception e) {",
                     String.format("\t\t\tSystem.out.println(\"%s\");", OutputParser.DELIMITER_FAILURE),
                 "\t\t\te.printStackTrace();",
@@ -147,9 +150,9 @@ public class JavaDriverGeneratorService implements DriverGeneratorService {
     }
 
     @Override
-    public void writeToStringCode(FileWriter writer) {
+    public String getToStringCode(ProblemIOType outputType) {
         // TODO Auto-generated method stub
-
+        return "";
     }
 
     @Override

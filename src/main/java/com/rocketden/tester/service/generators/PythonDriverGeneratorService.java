@@ -33,7 +33,7 @@ public class PythonDriverGeneratorService implements DriverGeneratorService {
     public void writeDriverFile(String fileDirectory, Problem problem) {
         // Open writer using try-with-resources.
         try (FileWriter writer = new FileWriter(fileDirectory)) {
-            writeStartingBoilerplate(writer);
+            writeStartingBoilerplate(writer, problem);
             writeTestCases(writer, problem);
             writeExecuteTestCases(writer, problem);
             writeEndingBoilerplate(writer);
@@ -43,12 +43,16 @@ public class PythonDriverGeneratorService implements DriverGeneratorService {
     }
 
     @Override
-    public void writeStartingBoilerplate(FileWriter writer) throws IOException {
+    public void writeStartingBoilerplate(FileWriter writer, Problem problem) throws IOException {
         writer.write(String.join("\n",
             "import traceback",
             "import os",
             "os.chdir(os.getcwd())",
             "from Solution import Solution as solution\n",
+            "",
+            "",
+            getToStringCode(problem.getOutputType()),
+            "",
             "def main():\n"
         ));
     }
@@ -125,7 +129,7 @@ public class PythonDriverGeneratorService implements DriverGeneratorService {
             // Print solution output, catch errors that arise from method call.
             writer.write(String.join("\n",
                 String.format("\t\tprint('%s')", OutputParser.DELIMITER_SUCCESS),
-                String.format("\t\tprint(solution%d)", testNum),
+                String.format("\t\tprint(serialize(solution%d))", testNum),
                 "\texcept Exception as e:",
                 String.format("\t\tprint('%s')", OutputParser.DELIMITER_FAILURE),
                 "\t\ttraceback.print_exc()\n\n"
@@ -142,9 +146,9 @@ public class PythonDriverGeneratorService implements DriverGeneratorService {
     }
 
     @Override
-    public void writeToStringCode(FileWriter writer) {
+    public String getToStringCode(ProblemIOType outputType) {
         // TODO Auto-generated method stub
-
+        return "";
     }
 
     @Override
