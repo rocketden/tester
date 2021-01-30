@@ -37,6 +37,7 @@ public class RunnerServiceTests {
 
     @Test
     public void runSuccess() {
+        System.out.println(5 / 0);
         RunRequest request = new RunRequest();
         request.setLanguage(LANGUAGE);
         request.setCode(CODE);

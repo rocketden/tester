@@ -101,30 +101,56 @@ The output of each driver program is used to judge the results of the user's
 program. The output follows a template similar to the following: 
 
 ```
-TODO: template goes here
+###########_TEST_CASE_############
+test 1 2 3 (user console output)
+here
+###########_SUCCESS_############
+3
+###########_TEST_CASE_############
+test 4 8 12
+here
+###########_SUCCESS_############
+12
+###########_TEST_CASE_############
+test -2 0 5
+###########_FAILURE_############
+java.lang.ArithmeticException: / by zero
+
+at Solution.runSuccess(Solution.java:25)
+
+...
 
 ``` 
+
+The delimiters are used to determine where one test case ends and another begins.
+For each test case, the first few lines are whatever the user prints to the console
+in their program. This is followed by either a success delimiter (the program runs
+without any exceptions) or a failure delimiter (an error occurred and thus the user's
+code was not able to return an answer). The lines afterwards are either the serialized
+return output or the error message.  
+
+
+### Output Serialization Formats 
 
 When serialized into strings, the returned objects are directly compared to the 
 given outputs for the problem. Therefore, both the serialization process and the
 user-provided outputs should follow a specific JSON-type format in order to 
 ensure proper judging. 
 
-
-### Output Serialization Formats 
-
 The following are the supported types for method parameters and return type for 
-a problem, as well as the desired serialization format: 
+a problem, as well as the desired serialization format. Note that brackets, quotes,
+and spaces must match perfectly in order for the answers to match properly. 
 
-* `STRING`
-  * TODO - give format 
-* `INTEGER`
-* `DOUBLE`
-* `CHARACTER`
-* `BOOLEAN`
-* `ARRAY_STRING`
-* `ARRAY_INTEGER`
-* `ARRAY_DOUBLE`
-* `ARRAY_CHARACTER`
-* `ARRAY_BOOLEAN`
+| Syntax                     | Example Serialization      |
+| -------------------------- | -------------------------- |
+| `String`                   | `"example"`                |
+| `INTEGER`                  | `12`                       |
+| `DOUBLE`                   | `5.405`                    |
+| `CHARACTER`                | `'A'`                      |
+| `BOOLEAN`                  | `true`                     |
+| `ARRAY_STRING`             | `["a", "b"]`               |
+| `ARRAY_INTEGER`            | `[-10, 20]`                |
+| `ARRAY_DOUBLE`             | `[0.0, 5.75, -1.12]`       |
+| `ARRAY_CHARACTER`          | `['a', 'b']`               |
+| `ARRAY_BOOLEAN`            | `[true, false]`            |
 
