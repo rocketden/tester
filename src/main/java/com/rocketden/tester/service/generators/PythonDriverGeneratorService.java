@@ -147,8 +147,9 @@ public class PythonDriverGeneratorService implements DriverGeneratorService {
 
     @Override
     public String getToStringCode(ProblemIOType outputType) {
-        // TODO Auto-generated method stub
-        return "";
+        return String.join("\n",
+                "def serialize(obj):",
+                "\treturn obj");
     }
 
     @Override
@@ -165,7 +166,7 @@ public class PythonDriverGeneratorService implements DriverGeneratorService {
 
         switch (ioType) {
             case STRING:
-                return String.format("\"%s\"", (String) value);
+                return String.format("\"%s\"", value);
             case INTEGER:
                 return String.format("%d", (Integer) value);
             case DOUBLE:
