@@ -21,7 +21,7 @@ public interface DriverGeneratorService {
 
     void writeEndingBoilerplate(FileWriter writer) throws IOException;
 
-    void writeToStringCode();
+    void writeToStringCode(FileWriter writer) throws IOException;
 
     // The implementation of the type's instantiation.
     String typeInstantiationToString(ProblemIOType ioType);

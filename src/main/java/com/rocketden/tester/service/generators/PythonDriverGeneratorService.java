@@ -14,6 +14,7 @@ import com.rocketden.tester.model.problem.ProblemInput;
 import com.rocketden.tester.model.problem.ProblemTestCase;
 
 import com.rocketden.tester.service.parsers.InputParser;
+import com.rocketden.tester.service.parsers.OutputParser;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -96,7 +97,7 @@ public class PythonDriverGeneratorService implements DriverGeneratorService {
         // Execute each of the test cases within separate try-catch blocks.
         for (int testNum = 1; testNum <= problem.getTestCases().size(); testNum++) {
             // Denote beginning of a new test case
-            writer.write(String.format("\tprint('%s')%n", DELIMITER_TEST_CASE));
+            writer.write(String.format("\tprint('%s')%n", OutputParser.DELIMITER_TEST_CASE));
 
             // Use try-catch block to print any errors.
             writer.write("\ttry:\n");
@@ -123,10 +124,10 @@ public class PythonDriverGeneratorService implements DriverGeneratorService {
 
             // Print solution output, catch errors that arise from method call.
             writer.write(String.join("\n",
-                String.format("\t\tprint('%s')", DELIMITER_SUCCESS),
+                String.format("\t\tprint('%s')", OutputParser.DELIMITER_SUCCESS),
                 String.format("\t\tprint(solution%d)", testNum),
                 "\texcept Exception as e:",
-                String.format("\t\tprint('%s')", DELIMITER_FAILURE),
+                String.format("\t\tprint('%s')", OutputParser.DELIMITER_FAILURE),
                 "\t\ttraceback.print_exc()\n\n"
             ));
         }
@@ -141,7 +142,7 @@ public class PythonDriverGeneratorService implements DriverGeneratorService {
     }
 
     @Override
-    public void writeToStringCode() {
+    public void writeToStringCode(FileWriter writer) {
         // TODO Auto-generated method stub
 
     }

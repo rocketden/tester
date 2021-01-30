@@ -14,6 +14,7 @@ import com.rocketden.tester.model.problem.ProblemInput;
 import com.rocketden.tester.model.problem.ProblemTestCase;
 
 import com.rocketden.tester.service.parsers.InputParser;
+import com.rocketden.tester.service.parsers.OutputParser;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -100,7 +101,7 @@ public class JavaDriverGeneratorService implements DriverGeneratorService {
         // Execute each of the test cases within separate try-catch blocks.
         for (int testNum = 1; testNum <= problem.getTestCases().size(); testNum++) {
             // Denote beginning of a new test case
-            writer.write(String.format("\t\tSystem.out.println(\"%s\");%n", DELIMITER_TEST_CASE));
+            writer.write(String.format("\t\tSystem.out.println(\"%s\");%n", OutputParser.DELIMITER_TEST_CASE));
 
             // Use try-catch block to print any errors.
             writer.write("\t\ttry {\n");
@@ -127,10 +128,10 @@ public class JavaDriverGeneratorService implements DriverGeneratorService {
 
             // Print solution output, catch errors that arise from method call.
             writer.write(String.join("\n",
-                String.format("\t\t\tSystem.out.println(\"%s\");", DELIMITER_SUCCESS),
+                String.format("\t\t\tSystem.out.println(\"%s\");", OutputParser.DELIMITER_SUCCESS),
                 String.format("\t\t\tSystem.out.println(solution%d);", testNum),
                 "\t\t} catch (Exception e) {",
-                    String.format("\t\t\tSystem.out.println(\"%s\");", DELIMITER_FAILURE),
+                    String.format("\t\t\tSystem.out.println(\"%s\");", OutputParser.DELIMITER_FAILURE),
                 "\t\t\te.printStackTrace();",
                 "\t\t}\n"
             ));
@@ -146,7 +147,7 @@ public class JavaDriverGeneratorService implements DriverGeneratorService {
     }
 
     @Override
-    public void writeToStringCode() {
+    public void writeToStringCode(FileWriter writer) {
         // TODO Auto-generated method stub
 
     }
