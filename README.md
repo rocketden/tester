@@ -148,7 +148,7 @@ and spaces must match perfectly in order for the answers to match properly.
 | `DOUBLE`                   | `5.405`                    |
 | `CHARACTER`                | `"A"`                      |
 | `BOOLEAN`                  | `true`                     |
-| `ARRAY_STRING`             | `["ab", "cd"]`             |
+| `ARRAY_STRING`             | `["ab","cd"]`             |
 | `ARRAY_INTEGER`            | `[-10,20]`                 |
 | `ARRAY_DOUBLE`             | `[0.0,5.75,-1.12]`         |
 | `ARRAY_CHARACTER`          | `["a", "b"]`               |

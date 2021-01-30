@@ -45,6 +45,8 @@ public class JavaDriverGeneratorService implements DriverGeneratorService {
     @Override
     public void writeStartingBoilerplate(FileWriter writer, Problem problem) throws IOException {
         writer.write(String.join("\n",
+            "import java.util.*;",
+            "",
             "public class Driver {",
             "",
             getToStringCode(problem.getOutputType()),
@@ -151,8 +153,17 @@ public class JavaDriverGeneratorService implements DriverGeneratorService {
 
     @Override
     public String getToStringCode(ProblemIOType outputType) {
-        // TODO Auto-generated method stub
-        return "";
+        String toStringCode;
+        if (outputType.getClassType().isArray()) {
+            toStringCode = "Arrays.toString(obj)";
+        } else {
+            toStringCode = "String.valueOf(obj)";
+        }
+
+        return String.join("\n",
+                String.format("\tpublic String serialize(%s obj) {", typeInstantiationToString(outputType)),
+                String.format("\t\treturn %s;", toStringCode),
+                "\t}");
     }
 
     @Override
