@@ -161,7 +161,7 @@ public class JavaDriverGeneratorService implements DriverGeneratorService {
         }
 
         return String.join("\n",
-                String.format("\tpublic String serialize(%s obj) {", typeInstantiationToString(outputType)),
+                String.format("\tpublic static String serialize(%s obj) {", typeInstantiationToString(outputType)),
                 String.format("\t\treturn %s;", toStringCode),
                 "\t}");
     }

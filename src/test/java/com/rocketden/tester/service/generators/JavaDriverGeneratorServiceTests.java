@@ -126,7 +126,7 @@ public class JavaDriverGeneratorServiceTests {
     @Test
     public void getToStringCodeSuccess() {
         String code = String.join("\n",
-                "    public String serialize(int[] obj) {",
+                "    public static String serialize(int[] obj) {",
                 "        return Arrays.toString(obj);",
                 "    }");
 
@@ -134,7 +134,7 @@ public class JavaDriverGeneratorServiceTests {
         assertEquals(code, generatedCode.replaceAll("\t", "    "));
 
         code = String.join("\n",
-                "    public String serialize(double obj) {",
+                "    public static String serialize(double obj) {",
                 "        return String.valueOf(obj);",
                 "    }");
 
