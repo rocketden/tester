@@ -125,6 +125,20 @@ public class JavaDriverGeneratorServiceTests {
 
     @Test
     public void getToStringCodeSuccess() {
+        String code = String.join("\n",
+                "    public String serialize(int[] obj) {",
+                "        return Arrays.toString(obj);",
+                "    }");
 
+        String generatedCode = service.getToStringCode(ProblemIOType.ARRAY_INTEGER);
+        assertEquals(code, generatedCode.replaceAll("\t", "    "));
+
+        code = String.join("\n",
+                "    public String serialize(double obj) {",
+                "        return String.valueOf(obj);",
+                "    }");
+
+        generatedCode = service.getToStringCode(ProblemIOType.DOUBLE);
+        assertEquals(code, generatedCode.replaceAll("\t", "    "));
     }
 }
