@@ -38,11 +38,11 @@ residing in a `Solution` class or similar (depending on the language of choice).
 Users are then responsible for implementing the method according to the problem
 description to pass the test cases.  
 
-### Input Format
+### Test Case Format
 
-The test case inputs are created in a partial JSON format. If a problem has N
-method parameters, then a corresponding test case will be N lines long, with
-the ith line containing the JSON input for the ith method parameter. 
+The test case inputs and outputs are represented in a JSON format. If a problem has
+multiple method parameters, then a corresponding test case input will be N lines long, 
+with the ith line containing the JSON input for the ith method parameter. 
 
 e.g. A problem with method parameters `String[] values` and `Integer num` could 
 have the following test case input (note how each individual line is JSON-parsable): 
@@ -50,6 +50,13 @@ have the following test case input (note how each individual line is JSON-parsab
 ```
 [hello, world]
 5
+```
+
+e.g. A problem with expected output of type `Boolean[]` could have the following test
+case output:
+
+```
+[true, true, false]
 ```
 
 ## Driver Program
@@ -70,6 +77,11 @@ solved in Java, the driver program might be generated to look like the following
 
 ```java
 public class Driver {
+
+    public String serialize(int obj) {
+        return String.valueOf(obj);
+    }
+
     public static void main(String[] args) {
         int[] test_1_param_1 = {1, 2, 3};
         int[] test_2_param_1 = {1, 2, 3};
@@ -80,7 +92,7 @@ public class Driver {
             int output_1 = new Solution().findMax(test_1_param_1);
 
             System.out.println(DELIMITER_SUCCESS);
-            captureOutput(output_1);
+            System.out.println(serialize(output_1));
         } catch (Exception e) {
             System.out.println(DELIMITER_FAILURE);
             e.printStackTrace();
@@ -91,9 +103,8 @@ public class Driver {
 }
 ```
 
-Above, `captureOutput`, and `captureError` is an additionally generated method 
-that serializes and prints the user return object to the console. The resulting
-output from the user program is then parsed, judged, and sent back to the user. 
+The resulting output from the user program is then parsed, judged, and 
+sent back to the user. 
 
 ## Output Format
 
@@ -130,16 +141,19 @@ code was not able to return an answer). The lines afterwards are either the seri
 return output or the error message.  
 
 
-### Output Serialization Formats 
+### Output Serialization
 
-When serialized into strings, the returned objects are directly compared to the 
-given outputs for the problem. Therefore, both the serialization process and the
-user-provided outputs should follow a specific JSON-type format in order to 
-ensure proper judging. 
+The user's returned output is serialized in the same JSON format as used to represent
+the test case inputs and outputs. When judging a user's program, these serialized
+strings are read back into the tester service as Java objects and then directly
+compared to prevent small formatting differences in strings from causing misleading
+errors. 
+
+
+## Supported Types
 
 The following are the supported types for method parameters and return type for 
-a problem, as well as the desired serialization format. Note that brackets, quotes,
-and spaces must match perfectly in order for the answers to match properly. 
+a problem, as well as an example JSON serialization. 
 
 | Syntax                     | Example Serialization      |
 | -------------------------- | -------------------------- |
@@ -148,9 +162,9 @@ and spaces must match perfectly in order for the answers to match properly.
 | `DOUBLE`                   | `5.405`                    |
 | `CHARACTER`                | `"A"`                      |
 | `BOOLEAN`                  | `true`                     |
-| `ARRAY_STRING`             | `["ab","cd"]`             |
-| `ARRAY_INTEGER`            | `[-10,20]`                 |
-| `ARRAY_DOUBLE`             | `[0.0,5.75,-1.12]`         |
+| `ARRAY_STRING`             | `["ab", "cd"]`             |
+| `ARRAY_INTEGER`            | `[-10, 20]`                |
+| `ARRAY_DOUBLE`             | `[0.0, 5.75, -1.12]`       |
 | `ARRAY_CHARACTER`          | `["a", "b"]`               |
-| `ARRAY_BOOLEAN`            | `[true,false]`             |
+| `ARRAY_BOOLEAN`            | `[true, false]`            |
 
