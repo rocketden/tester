@@ -146,11 +146,11 @@ and spaces must match perfectly in order for the answers to match properly.
 | `String`                   | `"example"`                |
 | `INTEGER`                  | `12`                       |
 | `DOUBLE`                   | `5.405`                    |
-| `CHARACTER`                | `'A'`                      |
+| `CHARACTER`                | `"A"`                      |
 | `BOOLEAN`                  | `true`                     |
-| `ARRAY_STRING`             | `["a", "b"]`               |
-| `ARRAY_INTEGER`            | `[-10, 20]`                |
-| `ARRAY_DOUBLE`             | `[0.0, 5.75, -1.12]`       |
-| `ARRAY_CHARACTER`          | `['a', 'b']`               |
-| `ARRAY_BOOLEAN`            | `[true, false]`            |
+| `ARRAY_STRING`             | `["ab", "cd"]`             |
+| `ARRAY_INTEGER`            | `[-10,20]`                 |
+| `ARRAY_DOUBLE`             | `[0.0,5.75,-1.12]`         |
+| `ARRAY_CHARACTER`          | `["a", "b"]`               |
+| `ARRAY_BOOLEAN`            | `[true,false]`             |
 
