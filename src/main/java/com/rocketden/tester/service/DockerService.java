@@ -56,6 +56,7 @@ public class DockerService {
         ResultDto result = new ResultDto();
         StringBuilder output = new StringBuilder();
         OutputSection outputSection = OutputSection.START;
+        int numCorrect = 0;
         int testCount = 0;
         String s;
         while ((s = stdInput.readLine()) != null) {
@@ -68,15 +69,35 @@ public class DockerService {
 
                     // Set the result fields.
                     result.setUserOutput(outputStr);
+                    result.setError(null);
                     result.setCorrectOutput(testCase.getOutput());
-                    result.setCorrect(isOutputCorrect(outputStr, testCase));
+
+                    // Set the output correctness.
+                    boolean outputCorrect = isOutputCorrect(outputStr, testCase);
+                    if (outputCorrect) {
+                        numCorrect++;
+                    }
+                    result.setCorrect(outputCorrect);
                     results.add(result);
 
-                    // Update variables that control loop status.
+                    // Update / clear variables that control loop process.
                     output.setLength(0);
                     testCount++;
-                }
-                if (outputSection == OutputSection.TEST_CASE) {
+                } else if (outputSection == OutputSection.FAILURE) {
+                    String outputStr = output.toString();
+                    ProblemTestCase testCase = testCases.get(testCount);
+
+                    // Set the result fields.
+                    result.setUserOutput(null);
+                    result.setError(outputStr);
+                    result.setCorrectOutput(testCase.getOutput());
+                    result.setCorrect(false);
+                    results.add(result);
+
+                    // Update / clear variables that control loop process.
+                    output.setLength(0);
+                    testCount++;
+                } else if (outputSection == OutputSection.TEST_CASE) {
                     throw new ApiException(ParserError.MISFORMATTED_OUTPUT);
                 }
 
@@ -87,13 +108,15 @@ public class DockerService {
                     throw new ApiException(ParserError.MISFORMATTED_OUTPUT);
                 }
 
+                result.setConsole(output.toString());
                 outputSection = OutputSection.SUCCESS;
-            } else if (s.equals(DELIMITER_FAILURE) {
+            } else if (s.equals(DELIMITER_FAILURE)) {
                 // Update the result as expected or throw error if misformatted.
                 if (outputSection != OutputSection.TEST_CASE) {
                     throw new ApiException(ParserError.MISFORMATTED_OUTPUT);
                 }
 
+                result.setConsole(output.toString());
                 outputSection = OutputSection.FAILURE;
             } else {
                 // Append new line to output, if line is not a delimiter.
@@ -105,10 +128,10 @@ public class DockerService {
 
         RunDto runDto = new RunDto();
         runDto.setStatus(exitStatus);
-        runDto.setResults(null);
+        runDto.setResults(results);
 
         // Set the number of correct test cases.
-        runDto.setNumCorrect(10);
+        runDto.setNumCorrect(numCorrect);
         runDto.setNumTestCases(testCases.size());
 
         // Set the output manually, before the runtime is calculated.
