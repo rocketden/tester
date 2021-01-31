@@ -174,7 +174,7 @@ public class PythonDriverGeneratorService implements DriverGeneratorService {
             case CHARACTER:
                 return String.format("'%c'", (Character) value);
             case BOOLEAN:
-                return String.format("%b", (Boolean) value);
+                return formatPythonBooleans(String.format("%b", (Boolean) value));
             case ARRAY_STRING:
                 return String.format("[\"%s\"]", String.join("\", \"", (String[]) value));
             case ARRAY_INTEGER:
@@ -184,9 +184,14 @@ public class PythonDriverGeneratorService implements DriverGeneratorService {
             case ARRAY_CHARACTER:
                 return String.format("['%s']", StringUtils.join((Character[]) value, "', '"));
             case ARRAY_BOOLEAN:
-                return String.format("[%s]", StringUtils.join((Boolean[]) value, ", "));
+                return formatPythonBooleans(String.format("[%s]",
+                        StringUtils.join((Boolean[]) value, ", ")));
             default:
                 return "";
         }
+    }
+
+    private String formatPythonBooleans(String code) {
+        return code.replace('t', 'T').replace('f', 'F');
     }
 }

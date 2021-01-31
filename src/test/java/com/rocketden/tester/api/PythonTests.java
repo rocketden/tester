@@ -137,7 +137,7 @@ class PythonTests {
 		request.setCode(code);
 		request.setLanguage(LANGUAGE);
 
-		String[] inputs = {"p1", "2", "3.0", "4", "true", "[p6]", "[7]", "[8.0]", "[9]", "[false]"};
+		String[] inputs = {"p1", "2", "3.0", "4", "True", "['p6']", "[7]", "[8.0]", "['9']", "[False]"};
 
 		Problem problem = ProblemTestMethods.getAllTypesProblem(String.join("\n", inputs));
 		request.setProblem(problem);
