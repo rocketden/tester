@@ -1,5 +1,6 @@
 package com.rocketden.tester.api;
 
+import com.rocketden.tester.service.parsers.OutputParser;
 import com.rocketden.tester.util.ProblemTestMethods;
 import com.rocketden.tester.util.UtilityTestMethods;
 import com.rocketden.tester.dto.RunDto;
@@ -123,18 +124,21 @@ class JavaTests {
     @Test
     public void runRequestTestAllParameterTypes() throws Exception {
         String code = String.join("\n",
+                "import java.util.Arrays;",
+                "",
                 "public class Solution {",
-                "    public int solve(String p1, int p2, double p3, boolean p4, ",
-                "            String[] p5, int[] p6, double[] p7, char[] p8, boolean[] p9) {",
+                "    public int solve(String p1, int p2, double p3, char p4, boolean p5, ",
+                "            String[] p6, int[] p7, double[] p8, char[] p9, boolean[] p10) {",
                 "        System.out.println(p1);",
                 "        System.out.println(String.valueOf(p2));",
                 "        System.out.println(String.valueOf(p3));",
                 "        System.out.println(String.valueOf(p4));",
-                "        System.out.println(p5[0]);",
-                "        System.out.println(String.valueOf(p6[0]));",
-                "        System.out.println(String.valueOf(p7[0]));",
-                "        System.out.println(String.valueOf(p8[0]));",
-                "        System.out.println(String.valueOf(p9[0]));",
+                "        System.out.println(String.valueOf(p5));",
+                "        System.out.println(Arrays.toString(p6));",
+                "        System.out.println(Arrays.toString(p7));",
+                "        System.out.println(Arrays.toString(p8));",
+                "        System.out.println(Arrays.toString(p9));",
+                "        System.out.println(Arrays.toString(p10));",
                 "",
                 "        return 0;",
                 "    }",
@@ -144,7 +148,9 @@ class JavaTests {
         request.setCode(code);
         request.setLanguage(LANGUAGE);
 
-        Problem problem = ProblemTestMethods.getSumProblem("2\n3\n");
+        String[] inputs = {"p1", "2", "3.0", "4", "true", "[p6]", "[7]", "[8.0]", "[9]", "[false]"};
+
+        Problem problem = ProblemTestMethods.getAllTypesProblem(String.join("\n", inputs));
         request.setProblem(problem);
 
         MvcResult result = this.mockMvc.perform(post(POST_RUNNER)
@@ -156,11 +162,12 @@ class JavaTests {
         String response = result.getResponse().getContentAsString();
         RunDto runDto = UtilityTestMethods.toObject(response, RunDto.class);
 
-        // TODO
         String expected = String.join("\n",
-                "Console (1):",
-                "Solution (1):",
-                "5",
+                OutputParser.DELIMITER_TEST_CASE,
+                inputs[0], inputs[1], inputs[2], inputs[3], inputs[4],
+                inputs[5], inputs[6], inputs[7], inputs[8], inputs[9],
+                OutputParser.DELIMITER_SUCCESS,
+                "0",
                 "");
 
         assertTrue(runDto.isStatus());
