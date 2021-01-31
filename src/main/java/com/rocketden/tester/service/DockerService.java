@@ -3,8 +3,10 @@ package com.rocketden.tester.service;
 import com.rocketden.tester.dto.ResultDto;
 import com.rocketden.tester.dto.RunDto;
 import com.rocketden.tester.exception.DockerSetupError;
+import com.rocketden.tester.exception.ParserError;
 import com.rocketden.tester.exception.api.ApiException;
 import com.rocketden.tester.model.Language;
+import com.rocketden.tester.model.OutputSection;
 import com.rocketden.tester.model.problem.Problem;
 import com.rocketden.tester.model.problem.ProblemTestCase;
 
@@ -14,6 +16,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -49,13 +52,52 @@ public class DockerService {
         List<ProblemTestCase> testCases = problem.getTestCases();
 
         // Create the List of ResultDto objects.
+        List<ResultDto> results = new ArrayList<>();
+        ResultDto result = new ResultDto();
         StringBuilder output = new StringBuilder();
-        int testCase = 0;
+        OutputSection outputSection = OutputSection.START;
+        int testCount = 0;
         String s;
         while ((s = stdInput.readLine()) != null) {
-            output.append(s).append("\n");
-            if (output.equals(DELIMITER_TEST_CASE)) {
-                
+            // Update the output section.
+            if (s.equals(DELIMITER_TEST_CASE)) {
+                // Update the result as expected or throw error if misformatted.
+                if (outputSection == OutputSection.SUCCESS) {
+                    String outputStr = output.toString();
+                    ProblemTestCase testCase = testCases.get(testCount);
+
+                    // Set the result fields.
+                    result.setUserOutput(outputStr);
+                    result.setCorrectOutput(testCase.getOutput());
+                    result.setCorrect(isOutputCorrect(outputStr, testCase));
+                    results.add(result);
+
+                    // Update variables that control loop status.
+                    output.setLength(0);
+                    testCount++;
+                }
+                if (outputSection == OutputSection.TEST_CASE) {
+                    throw new ApiException(ParserError.MISFORMATTED_OUTPUT);
+                }
+
+                outputSection = OutputSection.TEST_CASE;
+            } else if (s.equals(DELIMITER_SUCCESS)) {
+                // Update the result as expected or throw error if misformatted.
+                if (outputSection != OutputSection.TEST_CASE) {
+                    throw new ApiException(ParserError.MISFORMATTED_OUTPUT);
+                }
+
+                outputSection = OutputSection.SUCCESS;
+            } else if (s.equals(DELIMITER_FAILURE) {
+                // Update the result as expected or throw error if misformatted.
+                if (outputSection != OutputSection.TEST_CASE) {
+                    throw new ApiException(ParserError.MISFORMATTED_OUTPUT);
+                }
+
+                outputSection = OutputSection.FAILURE;
+            } else {
+                // Append new line to output, if line is not a delimiter.
+                output.append(s).append("\n");
             }
         }
 
@@ -82,7 +124,7 @@ public class DockerService {
     }
 
     // Return whether the user's output is correct.
-    private boolean isCorrect(String output, ProblemTestCase testCase) {
+    private boolean isOutputCorrect(String output, ProblemTestCase testCase) {
         return true;
     }
 }
