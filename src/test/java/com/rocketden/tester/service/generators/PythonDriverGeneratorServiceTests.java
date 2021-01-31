@@ -68,7 +68,7 @@ public class PythonDriverGeneratorServiceTests {
 
     @Test
     public void typeInitializationToStringBoolean() {
-        assertEquals("true", service.typeInitializationToString(ProblemIOType.BOOLEAN, BOOLEAN_INPUT));
+        assertEquals("True", service.typeInitializationToString(ProblemIOType.BOOLEAN, BOOLEAN_INPUT));
     }
 
     @Test
@@ -97,7 +97,7 @@ public class PythonDriverGeneratorServiceTests {
 
     @Test
     public void typeInitializationToStringArrayBoolean() {
-        assertEquals("[false, true, true]", 
+        assertEquals("[False, True, True]",
             service.typeInitializationToString(ProblemIOType.ARRAY_BOOLEAN, ARRAY_BOOLEAN_INPUT));
     }
 

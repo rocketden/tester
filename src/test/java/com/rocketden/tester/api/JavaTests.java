@@ -61,11 +61,11 @@ class JavaTests {
         RunDto runDto = UtilityTestMethods.toObject(response, RunDto.class);
 
         String expected = String.join("\n",
-                "Console (1):",
-                "Solution (1):",
+                OutputParser.DELIMITER_TEST_CASE,
+                OutputParser.DELIMITER_SUCCESS,
                 "7",
-                "Console (2):",
-                "Solution (2):",
+                OutputParser.DELIMITER_TEST_CASE,
+                OutputParser.DELIMITER_SUCCESS,
                 "16",
                 "");
 
@@ -99,8 +99,8 @@ class JavaTests {
         RunDto runDto = UtilityTestMethods.toObject(response, RunDto.class);
 
         String expected = String.join("\n",
-                "Console (1):",
-                "Solution (1):",
+                OutputParser.DELIMITER_TEST_CASE,
+                OutputParser.DELIMITER_SUCCESS,
                 "5",
                 "");
 
