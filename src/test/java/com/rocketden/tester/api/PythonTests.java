@@ -1,5 +1,6 @@
 package com.rocketden.tester.api;
 
+import com.rocketden.tester.service.parsers.OutputParser;
 import com.rocketden.tester.util.ProblemTestMethods;
 import com.rocketden.tester.util.UtilityTestMethods;
 import com.rocketden.tester.dto.RunDto;
@@ -90,8 +91,8 @@ class PythonTests {
 		RunDto runDto = UtilityTestMethods.toObject(response, RunDto.class);
 
 		String expected = String.join("\n",
-				"###########_TEST_CASE_############",
-				"###########_SUCCESS_############",
+				OutputParser.DELIMITER_TEST_CASE,
+				OutputParser.DELIMITER_SUCCESS,
 				"5",
 				"");
 
