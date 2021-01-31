@@ -1,5 +1,6 @@
 package com.rocketden.tester.api;
 
+import com.rocketden.tester.service.parsers.OutputParser;
 import com.rocketden.tester.util.ProblemTestMethods;
 import com.rocketden.tester.util.UtilityTestMethods;
 import com.rocketden.tester.dto.RunDto;
@@ -112,5 +113,53 @@ class PythonTests {
 	@Test
 	public void runRequestConsoleOutput() throws Exception {
 		// TODO - test console output portions
+	}
+
+	@Test
+	public void runRequestTestAllParameterTypes() throws Exception {
+		String code = String.join("\n",
+				"class Solution:",
+				"    def solve(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10):",
+				"        print(p1)",
+				"        print(p2)",
+				"        print(p3)",
+				"        print(p4)",
+				"        print(p5)",
+				"        print(p6)",
+				"        print(p7)",
+				"        print(p8)",
+				"        print(p9)",
+				"        print(p10)",
+				"",
+				"        return 0");
+
+		RunRequest request = new RunRequest();
+		request.setCode(code);
+		request.setLanguage(LANGUAGE);
+
+		String[] inputs = {"p1", "2", "3.0", "4", "true", "[p6]", "[7]", "[8.0]", "[9]", "[false]"};
+
+		Problem problem = ProblemTestMethods.getAllTypesProblem(String.join("\n", inputs));
+		request.setProblem(problem);
+
+		MvcResult result = this.mockMvc.perform(post(POST_RUNNER)
+				.contentType(MediaType.APPLICATION_JSON_VALUE)
+				.content(UtilityTestMethods.convertObjectToJsonString(request)))
+				.andDo(print()).andExpect(status().isOk())
+				.andReturn();
+
+		String response = result.getResponse().getContentAsString();
+		RunDto runDto = UtilityTestMethods.toObject(response, RunDto.class);
+
+		String expected = String.join("\n",
+				OutputParser.DELIMITER_TEST_CASE,
+				inputs[0], inputs[1], inputs[2], inputs[3], inputs[4],
+				inputs[5], inputs[6], inputs[7], inputs[8], inputs[9],
+				OutputParser.DELIMITER_SUCCESS,
+				"0",
+				"");
+
+		assertTrue(runDto.isStatus());
+		assertEquals(expected, runDto.getOutput());
 	}
 }
