@@ -1,4 +1,4 @@
-package com.rocketden.tester.service;
+package com.rocketden.tester.service.generators;
 
 import java.io.FileWriter;
 import java.io.IOException;

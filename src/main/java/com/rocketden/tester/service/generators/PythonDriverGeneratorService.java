@@ -3,8 +3,8 @@ package com.rocketden.tester.service.generators;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.List;
 
-import com.google.gson.Gson;
 import com.rocketden.tester.exception.DockerSetupError;
 import com.rocketden.tester.exception.ProblemError;
 import com.rocketden.tester.exception.api.ApiException;
@@ -12,13 +12,22 @@ import com.rocketden.tester.model.problem.Problem;
 import com.rocketden.tester.model.problem.ProblemIOType;
 import com.rocketden.tester.model.problem.ProblemInput;
 import com.rocketden.tester.model.problem.ProblemTestCase;
-import com.rocketden.tester.service.DriverGeneratorService;
 
+import com.rocketden.tester.service.parsers.InputParser;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class PythonDriverGeneratorService implements DriverGeneratorService {
+
+    private final InputParser inputParser;
+
+    @Autowired
+    public PythonDriverGeneratorService(InputParser inputParser) {
+        this.inputParser = inputParser;
+    }
+
     @Override
     public void writeDriverFile(String fileDirectory, Problem problem) {
         // Open writer using try-with-resources.
@@ -51,25 +60,20 @@ public class PythonDriverGeneratorService implements DriverGeneratorService {
          * Iterate through the test cases, and then each of the problem inputs;
          * these are used to construct the input parameter variables.
          */
-        int testNum = 1;
-        for (ProblemTestCase testCase : problem.getTestCases()) {
+        List<ProblemTestCase> testCases = problem.getTestCases();
+        for (int testNum = 1; testNum <= testCases.size(); testNum++) {
+
+            List<Object> parsedInputs = inputParser.parseTestCase(problem, testCases.get(testNum - 1));
 
             // Iterate through the entries of inputs, which hold name and type.
-            for (ProblemInput input : problem.getProblemInputs()) {
+            for (int i = 0; i < problem.getProblemInputs().size(); i++) {
+                ProblemInput input = problem.getProblemInputs().get(i);
 
                 // Get the input parameter variable name.
                 String inputName = input.getName();
 
                 // Get initialization of input from its type and content.
-                Gson gson = new Gson();
-                String initialization = 
-                    typeInitializationToString(
-                        input.getType(),
-                        gson.fromJson(
-                            testCase.getInput(),
-                            input.getType().getClassType()
-                        )
-                    );
+                String initialization = typeInitializationToString(input.getType(), parsedInputs.get(i));
 
                 /**
                  * Write the creation of the test input variable.
@@ -84,9 +88,6 @@ public class PythonDriverGeneratorService implements DriverGeneratorService {
                     )
                 );
             }
-
-            // Update the test number, used to distinguish the input params.
-            testNum++;
         }
     }
 

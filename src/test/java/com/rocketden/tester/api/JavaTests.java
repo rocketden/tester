@@ -71,6 +71,41 @@ class JavaTests {
     }
 
     @Test
+    public void runRequestSuccessMultipleParams() throws Exception {
+        String code = String.join("\n",
+                "public class Solution {",
+                "    public int solve(int num1, int num2) {",
+                "        return num1 + num2;",
+                "    }",
+                "}");
+
+        RunRequest request = new RunRequest();
+        request.setCode(code);
+        request.setLanguage(LANGUAGE);
+
+        Problem problem = ProblemTestMethods.getSumProblem("2\n3\n");
+        request.setProblem(problem);
+
+        MvcResult result = this.mockMvc.perform(post(POST_RUNNER)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(UtilityTestMethods.convertObjectToJsonString(request)))
+                .andDo(print()).andExpect(status().isOk())
+                .andReturn();
+
+        String response = result.getResponse().getContentAsString();
+        RunDto runDto = UtilityTestMethods.toObject(response, RunDto.class);
+
+        String expected = String.join("\n",
+                "Console (1):",
+                "Solution (1):",
+                "5",
+                "");
+
+        assertTrue(runDto.isStatus());
+        assertEquals(expected, runDto.getOutput());
+    }
+
+    @Test
     public void runRequestWrongAnswer() throws Exception {
         // TODO
     }
