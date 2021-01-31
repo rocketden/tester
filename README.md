@@ -157,14 +157,14 @@ a problem, as well as an example JSON serialization.
 
 | Syntax                     | Example Serialization      |
 | -------------------------- | -------------------------- |
-| `String`                   | `"example"`                |
+| `String`                   | `example`                  |
 | `INTEGER`                  | `12`                       |
 | `DOUBLE`                   | `5.405`                    |
-| `CHARACTER`                | `"A"`                      |
+| `CHARACTER`                | `A`                        |
 | `BOOLEAN`                  | `true`                     |
-| `ARRAY_STRING`             | `["ab", "cd"]`             |
+| `ARRAY_STRING`             | `[ab, cd]`                 |
 | `ARRAY_INTEGER`            | `[-10, 20]`                |
 | `ARRAY_DOUBLE`             | `[0.0, 5.75, -1.12]`       |
-| `ARRAY_CHARACTER`          | `["a", "b"]`               |
+| `ARRAY_CHARACTER`          | `[a, b]`                   |
 | `ARRAY_BOOLEAN`            | `[true, false]`            |
 
