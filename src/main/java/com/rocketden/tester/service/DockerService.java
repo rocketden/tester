@@ -148,6 +148,6 @@ public class DockerService {
 
     // Return whether the user's output is correct.
     private boolean isOutputCorrect(String output, ProblemTestCase testCase) {
-        return true;
+        return output.equals(testCase.getOutput());
     }
 }

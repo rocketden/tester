@@ -44,7 +44,12 @@ public class RunnerService {
         String folder = setupService.createTempFolder();
         try {
             setupService.populateTempFolder(folder, request);
-            return dockerService.spawnAndRun(folder, request.getLanguage(), problem);
+
+            // Get RunDto and set the remaining fields.
+            RunDto runDto = dockerService.spawnAndRun(folder, request.getLanguage(), problem);
+            runDto.setCode(request.getCode());
+            runDto.setLanguage(request.getLanguage());
+            return runDto;
         } finally {
             // Clean up temp folder regardless if above code throws an exception
             setupService.deleteTempFolder(folder);

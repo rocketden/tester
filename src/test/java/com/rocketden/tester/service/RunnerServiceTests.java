@@ -5,6 +5,7 @@ import com.rocketden.tester.exception.DockerSetupError;
 import com.rocketden.tester.exception.api.ApiError;
 import com.rocketden.tester.exception.api.ApiException;
 import com.rocketden.tester.model.Language;
+import com.rocketden.tester.model.problem.Problem;
 import com.rocketden.tester.util.ProblemTestMethods;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -40,13 +41,15 @@ public class RunnerServiceTests {
         RunRequest request = new RunRequest();
         request.setLanguage(LANGUAGE);
         request.setCode(CODE);
-        request.setProblem(ProblemTestMethods.getFindMaxProblem("[]"));
+
+        Problem problem = ProblemTestMethods.getFindMaxProblem("[]");
+        request.setProblem(problem);
 
         Mockito.doReturn(TEMP_FOLDER).when(setupService).createTempFolder();
         runnerService.run(request);
 
         verify(setupService).populateTempFolder(TEMP_FOLDER, request);
-        verify(dockerService).spawnAndRun(TEMP_FOLDER, request.getLanguage());
+        verify(dockerService).spawnAndRun(TEMP_FOLDER, request.getLanguage(), problem);
         verify(setupService).deleteTempFolder(TEMP_FOLDER);
     }
 
