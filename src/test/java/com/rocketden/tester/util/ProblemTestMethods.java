@@ -91,4 +91,24 @@ public class ProblemTestMethods {
 
         return problem;
     }
+
+    public static Problem getVariedReturnTypeProblem(ProblemIOType returnType, String input) {
+        List<ProblemTestCase> testCases = new ArrayList<>();
+        ProblemTestCase testCase = new ProblemTestCase();
+        testCase.setInput(input);
+        testCases.add(testCase);
+
+        List<ProblemInput> problemInputs = new ArrayList<>();
+        ProblemInput problemInput = new ProblemInput();
+        problemInput.setType(returnType);
+        problemInput.setName("param");
+        problemInputs.add(problemInput);
+
+        Problem problem = new Problem();
+        problem.setTestCases(testCases);
+        problem.setProblemInputs(problemInputs);
+        problem.setOutputType(returnType);
+
+        return problem;
+    }
 }
