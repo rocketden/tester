@@ -37,15 +37,23 @@ public class DockerService {
             builder.redirectErrorStream(true);
             Process process = builder.start();
 
-            return captureOutput(process, problem);
+            return parseCaptureOutput(process, problem);
 
         } catch (Exception e) {
             throw new ApiException(DockerSetupError.BUILD_DOCKER_CONTAINER);
         }
     }
 
-    // Given a process, return its status, console output, and error output
-    private RunDto captureOutput(Process process, Problem problem) throws IOException, InterruptedException {
+    /**
+     * Given a process and the relevant problem, parse and produce
+     * the relevant RunDto object to capture the console, solution, and
+     * errors for each test case, as well as the correctness and runtime.
+     * 
+     * @param process The process used to get the testing output.
+     * @param problem The current problem associated with this output.
+     * @return The RunDto object produced from the output.
+     */
+    private RunDto parseCaptureOutput(Process process, Problem problem) throws IOException, InterruptedException {
         BufferedReader stdInput = new BufferedReader(new
                 InputStreamReader(process.getInputStream()));
 
@@ -62,45 +70,9 @@ public class DockerService {
         while ((s = stdInput.readLine()) != null) {
             // Update the output section.
             if (s.equals(DELIMITER_TEST_CASE)) {
-                // Update the result as expected or throw error if misformatted.
-                if (outputSection == OutputSection.SUCCESS) {
-                    String outputStr = output.toString();
-                    ProblemTestCase testCase = testCases.get(testCount);
-
-                    // Set the result fields.
-                    result.setUserOutput(outputStr);
-                    result.setError(null);
-                    result.setCorrectOutput(testCase.getOutput());
-
-                    // Set the output correctness.
-                    boolean outputCorrect = isOutputCorrect(outputStr, testCase);
-                    if (outputCorrect) {
-                        numCorrect++;
-                    }
-                    result.setCorrect(outputCorrect);
-                    results.add(result);
-
-                    // Update / clear variables that control loop process.
-                    output.setLength(0);
-                    testCount++;
-                } else if (outputSection == OutputSection.FAILURE) {
-                    String outputStr = output.toString();
-                    ProblemTestCase testCase = testCases.get(testCount);
-
-                    // Set the result fields.
-                    result.setUserOutput(null);
-                    result.setError(outputStr);
-                    result.setCorrectOutput(testCase.getOutput());
-                    result.setCorrect(false);
-                    results.add(result);
-
-                    // Update / clear variables that control loop process.
-                    output.setLength(0);
-                    testCount++;
-                } else if (outputSection == OutputSection.TEST_CASE) {
-                    throw new ApiException(ParserError.MISFORMATTED_OUTPUT);
-                }
-
+                testCount = parseTestCaseOutput(outputSection,
+                    output.toString(), results, result, testCases, testCount);
+                output.setLength(0);
                 outputSection = OutputSection.TEST_CASE;
             } else if (s.equals(DELIMITER_SUCCESS)) {
                 // Update the result as expected or throw error if misformatted.
@@ -122,6 +94,11 @@ public class DockerService {
                 // Append new line to output, if line is not a delimiter.
                 output.append(s).append("\n");
             }
+        }
+
+        // Throw error if more tests were captured than exist.
+        if (testCount != testCases.size()) {
+            throw new ApiException(ParserError.MISFORMATTED_OUTPUT);
         }
 
         boolean exitStatus = process.waitFor(TIME_LIMIT, TimeUnit.SECONDS);
@@ -149,5 +126,58 @@ public class DockerService {
     // Return whether the user's output is correct.
     private boolean isOutputCorrect(String output, ProblemTestCase testCase) {
         return output.equals(testCase.getOutput());
+    }
+
+    /**
+     * Handle the update to parse the test case output.
+     * 
+     * @param outputSection The current output section in the parsing process.
+     * @param outputStr The current output, in String form.
+     * @param results The list of results, which this method adds to.
+     * @param result The current result being built, and possibly added to
+     * the results object.
+     * @param testCases The list of test cases for this problem.
+     * @param testCount The current test number that the parser has reached.
+     * 
+     * @return The updated testCount number, since this is not a
+     * pass-by-reference object and needs to be updated in the original
+     * method.
+     */
+    private Integer parseTestCaseOutput(OutputSection outputSection,
+        String outputStr, List<ResultDto> results, ResultDto result,
+        List<ProblemTestCase> testCases, Integer testCount) {
+        // Update the result as expected or throw error if misformatted.
+        if (outputSection == OutputSection.SUCCESS) {
+            ProblemTestCase testCase = testCases.get(testCount);
+
+            // Set the result fields.
+            result.setUserOutput(outputStr);
+            result.setError(null);
+            result.setCorrectOutput(testCase.getOutput());
+
+            // Set the output correctness.
+            boolean outputCorrect = isOutputCorrect(outputStr, testCase);
+            result.setCorrect(outputCorrect);
+            results.add(result);
+
+            // Update / clear variables that control loop process.
+            testCount++;
+        } else if (outputSection == OutputSection.FAILURE) {
+            ProblemTestCase testCase = testCases.get(testCount);
+
+            // Set the result fields.
+            result.setUserOutput(null);
+            result.setError(outputStr);
+            result.setCorrectOutput(testCase.getOutput());
+            result.setCorrect(false);
+            results.add(result);
+
+            // Update / clear variables that control loop process.
+            testCount++;
+        } else if (outputSection == OutputSection.TEST_CASE) {
+            throw new ApiException(ParserError.MISFORMATTED_OUTPUT);
+        }
+
+        return testCount;
     }
 }
