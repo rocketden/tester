@@ -3,15 +3,14 @@
 This repository holds the source code for our application that takes in user code
 and runs it against a set of test cases. 
 
-## Manual Docker Setup and Usage
+## Running Locally
 
-To manually set up, prepare, and test the Docker system used in this app, follow these steps:
+To run this application locally, follow these steps:
 
-* Run `docker-compose up` in the `docker` folder any time you make changes to files in that folder
+* Ensure Docker is installed on your computer
+* Run `docker-compose up` in the `docker` folder (required any time you make changes to files in that folder)
   * This will build the Docker images that serve as "templates" for our disposable containers
-* Run `start.sh` in the `docker` folder passing in the name of a directory in `temp` and language
-  * This will create and run a disposable container that executes the code in the given folder
-  * e.g. `bash start.sh folder123 java`
+* Run `./mvnw clean install` and start the service using `./mvnw spring-boot:run`
 
 ## General Structure
 
