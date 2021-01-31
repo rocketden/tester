@@ -1,5 +1,7 @@
 package com.rocketden.tester.api;
 
+import com.rocketden.tester.model.problem.ProblemIOType;
+import com.rocketden.tester.service.generators.JavaDriverGeneratorService;
 import com.rocketden.tester.service.parsers.OutputParser;
 import com.rocketden.tester.util.ProblemTestMethods;
 import com.rocketden.tester.util.UtilityTestMethods;
@@ -172,5 +174,50 @@ class JavaTests {
 
         assertTrue(runDto.isStatus());
         assertEquals(expected, runDto.getOutput());
+    }
+
+    @Test
+    public void runRequestTestAllReturnTypes() throws Exception {
+        // Initialize regular driver generator service to use one of its methods
+        JavaDriverGeneratorService javaService = new JavaDriverGeneratorService(null);
+        String code = String.join("\n",
+                "public class Solution {",
+                "    public %s solve(%s param) {",
+                "        return param;",
+                "    }",
+                "}");
+
+        String[] inputs = {"p1", "2", "3.0", "4", "true", "[p6]", "[7]", "[8.0]", "[9]", "[false]"};
+        int index = 0;
+        for (ProblemIOType type : ProblemIOType.values()) {
+            String typeDeclaration = javaService.typeInstantiationToString(type);
+
+            RunRequest request = new RunRequest();
+            request.setCode(String.format(code, typeDeclaration, typeDeclaration));
+            request.setLanguage(LANGUAGE);
+
+            Problem problem = ProblemTestMethods.getVariedReturnTypeProblem(type, inputs[index]);
+            request.setProblem(problem);
+
+            MvcResult result = this.mockMvc.perform(post(POST_RUNNER)
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .content(UtilityTestMethods.convertObjectToJsonString(request)))
+                    .andDo(print()).andExpect(status().isOk())
+                    .andReturn();
+
+            String response = result.getResponse().getContentAsString();
+            RunDto runDto = UtilityTestMethods.toObject(response, RunDto.class);
+
+            String expected = String.join("\n",
+                    OutputParser.DELIMITER_TEST_CASE,
+                    OutputParser.DELIMITER_SUCCESS,
+                    inputs[index],
+                    "");
+
+            assertTrue(runDto.isStatus());
+            assertEquals(expected, runDto.getOutput());
+
+            index++;
+        }
     }
 }
