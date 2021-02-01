@@ -11,7 +11,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class RunDto {
-    private boolean status;
     private List<ResultDto> results;
     private String code;
     private Language language;

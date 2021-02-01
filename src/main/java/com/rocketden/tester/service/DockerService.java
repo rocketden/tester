@@ -62,13 +62,13 @@ public class DockerService {
         StringBuilder output = new StringBuilder();
         OutputSection outputSection = OutputSection.START;
         int numCorrect = 0;
-        int testCount = 0;
         String s;
         while ((s = stdInput.readLine()) != null) {
             // Update the output section.
             if (s.equals(OutputParser.DELIMITER_TEST_CASE)) {
-                testCount = parseTestCaseOutput(outputSection,
-                    output.toString(), results, result, testCases, testCount);
+                parseTestCaseOutput(outputSection,
+                    output.toString(), results, result,
+                    testCases.get(results.size()));
                 output.setLength(0);
                 outputSection = OutputSection.TEST_CASE;
             } else if (s.equals(OutputParser.DELIMITER_SUCCESS)) {
@@ -94,14 +94,13 @@ public class DockerService {
         }
 
         // Throw error if more tests were captured than exist.
-        if (testCount != testCases.size()) {
+        if (results.size() != testCases.size()) {
             throw new ApiException(ParserError.MISFORMATTED_OUTPUT);
         }
 
         boolean exitStatus = process.waitFor(TIME_LIMIT, TimeUnit.SECONDS);
 
         RunDto runDto = new RunDto();
-        runDto.setStatus(exitStatus);
         runDto.setResults(results);
 
         // Set the number of correct test cases.
@@ -133,20 +132,15 @@ public class DockerService {
      * @param results The list of results, which this method adds to.
      * @param result The current result being built, and possibly added to
      * the results object.
-     * @param testCases The list of test cases for this problem.
-     * @param testCount The current test number that the parser has reached.
-     * 
-     * @return The updated testCount number, since this is not a
-     * pass-by-reference object and needs to be updated in the original
-     * method.
+     * @param testCase The relevant test case for this parsing step.
      */
-    private Integer parseTestCaseOutput(OutputSection outputSection,
+    private void parseTestCaseOutput(OutputSection outputSection,
         String outputStr, List<ResultDto> results, ResultDto result,
-        List<ProblemTestCase> testCases, Integer testCount) {
+        ProblemTestCase testCase) {
         // Update the result as expected or throw error if misformatted.
-        if (outputSection == OutputSection.SUCCESS) {
-            ProblemTestCase testCase = testCases.get(testCount);
-
+        if (outputSection == OutputSection.TEST_CASE) {
+            throw new ApiException(ParserError.MISFORMATTED_OUTPUT);
+        } else if (outputSection == OutputSection.SUCCESS) {
             // Set the result fields.
             result.setUserOutput(outputStr);
             result.setError(null);
@@ -156,25 +150,13 @@ public class DockerService {
             boolean outputCorrect = isOutputCorrect(outputStr, testCase);
             result.setCorrect(outputCorrect);
             results.add(result);
-
-            // Update / clear variables that control loop process.
-            testCount++;
         } else if (outputSection == OutputSection.FAILURE) {
-            ProblemTestCase testCase = testCases.get(testCount);
-
             // Set the result fields.
             result.setUserOutput(null);
             result.setError(outputStr);
             result.setCorrectOutput(testCase.getOutput());
             result.setCorrect(false);
             results.add(result);
-
-            // Update / clear variables that control loop process.
-            testCount++;
-        } else if (outputSection == OutputSection.TEST_CASE) {
-            throw new ApiException(ParserError.MISFORMATTED_OUTPUT);
         }
-
-        return testCount;
     }
 }

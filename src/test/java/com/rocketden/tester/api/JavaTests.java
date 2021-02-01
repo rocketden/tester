@@ -14,7 +14,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -56,7 +55,6 @@ class JavaTests {
         String response = result.getResponse().getContentAsString();
         RunDto runDto = UtilityTestMethods.toObject(response, RunDto.class);
 
-        assertTrue(runDto.isStatus());
         // TODO: Check the RunDto expected fields.
     }
 
@@ -85,7 +83,6 @@ class JavaTests {
         String response = result.getResponse().getContentAsString();
         RunDto runDto = UtilityTestMethods.toObject(response, RunDto.class);
 
-        assertTrue(runDto.isStatus());
         // TODO: Check the RunDto expected fields.
     }
 
