@@ -1,6 +1,5 @@
 package com.rocketden.tester.util;
 
-import com.rocketden.tester.model.Language;
 import com.rocketden.tester.model.problem.Problem;
 import com.rocketden.tester.model.problem.ProblemIOType;
 import com.rocketden.tester.model.problem.ProblemInput;
@@ -8,7 +7,6 @@ import com.rocketden.tester.model.problem.ProblemTestCase;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class ProblemTestMethods {
 

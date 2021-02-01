@@ -98,8 +98,6 @@ public class DockerService {
             throw new ApiException(ParserError.MISFORMATTED_OUTPUT);
         }
 
-        boolean exitStatus = process.waitFor(TIME_LIMIT, TimeUnit.SECONDS);
-
         RunDto runDto = new RunDto();
         runDto.setResults(results);
 
