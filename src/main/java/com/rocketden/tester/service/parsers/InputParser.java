@@ -40,7 +40,7 @@ public class InputParser {
     private Object parseRawInputOfGivenType(String input, Class<?> classType) {
         try {
             return gson.fromJson(input, classType);
-        } catch (JsonSyntaxException e) {
+        } catch (Exception e) {
             throw new ApiException(ParserError.INVALID_INPUT);
         }
     }
