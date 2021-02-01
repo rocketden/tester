@@ -59,11 +59,11 @@ class JavaTests {
         RunDto runDto = UtilityTestMethods.toObject(response, RunDto.class);
 
         String expected = String.join("\n",
-                "###########_TEST_CASE_############",
-                "###########_SUCCESS_############",
+                OutputParser.DELIMITER_TEST_CASE,
+                OutputParser.DELIMITER_SUCCESS,
                 "7",
-                "###########_TEST_CASE_############",
-                "###########_SUCCESS_############",
+                OutputParser.DELIMITER_TEST_CASE,
+                OutputParser.DELIMITER_SUCCESS,
                 "16",
                 "");
 
