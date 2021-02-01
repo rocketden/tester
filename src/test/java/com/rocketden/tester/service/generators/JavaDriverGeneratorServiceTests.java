@@ -121,6 +121,24 @@ public class JavaDriverGeneratorServiceTests {
         ApiException exception = assertThrows(ApiException.class, () ->
             service.typeInitializationToString(ProblemIOType.STRING, CHARACTER_INPUT));
         assertEquals(ProblemError.OBJECT_MATCH_IOTYPE, exception.getError());
-        ;
+    }
+
+    @Test
+    public void getToStringCodeSuccess() {
+        String code = String.join("\n",
+                "    public static String serialize(int[] obj) {",
+                "        return Arrays.toString(obj);",
+                "    }");
+
+        String generatedCode = service.getToStringCode(ProblemIOType.ARRAY_INTEGER);
+        assertEquals(code, generatedCode.replaceAll("\t", "    "));
+
+        code = String.join("\n",
+                "    public static String serialize(double obj) {",
+                "        return String.valueOf(obj);",
+                "    }");
+
+        generatedCode = service.getToStringCode(ProblemIOType.DOUBLE);
+        assertEquals(code, generatedCode.replaceAll("\t", "    "));
     }
 }

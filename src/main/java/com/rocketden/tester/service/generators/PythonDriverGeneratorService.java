@@ -14,6 +14,7 @@ import com.rocketden.tester.model.problem.ProblemInput;
 import com.rocketden.tester.model.problem.ProblemTestCase;
 
 import com.rocketden.tester.service.parsers.InputParser;
+import com.rocketden.tester.service.parsers.OutputParser;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,7 +33,7 @@ public class PythonDriverGeneratorService implements DriverGeneratorService {
     public void writeDriverFile(String fileDirectory, Problem problem) {
         // Open writer using try-with-resources.
         try (FileWriter writer = new FileWriter(fileDirectory)) {
-            writeStartingBoilerplate(writer);
+            writeStartingBoilerplate(writer, problem);
             writeTestCases(writer, problem);
             writeExecuteTestCases(writer, problem);
             writeEndingBoilerplate(writer);
@@ -42,12 +43,16 @@ public class PythonDriverGeneratorService implements DriverGeneratorService {
     }
 
     @Override
-    public void writeStartingBoilerplate(FileWriter writer) throws IOException {
+    public void writeStartingBoilerplate(FileWriter writer, Problem problem) throws IOException {
         writer.write(String.join("\n",
             "import traceback",
             "import os",
             "os.chdir(os.getcwd())",
             "from Solution import Solution as solution\n",
+            "",
+            "",
+            getToStringCode(problem.getOutputType()),
+            "",
             "def main():\n"
         ));
     }
@@ -95,8 +100,8 @@ public class PythonDriverGeneratorService implements DriverGeneratorService {
     public void writeExecuteTestCases(FileWriter writer, Problem problem) throws IOException {
         // Execute each of the test cases within separate try-catch blocks.
         for (int testNum = 1; testNum <= problem.getTestCases().size(); testNum++) {
-            // Print line to predict any console output.
-            writer.write(String.format("\tprint('Console (%d):')%n", testNum));
+            // Denote beginning of a new test case
+            writer.write(String.format("\tprint('%s')%n", OutputParser.DELIMITER_TEST_CASE));
 
             // Use try-catch block to print any errors.
             writer.write("\ttry:\n");
@@ -123,10 +128,10 @@ public class PythonDriverGeneratorService implements DriverGeneratorService {
 
             // Print solution output, catch errors that arise from method call.
             writer.write(String.join("\n",
-                String.format("\t\tprint('Solution (%d):')", testNum),
-                String.format("\t\tprint(solution%d)", testNum),
+                String.format("\t\tprint('%s')", OutputParser.DELIMITER_SUCCESS),
+                String.format("\t\tprint(serialize(solution%d))", testNum),
                 "\texcept Exception as e:",
-                String.format("\t\tprint('Error (%d):')", testNum),
+                String.format("\t\tprint('%s')", OutputParser.DELIMITER_FAILURE),
                 "\t\ttraceback.print_exc()\n\n"
             ));
         }
@@ -141,9 +146,10 @@ public class PythonDriverGeneratorService implements DriverGeneratorService {
     }
 
     @Override
-    public void writeToStringCode() {
-        // TODO Auto-generated method stub
-
+    public String getToStringCode(ProblemIOType outputType) {
+        return String.join("\n",
+                "def serialize(obj):",
+                "\treturn obj");
     }
 
     @Override
@@ -160,7 +166,7 @@ public class PythonDriverGeneratorService implements DriverGeneratorService {
 
         switch (ioType) {
             case STRING:
-                return String.format("\"%s\"", (String) value);
+                return String.format("\"%s\"", value);
             case INTEGER:
                 return String.format("%d", (Integer) value);
             case DOUBLE:
