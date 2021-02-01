@@ -16,15 +16,11 @@ import org.springframework.stereotype.Service;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 @Service
 public class DockerService {
-
-    private static final int TIME_LIMIT = 2;
 
     public RunDto spawnAndRun(String folder, Language language, Problem problem) {
         try {
@@ -50,7 +46,7 @@ public class DockerService {
      * @param problem The current problem associated with this output.
      * @return The RunDto object produced from the output.
      */
-    private RunDto parseCaptureOutput(Process process, Problem problem) throws IOException, InterruptedException {
+    private RunDto parseCaptureOutput(Process process, Problem problem) throws IOException {
         BufferedReader stdInput = new BufferedReader(new
                 InputStreamReader(process.getInputStream()));
 
@@ -107,7 +103,6 @@ public class DockerService {
 
         // Set the output manually, before the runtime is calculated.
         runDto.setRuntime(0L);
-        runDto.setStartTime(LocalDateTime.now());
 
         return runDto;
     }
