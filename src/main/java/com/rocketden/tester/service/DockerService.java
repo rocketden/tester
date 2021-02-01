@@ -9,6 +9,7 @@ import com.rocketden.tester.model.Language;
 import com.rocketden.tester.model.OutputSection;
 import com.rocketden.tester.model.problem.Problem;
 import com.rocketden.tester.model.problem.ProblemTestCase;
+import com.rocketden.tester.service.parsers.OutputParser;
 
 import org.springframework.stereotype.Service;
 
@@ -24,10 +25,6 @@ import java.util.concurrent.TimeUnit;
 public class DockerService {
 
     private static final int TIME_LIMIT = 2;
-
-    public static final String DELIMITER_TEST_CASE = "###########_TEST_CASE_############";
-    public static final String DELIMITER_SUCCESS = "###########_SUCCESS_############";
-    public static final String DELIMITER_FAILURE = "###########_FAILURE_############";
 
     public RunDto spawnAndRun(String folder, Language language, Problem problem) {
         try {
@@ -69,12 +66,12 @@ public class DockerService {
         String s;
         while ((s = stdInput.readLine()) != null) {
             // Update the output section.
-            if (s.equals(DELIMITER_TEST_CASE)) {
+            if (s.equals(OutputParser.DELIMITER_TEST_CASE)) {
                 testCount = parseTestCaseOutput(outputSection,
                     output.toString(), results, result, testCases, testCount);
                 output.setLength(0);
                 outputSection = OutputSection.TEST_CASE;
-            } else if (s.equals(DELIMITER_SUCCESS)) {
+            } else if (s.equals(OutputParser.DELIMITER_SUCCESS)) {
                 // Update the result as expected or throw error if misformatted.
                 if (outputSection != OutputSection.TEST_CASE) {
                     throw new ApiException(ParserError.MISFORMATTED_OUTPUT);
@@ -82,7 +79,7 @@ public class DockerService {
 
                 result.setConsole(output.toString());
                 outputSection = OutputSection.SUCCESS;
-            } else if (s.equals(DELIMITER_FAILURE)) {
+            } else if (s.equals(OutputParser.DELIMITER_FAILURE)) {
                 // Update the result as expected or throw error if misformatted.
                 if (outputSection != OutputSection.TEST_CASE) {
                     throw new ApiException(ParserError.MISFORMATTED_OUTPUT);

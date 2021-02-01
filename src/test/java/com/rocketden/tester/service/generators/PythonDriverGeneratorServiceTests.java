@@ -114,6 +114,22 @@ public class PythonDriverGeneratorServiceTests {
         ApiException exception = assertThrows(ApiException.class, () ->
             service.typeInitializationToString(ProblemIOType.STRING, CHARACTER_INPUT));
         assertEquals(ProblemError.OBJECT_MATCH_IOTYPE, exception.getError());
-        ;
     }
+
+    @Test
+    public void getToStringCodeSuccess() {
+        String code = String.join("\n",
+                "def serialize(obj):",
+                "    return obj");
+
+        String generatedCode = service.getToStringCode(ProblemIOType.STRING);
+        assertEquals(code, generatedCode.replaceAll("\t", "    "));
+
+        generatedCode = service.getToStringCode(ProblemIOType.ARRAY_BOOLEAN);
+        assertEquals(code, generatedCode.replaceAll("\t", "    "));
+
+        generatedCode = service.getToStringCode(ProblemIOType.CHARACTER);
+        assertEquals(code, generatedCode.replaceAll("\t", "    "));
+    }
+
 }

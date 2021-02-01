@@ -14,6 +14,7 @@ import com.rocketden.tester.model.problem.ProblemInput;
 import com.rocketden.tester.model.problem.ProblemTestCase;
 
 import com.rocketden.tester.service.parsers.InputParser;
+import com.rocketden.tester.service.parsers.OutputParser;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,7 +33,7 @@ public class JavaDriverGeneratorService implements DriverGeneratorService {
     public void writeDriverFile(String fileDirectory, Problem problem) {
         // Open writer using try-with-resources.
         try (FileWriter writer = new FileWriter(fileDirectory)) {
-            writeStartingBoilerplate(writer);
+            writeStartingBoilerplate(writer, problem);
             writeTestCases(writer, problem);
             writeExecuteTestCases(writer, problem);
             writeEndingBoilerplate(writer);
@@ -42,9 +43,14 @@ public class JavaDriverGeneratorService implements DriverGeneratorService {
     }
 
     @Override
-    public void writeStartingBoilerplate(FileWriter writer) throws IOException {
+    public void writeStartingBoilerplate(FileWriter writer, Problem problem) throws IOException {
         writer.write(String.join("\n",
+            "import java.util.*;",
+            "",
             "public class Driver {",
+            "",
+            getToStringCode(problem.getOutputType()),
+            "",
             "\tpublic static void main (String[] args) {\n"
         ));
     }
@@ -99,8 +105,8 @@ public class JavaDriverGeneratorService implements DriverGeneratorService {
 
         // Execute each of the test cases within separate try-catch blocks.
         for (int testNum = 1; testNum <= problem.getTestCases().size(); testNum++) {
-            // Print line to predict any console output.
-            writer.write(String.format("\t\tSystem.out.println(\"Console (%d):\");%n", testNum));
+            // Denote beginning of a new test case
+            writer.write(String.format("\t\tSystem.out.println(\"%s\");%n", OutputParser.DELIMITER_TEST_CASE));
 
             // Use try-catch block to print any errors.
             writer.write("\t\ttry {\n");
@@ -127,10 +133,10 @@ public class JavaDriverGeneratorService implements DriverGeneratorService {
 
             // Print solution output, catch errors that arise from method call.
             writer.write(String.join("\n",
-                String.format("\t\t\tSystem.out.println(\"Solution (%d):\");", testNum),
-                String.format("\t\t\tSystem.out.println(solution%d);", testNum),
+                String.format("\t\t\tSystem.out.println(\"%s\");", OutputParser.DELIMITER_SUCCESS),
+                String.format("\t\t\tSystem.out.println(serialize(solution%d));", testNum),
                 "\t\t} catch (Exception e) {",
-                String.format("\t\t\tSystem.out.println(\"Error (%d):\");", testNum),
+                    String.format("\t\t\tSystem.out.println(\"%s\");", OutputParser.DELIMITER_FAILURE),
                 "\t\t\te.printStackTrace();",
                 "\t\t}\n"
             ));
@@ -146,9 +152,18 @@ public class JavaDriverGeneratorService implements DriverGeneratorService {
     }
 
     @Override
-    public void writeToStringCode() {
-        // TODO Auto-generated method stub
+    public String getToStringCode(ProblemIOType outputType) {
+        String toStringCode;
+        if (outputType.getClassType().isArray()) {
+            toStringCode = "Arrays.toString(obj)";
+        } else {
+            toStringCode = "String.valueOf(obj)";
+        }
 
+        return String.join("\n",
+                String.format("\tpublic static String serialize(%s obj) {", typeInstantiationToString(outputType)),
+                String.format("\t\treturn %s;", toStringCode),
+                "\t}");
     }
 
     @Override

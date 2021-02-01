@@ -13,7 +13,7 @@ public interface DriverGeneratorService {
 
     void writeDriverFile(String fileDirectory, Problem problem);
 
-    void writeStartingBoilerplate(FileWriter writer) throws IOException;
+    void writeStartingBoilerplate(FileWriter writer, Problem problem) throws IOException;
 
     void writeTestCases(FileWriter writer, Problem problem) throws IOException;
 
@@ -21,7 +21,7 @@ public interface DriverGeneratorService {
 
     void writeEndingBoilerplate(FileWriter writer) throws IOException;
 
-    void writeToStringCode();
+    String getToStringCode(ProblemIOType outputType) throws IOException;
 
     // The implementation of the type's instantiation.
     String typeInstantiationToString(ProblemIOType ioType);
