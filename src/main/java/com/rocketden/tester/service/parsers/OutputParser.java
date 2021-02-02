@@ -75,6 +75,11 @@ public class OutputParser {
             }
         }
 
+        // Add the last remaining test case output, if one exists.
+        parseTestCaseOutput(outputSection,
+            output.toString(), results, result,
+            testCases.get(results.size()));
+
         // Throw error if more tests were captured than exist.
         if (results.size() != testCases.size()) {
             throw new ApiException(ParserError.MISFORMATTED_OUTPUT);
