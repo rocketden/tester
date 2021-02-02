@@ -31,7 +31,8 @@ class PythonTests {
 	private static final String CODE = String.join("\n",
 			"class Solution:",
 			"    def solve(array):",
-			"        return max(array)");
+            "        return max(array)");
+    private static final String ERROR_CODE = "class Solution(object):\n\tdef solve(num):\n\t\tlist = [1, 2, 4]\n\t\tprint(num)\n\t\treturn list[num]";
 
 	@Test
 	public void runRequestSuccess() throws Exception {
@@ -65,7 +66,7 @@ class PythonTests {
 		request.setCode(code);
 		request.setLanguage(LANGUAGE);
 
-		Problem problem = ProblemTestMethods.getSumProblem("\n2\n3");
+		Problem problem = ProblemTestMethods.getSumProblem("2", "3");
 		request.setProblem(problem);
 
 		MvcResult result = this.mockMvc.perform(post(POST_RUNNER)
@@ -78,6 +79,27 @@ class PythonTests {
 		RunDto runDto = UtilityTestMethods.toObject(response, RunDto.class);
 
 		// TODO: Check the RunDto expected fields.
+    }
+    
+    @Test
+	public void runRequestFailureOnTwoCases() throws Exception {
+		RunRequest request = new RunRequest();
+		request.setCode(ERROR_CODE);
+		request.setLanguage(LANGUAGE);
+
+		Problem problem = ProblemTestMethods.getMultiplyDoubleProblem("2", "5", "13");
+		request.setProblem(problem);
+
+		MvcResult result = this.mockMvc.perform(post(POST_RUNNER)
+				.contentType(MediaType.APPLICATION_JSON_VALUE)
+				.content(UtilityTestMethods.convertObjectToJsonString(request)))
+				.andDo(print()).andExpect(status().isOk())
+				.andReturn();
+
+		String response = result.getResponse().getContentAsString();
+        RunDto runDto = UtilityTestMethods.toObject(response, RunDto.class);
+        
+        // TODO: Check the RunDto expected fields.
 	}
 
 	@Test
