@@ -7,10 +7,18 @@ import com.rocketden.tester.model.Language;
 import com.rocketden.tester.model.problem.Problem;
 import com.rocketden.tester.service.parsers.OutputParser;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class DockerService {
+
+    private final OutputParser outputParser;
+
+    @Autowired
+    public DockerService(OutputParser outputParser) {
+        this.outputParser = outputParser;
+    }
 
     public RunDto spawnAndRun(String folder, Language language, Problem problem) {
         try {
@@ -20,7 +28,7 @@ public class DockerService {
             builder.redirectErrorStream(true);
             Process process = builder.start();
 
-            OutputParser outputParser = new OutputParser();
+            // Parse, capture, and return the newly-created RunDto object.
             return outputParser.parseCaptureOutput(process, problem);
 
         } catch (Exception e) {
