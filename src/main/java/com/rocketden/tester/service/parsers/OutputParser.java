@@ -48,9 +48,9 @@ public class OutputParser {
         while ((s = stdInput.readLine()) != null) {
             // Update the output section.
             if (s.equals(DELIMITER_TEST_CASE)) {
-                parseTestCaseOutput(outputSection,
+                numCorrect = parseTestCaseOutput(outputSection,
                     output.toString(), results, result,
-                    testCases.get(results.size()));
+                    testCases.get(results.size()), numCorrect);
                 output.setLength(0);
                 outputSection = OutputSection.TEST_CASE;
             } else if (s.equals(DELIMITER_SUCCESS)) {
@@ -78,9 +78,9 @@ public class OutputParser {
         }
 
         // Add the last remaining test case output, if one exists.
-        parseTestCaseOutput(outputSection,
+        numCorrect = parseTestCaseOutput(outputSection,
             output.toString(), results, result,
-            testCases.get(results.size()));
+            testCases.get(results.size()), numCorrect);
 
         // Throw error if more tests were captured than exist.
         if (results.size() != testCases.size()) {
@@ -101,7 +101,8 @@ public class OutputParser {
     }
 
     /**
-     * Handle the update to parse the test case output.
+     * Handle the update to parse the test case output. This is a helper method
+     * to parseCaptureOutput.
      * 
      * @param outputSection The current output section in the parsing process.
      * @param outputStr The current output, in String form.
@@ -109,10 +110,14 @@ public class OutputParser {
      * @param result The current result being built, and possibly added to
      * the results object.
      * @param testCase The relevant test case for this parsing step.
+     * @param numCorrect The number of correct test cases.
+     * @return The current number of correct test cases, so far. This is
+     * returned because it is a primitive, and its value will not be
+     * preserved in the parent method.
      */
-    private void parseTestCaseOutput(OutputSection outputSection,
+    private int parseTestCaseOutput(OutputSection outputSection,
         String outputStr, List<ResultDto> results, ResultDto result,
-        ProblemTestCase testCase) {
+        ProblemTestCase testCase, int numCorrect) {
         // Update the result as expected or throw error if misformatted.
         if (outputSection == OutputSection.TEST_CASE) {
             throw new ApiException(ParserError.MISFORMATTED_OUTPUT);
@@ -124,6 +129,9 @@ public class OutputParser {
 
             // Set the output correctness.
             boolean outputCorrect = isOutputCorrect(outputStr, testCase);
+            if (outputCorrect) {
+                numCorrect++;
+            }
             result.setCorrect(outputCorrect);
             results.add(result);
         } else if (outputSection == OutputSection.FAILURE) {
@@ -134,6 +142,8 @@ public class OutputParser {
             result.setCorrect(false);
             results.add(result);
         }
+
+        return numCorrect;
     }
 
     // Return whether the user's output is correct.
