@@ -60,6 +60,7 @@ public class OutputParser {
                 }
 
                 result.setConsole(output.toString());
+                output.setLength(0);
                 outputSection = OutputSection.SUCCESS;
             } else if (s.equals(DELIMITER_FAILURE)) {
                 // Update the result as expected or throw error if misformatted.
@@ -68,6 +69,7 @@ public class OutputParser {
                 }
 
                 result.setConsole(output.toString());
+                output.setLength(0);
                 outputSection = OutputSection.FAILURE;
             } else {
                 // Append new line to output, if line is not a delimiter.
