@@ -51,6 +51,7 @@ public class OutputParser {
                 numCorrect = parseTestCaseOutput(outputSection,
                     output.toString(), results, result,
                     testCases.get(results.size()), numCorrect);
+                result = new ResultDto();
                 output.setLength(0);
                 outputSection = OutputSection.TEST_CASE;
             } else if (s.equals(DELIMITER_SUCCESS)) {
