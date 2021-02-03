@@ -43,14 +43,13 @@ public class OutputParser {
         ResultDto result = new ResultDto();
         StringBuilder output = new StringBuilder();
         OutputSection outputSection = OutputSection.START;
-        int numCorrect = 0;
         String s;
         while ((s = stdInput.readLine()) != null) {
             // Update the output section.
             if (s.equals(DELIMITER_TEST_CASE)) {
-                numCorrect = parseTestCaseOutput(outputSection,
+                parseTestCaseOutput(outputSection,
                     output.toString(), results, result,
-                    testCases.get(results.size()), numCorrect);
+                    testCases.get(results.size()));
                 result = new ResultDto();
                 output.setLength(0);
                 outputSection = OutputSection.TEST_CASE;
@@ -79,9 +78,9 @@ public class OutputParser {
         }
 
         // Add the last remaining test case output, if one exists.
-        numCorrect = parseTestCaseOutput(outputSection,
+        parseTestCaseOutput(outputSection,
             output.toString(), results, result,
-            testCases.get(results.size()), numCorrect);
+            testCases.get(results.size()));
 
         // Throw error if more tests were captured than exist.
         if (results.size() != testCases.size()) {
@@ -92,7 +91,7 @@ public class OutputParser {
         runDto.setResults(results);
 
         // Set the number of correct test cases.
-        runDto.setNumCorrect(numCorrect);
+        runDto.setNumCorrect(calculateNumCorrect(results));
         runDto.setNumTestCases(testCases.size());
 
         // Set the output manually, before the runtime is calculated.
@@ -111,14 +110,10 @@ public class OutputParser {
      * @param result The current result being built, and possibly added to
      * the results object.
      * @param testCase The relevant test case for this parsing step.
-     * @param numCorrect The number of correct test cases.
-     * @return The current number of correct test cases, so far. This is
-     * returned because it is a primitive, and its value will not be
-     * preserved in the parent method.
      */
-    private int parseTestCaseOutput(OutputSection outputSection,
+    private void parseTestCaseOutput(OutputSection outputSection,
         String outputStr, List<ResultDto> results, ResultDto result,
-        ProblemTestCase testCase, int numCorrect) {
+        ProblemTestCase testCase) {
         // Update the result as expected or throw error if misformatted.
         if (outputSection == OutputSection.TEST_CASE) {
             throw new ApiException(ParserError.MISFORMATTED_OUTPUT);
@@ -127,13 +122,7 @@ public class OutputParser {
             result.setUserOutput(outputStr);
             result.setError(null);
             result.setCorrectOutput(testCase.getOutput());
-
-            // Set the output correctness.
-            boolean outputCorrect = isOutputCorrect(outputStr, testCase);
-            if (outputCorrect) {
-                numCorrect++;
-            }
-            result.setCorrect(outputCorrect);
+            result.setCorrect(isOutputCorrect(outputStr, testCase));
             results.add(result);
         } else if (outputSection == OutputSection.FAILURE) {
             // Set the result fields.
@@ -143,7 +132,21 @@ public class OutputParser {
             result.setCorrect(false);
             results.add(result);
         }
+    }
 
+    /**
+     * Calculate the number of correct test case results.
+     * 
+     * @param results The list of results, a result for each test case.
+     * @return The number of correct test case results by the user's code.
+     */
+    private int calculateNumCorrect(List<ResultDto> results) {
+        int numCorrect = 0;
+        for (ResultDto result : results) {
+            if (result.isCorrect()) {
+                numCorrect++;
+            }
+        }
         return numCorrect;
     }
 
