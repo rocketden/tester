@@ -4,20 +4,23 @@ import com.rocketden.tester.dto.RunDto;
 import com.rocketden.tester.exception.DockerSetupError;
 import com.rocketden.tester.exception.api.ApiException;
 import com.rocketden.tester.model.Language;
+import com.rocketden.tester.model.problem.Problem;
+import com.rocketden.tester.service.parsers.OutputParser;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.concurrent.TimeUnit;
 
 @Service
 public class DockerService {
 
-    private static final int TIME_LIMIT = 2;
+    private final OutputParser outputParser;
 
-    public RunDto spawnAndRun(String folder, Language language) {
+    @Autowired
+    public DockerService(OutputParser outputParser) {
+        this.outputParser = outputParser;
+    }
+
+    public RunDto spawnAndRun(String folder, Language language, Problem problem) {
         try {
             // Create and run disposable docker container with the given temp folder
             String[] commands = getRunCommands(folder, language);
@@ -25,31 +28,12 @@ public class DockerService {
             builder.redirectErrorStream(true);
             Process process = builder.start();
 
-            return captureOutput(process);
+            // Parse, capture, and return the newly-created RunDto object.
+            return outputParser.parseCaptureOutput(process, problem);
 
         } catch (Exception e) {
             throw new ApiException(DockerSetupError.BUILD_DOCKER_CONTAINER);
         }
-    }
-
-    // Given a process, return its status, console output, and error output
-    private RunDto captureOutput(Process process) throws IOException, InterruptedException {
-        BufferedReader stdInput = new BufferedReader(new
-                InputStreamReader(process.getInputStream()));
-
-        StringBuilder output = new StringBuilder();
-        String s;
-        while ((s = stdInput.readLine()) != null) {
-            output.append(s).append("\n");
-        }
-
-        boolean exitStatus = process.waitFor(TIME_LIMIT, TimeUnit.SECONDS);
-
-        RunDto runDto = new RunDto();
-        runDto.setStatus(exitStatus);
-        runDto.setOutput(output.toString());
-
-        return runDto;
     }
 
     private String[] getRunCommands(String folder, Language language) {
