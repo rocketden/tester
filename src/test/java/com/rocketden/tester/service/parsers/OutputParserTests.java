@@ -29,7 +29,7 @@ public class OutputParserTests {
 
     private static final String STRING_OUTPUT_1 = "\"This is a test - hello!\"";
     private static final String STRING_OUTPUT_2 = "\"This is a test = hello!\"";
-    private static final String STRING_OUTPUT_INVALID = "This is a test = hello!";
+    private static final String STRING_OUTPUT_INVALID = "This is a test - hello!";
     private static final ProblemIOType STRING_OUTPUT_TYPE = ProblemIOType.STRING;
 
     private static final String INTEGER_OUTPUT = "7";

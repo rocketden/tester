@@ -78,7 +78,7 @@ class RunnerTests {
         RunRequest request = new RunRequest();
         request.setLanguage(LANGUAGE);
         request.setCode(CODE);
-        request.setProblem(ProblemTestMethods.getFindMaxProblem("[1]"));
+        request.setProblem(ProblemTestMethods.getFindMaxProblem(new String[]{"[1]", "1"}));
         request.getProblem().setOutputType(null);
 
         ApiError ERROR = RequestError.EMPTY_FIELD;
@@ -121,7 +121,7 @@ class RunnerTests {
         RunRequest request = new RunRequest();
         request.setLanguage(LANGUAGE);
         request.setCode(CODE);
-        request.setProblem(ProblemTestMethods.getFindMaxProblem("[1]"));
+        request.setProblem(ProblemTestMethods.getFindMaxProblem(new String[]{"[1]", "1"}));
         request.getProblem().getProblemInputs().get(0).setName("");
 
         ApiError ERROR = ProblemError.BAD_PARAMETER_SETTINGS;
@@ -143,7 +143,7 @@ class RunnerTests {
         RunRequest request = new RunRequest();
         request.setLanguage(LANGUAGE);
         request.setCode(CODE);
-        request.setProblem(ProblemTestMethods.getFindMaxProblem("[1, 2, hi]"));
+        request.setProblem(ProblemTestMethods.getFindMaxProblem(new String[]{"[1, 2, hi]", "2"}));
 
         ApiError ERROR = ParserError.INVALID_INPUT;
 

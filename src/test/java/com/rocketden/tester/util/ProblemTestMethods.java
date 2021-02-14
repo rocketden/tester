@@ -10,12 +10,13 @@ import java.util.List;
 
 public class ProblemTestMethods {
 
-    public static Problem getFindMaxProblem(String... inputs) {
+    public static Problem getFindMaxProblem(String[]... inputs) {
         List<ProblemTestCase> testCases = new ArrayList<>();
 
-        for (String input : inputs) {
+        for (String[] input : inputs) {
             ProblemTestCase testCase = new ProblemTestCase();
-            testCase.setInput(input);
+            testCase.setInput(input[0]);
+            testCase.setOutput(input[1]);
             testCases.add(testCase);
         }
 

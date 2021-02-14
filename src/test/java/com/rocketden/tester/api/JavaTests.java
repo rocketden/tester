@@ -2,6 +2,7 @@ package com.rocketden.tester.api;
 
 import com.rocketden.tester.util.ProblemTestMethods;
 import com.rocketden.tester.util.UtilityTestMethods;
+import com.rocketden.tester.dto.ResultDto;
 import com.rocketden.tester.dto.RunDto;
 import com.rocketden.tester.dto.RunRequest;
 import com.rocketden.tester.model.Language;
@@ -14,6 +15,9 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -33,6 +37,7 @@ class JavaTests {
             "",
             "public class Solution {",
             "    public int solve(int[] array) {",
+            "        System.out.println(\"Test print.\");",
             "        return Arrays.stream(array).max().getAsInt();",
             "    }",
             "}");
@@ -43,7 +48,7 @@ class JavaTests {
         request.setCode(CODE);
         request.setLanguage(LANGUAGE);
 
-        Problem problem = ProblemTestMethods.getFindMaxProblem("[1, 3, 5, 7, 4, 2]", "[-5, 16, 0]");
+        Problem problem = ProblemTestMethods.getFindMaxProblem(new String[]{"[1, 3, 5, 7, 4, 2]", "7"}, new String[]{"[-5, 16, 0]", "16"});
         request.setProblem(problem);
 
         MvcResult result = this.mockMvc.perform(post(POST_RUNNER)
@@ -55,7 +60,29 @@ class JavaTests {
         String response = result.getResponse().getContentAsString();
         RunDto runDto = UtilityTestMethods.toObject(response, RunDto.class);
 
-        // TODO: Check the RunDto expected fields.
+        // Check the base fields of runDto.
+        assertEquals(2, runDto.getNumCorrect());
+        assertEquals(2, runDto.getNumTestCases());
+        assertEquals(0.0, runDto.getRuntime());
+
+        // Check the individual results within the runDto.
+        assertEquals(2, runDto.getResults().size());
+
+        // Check the first result.
+        ResultDto resultDto = runDto.getResults().get(0);
+        assertEquals("Test print.\n", resultDto.getConsole());
+        assertEquals("7\n", resultDto.getUserOutput());
+        assertNull(resultDto.getError());
+        assertEquals("7", resultDto.getCorrectOutput());
+        assertTrue(resultDto.isCorrect());
+
+        // Check the second result.
+        resultDto = runDto.getResults().get(1);
+        assertEquals("Test print.\n", resultDto.getConsole());
+        assertEquals("16\n", resultDto.getUserOutput());
+        assertNull(resultDto.getError());
+        assertEquals("16", resultDto.getCorrectOutput());
+        assertTrue(resultDto.isCorrect());
     }
 
     @Test

@@ -40,7 +40,7 @@ class PythonTests {
 		request.setCode(CODE);
 		request.setLanguage(LANGUAGE);
 
-		Problem problem = ProblemTestMethods.getFindMaxProblem("[1, 3, 5, 7, 4, 2]", "[-5, 16, 0]");
+		Problem problem = ProblemTestMethods.getFindMaxProblem(new String[]{"[1, 3, 5, 7, 4, 2]", "7"}, new String[]{"[-5, 16, 0]", "16"});
 		request.setProblem(problem);
 
 		MvcResult result = this.mockMvc.perform(post(POST_RUNNER)
