@@ -16,6 +16,7 @@ import com.rocketden.tester.model.OutputSection;
 import com.rocketden.tester.model.problem.Problem;
 import com.rocketden.tester.model.problem.ProblemIOType;
 import com.rocketden.tester.model.problem.ProblemTestCase;
+import com.rocketden.tester.util.Utility;
 
 import org.springframework.stereotype.Service;
 
@@ -157,8 +158,14 @@ public class OutputParser {
 
     // Return whether the user's output is correct.
     protected boolean isOutputCorrect(String outputStr, ProblemTestCase testCase, ProblemIOType outputType) {
+        // Deserialize the user and correct outputs to compare object equality.
         Object userOutput = parseRawOutputOfGivenType(outputStr, outputType.getClassType());
         Object correctOutput = parseRawOutputOfGivenType(testCase.getOutput(), outputType.getClassType());
+
+        // Check equality between arrays separately from direct object equality.
+        if (Utility.arrayTypes.contains(outputType)) {
+            return Arrays.equals(userOutput, correctOutput);
+        }
         return userOutput.equals(correctOutput);
     }
 

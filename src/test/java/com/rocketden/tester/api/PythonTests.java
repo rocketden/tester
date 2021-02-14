@@ -66,7 +66,7 @@ class PythonTests {
 		request.setCode(code);
 		request.setLanguage(LANGUAGE);
 
-		Problem problem = ProblemTestMethods.getSumProblem("2\n3\n");
+		Problem problem = ProblemTestMethods.getSumProblem(new String[]{"2\n3\n", "5"});
 		request.setProblem(problem);
 
 		MvcResult result = this.mockMvc.perform(post(POST_RUNNER)

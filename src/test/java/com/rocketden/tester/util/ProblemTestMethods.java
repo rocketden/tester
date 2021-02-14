@@ -34,12 +34,37 @@ public class ProblemTestMethods {
         return problem;
     }
 
-    public static Problem getSumProblem(String... inputs) {
+    public static Problem getSortStringArrayProblem(String[]... inputs) {
         List<ProblemTestCase> testCases = new ArrayList<>();
 
-        for (String input : inputs) {
+        for (String[] input : inputs) {
             ProblemTestCase testCase = new ProblemTestCase();
-            testCase.setInput(input);
+            testCase.setInput(input[0]);
+            testCase.setOutput(input[1]);
+            testCases.add(testCase);
+        }
+
+        List<ProblemInput> problemInputs = new ArrayList<>();
+        ProblemInput problemInput = new ProblemInput();
+        problemInput.setType(ProblemIOType.ARRAY_STRING);
+        problemInput.setName("array");
+        problemInputs.add(problemInput);
+
+        Problem problem = new Problem();
+        problem.setTestCases(testCases);
+        problem.setProblemInputs(problemInputs);
+        problem.setOutputType(ProblemIOType.ARRAY_STRING);
+
+        return problem;
+    }
+
+    public static Problem getSumProblem(String[]... inputs) {
+        List<ProblemTestCase> testCases = new ArrayList<>();
+
+        for (String[] input : inputs) {
+            ProblemTestCase testCase = new ProblemTestCase();
+            testCase.setInput(input[0]);
+            testCase.setOutput(input[1]);
             testCases.add(testCase);
         }
 

@@ -164,7 +164,7 @@ class RunnerTests {
         RunRequest request = new RunRequest();
         request.setLanguage(LANGUAGE);
         request.setCode(CODE);
-        request.setProblem(ProblemTestMethods.getSumProblem("5\n"));
+        request.setProblem(ProblemTestMethods.getSumProblem(new String[]{"5\n", "5"}));
 
         ApiError ERROR = ParserError.INCORRECT_COUNT;
 
