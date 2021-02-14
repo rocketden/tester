@@ -156,7 +156,7 @@ public class OutputParser {
     }
 
     // Return whether the user's output is correct.
-    private boolean isOutputCorrect(String outputStr, ProblemTestCase testCase, ProblemIOType outputType) {
+    protected boolean isOutputCorrect(String outputStr, ProblemTestCase testCase, ProblemIOType outputType) {
         Object userOutput = parseRawOutputOfGivenType(outputStr, outputType.getClassType());
         Object correctOutput = parseRawOutputOfGivenType(testCase.getOutput(), outputType.getClassType());
         return userOutput.equals(correctOutput);
