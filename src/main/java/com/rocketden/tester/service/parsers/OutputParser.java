@@ -95,7 +95,7 @@ public class OutputParser {
         runDto.setNumTestCases(testCases.size());
 
         // Set the output manually, before the runtime is calculated.
-        runDto.setRuntime(0L);
+        runDto.setRuntime(0.0);
 
         return runDto;
     }

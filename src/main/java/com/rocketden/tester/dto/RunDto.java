@@ -12,5 +12,5 @@ public class RunDto {
     private List<ResultDto> results;
     private Integer numCorrect;
     private Integer numTestCases;
-    private Long runtime;
+    private Double runtime;
 }
