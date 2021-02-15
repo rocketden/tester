@@ -8,7 +8,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
 import com.rocketden.tester.dto.ResultDto;
 import com.rocketden.tester.dto.RunDto;
 import com.rocketden.tester.exception.ParserError;
@@ -178,7 +177,7 @@ public class OutputParser {
     private Object parseRawOutputOfGivenType(String output, Class<?> classType) {
         try {
             return gson.fromJson(output, classType);
-        } catch (JsonSyntaxException e) {
+        } catch (Exception e) {
             throw new ApiException(ParserError.INVALID_OUTPUT);
         }
     }
