@@ -22,98 +22,98 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 class PythonTests {
 
-	@Autowired
-	private MockMvc mockMvc;
+    @Autowired
+    private MockMvc mockMvc;
 
-	private static final String POST_RUNNER = "/api/v1/runner";
+    private static final String POST_RUNNER = "/api/v1/runner";
 
-	private static final Language LANGUAGE = Language.PYTHON;
-	private static final String CODE = String.join("\n",
-			"class Solution:",
-			"    def solve(array):",
+    private static final Language LANGUAGE = Language.PYTHON;
+    private static final String CODE = String.join("\n",
+            "class Solution:",
+            "    def solve(array):",
             "        return max(array)");
     private static final String ERROR_CODE = "class Solution(object):\n\tdef solve(num):\n\t\tlist = [1, 2, 4]\n\t\tprint(num)\n\t\treturn list[num]";
 
-	@Test
-	public void runRequestSuccess() throws Exception {
-		RunRequest request = new RunRequest();
-		request.setCode(CODE);
-		request.setLanguage(LANGUAGE);
-
-		Problem problem = ProblemTestMethods.getFindMaxProblem(new String[]{"[1, 3, 5, 7, 4, 2]", "7"}, new String[]{"[-5, 16, 0]", "16"});
-		request.setProblem(problem);
-
-		MvcResult result = this.mockMvc.perform(post(POST_RUNNER)
-				.contentType(MediaType.APPLICATION_JSON_VALUE)
-				.content(UtilityTestMethods.convertObjectToJsonString(request)))
-				.andDo(print()).andExpect(status().isOk())
-				.andReturn();
-
-		String response = result.getResponse().getContentAsString();
-        RunDto runDto = UtilityTestMethods.toObject(response, RunDto.class);
-        
-        // TODO: Check the RunDto expected fields.
-	}
-
-	@Test
-	public void runRequestSuccessMultipleParams() throws Exception {
-		String code = String.join("\n",
-				"class Solution:",
-				"    def solve(num1, num2):",
-				"        return num1 + num2");
-
-		RunRequest request = new RunRequest();
-		request.setCode(code);
-		request.setLanguage(LANGUAGE);
-
-		Problem problem = ProblemTestMethods.getSumProblem(new String[]{"2\n3\n", "5"});
-		request.setProblem(problem);
-
-		MvcResult result = this.mockMvc.perform(post(POST_RUNNER)
-				.contentType(MediaType.APPLICATION_JSON_VALUE)
-				.content(UtilityTestMethods.convertObjectToJsonString(request)))
-				.andDo(print()).andExpect(status().isOk())
-				.andReturn();
-
-		String response = result.getResponse().getContentAsString();
-		RunDto runDto = UtilityTestMethods.toObject(response, RunDto.class);
-
-		// TODO: Check the RunDto expected fields.
-    }
-    
     @Test
-	public void runRequestFailureOnTwoCases() throws Exception {
-		RunRequest request = new RunRequest();
-		request.setCode(ERROR_CODE);
-		request.setLanguage(LANGUAGE);
+    public void runRequestSuccess() throws Exception {
+        RunRequest request = new RunRequest();
+        request.setCode(CODE);
+        request.setLanguage(LANGUAGE);
 
-		Problem problem = ProblemTestMethods.getMultiplyDoubleProblem("2", "5", "13");
-		request.setProblem(problem);
+        Problem problem = ProblemTestMethods.getFindMaxProblem(new String[]{"[1, 3, 5, 7, 4, 2]", "7"}, new String[]{"[-5, 16, 0]", "16"});
+        request.setProblem(problem);
 
-		MvcResult result = this.mockMvc.perform(post(POST_RUNNER)
-				.contentType(MediaType.APPLICATION_JSON_VALUE)
-				.content(UtilityTestMethods.convertObjectToJsonString(request)))
-				.andDo(print()).andExpect(status().isOk())
-				.andReturn();
+        MvcResult result = this.mockMvc.perform(post(POST_RUNNER)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(UtilityTestMethods.convertObjectToJsonString(request)))
+                .andDo(print()).andExpect(status().isOk())
+                .andReturn();
 
-		String response = result.getResponse().getContentAsString();
+        String response = result.getResponse().getContentAsString();
         RunDto runDto = UtilityTestMethods.toObject(response, RunDto.class);
         
         // TODO: Check the RunDto expected fields.
-	}
+    }
 
-	@Test
-	public void runRequestWrongAnswer() throws Exception {
-		// TODO
-	}
+    @Test
+    public void runRequestSuccessMultipleParams() throws Exception {
+        String code = String.join("\n",
+                "class Solution:",
+                "    def solve(num1, num2):",
+                "        return num1 + num2");
 
-	@Test
-	public void runRequestErrorOccurred() throws Exception {
-		// TODO - test error portions
-	}
+        RunRequest request = new RunRequest();
+        request.setCode(code);
+        request.setLanguage(LANGUAGE);
 
-	@Test
-	public void runRequestConsoleOutput() throws Exception {
-		// TODO - test console output portions
-	}
+        Problem problem = ProblemTestMethods.getSumProblem(new String[]{"2\n3\n", "5"});
+        request.setProblem(problem);
+
+        MvcResult result = this.mockMvc.perform(post(POST_RUNNER)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(UtilityTestMethods.convertObjectToJsonString(request)))
+                .andDo(print()).andExpect(status().isOk())
+                .andReturn();
+
+        String response = result.getResponse().getContentAsString();
+        RunDto runDto = UtilityTestMethods.toObject(response, RunDto.class);
+
+        // TODO: Check the RunDto expected fields.
+    }
+
+    @Test
+    public void runRequestFailureOnTwoCases() throws Exception {
+        RunRequest request = new RunRequest();
+        request.setCode(ERROR_CODE);
+        request.setLanguage(LANGUAGE);
+
+        Problem problem = ProblemTestMethods.getMultiplyDoubleProblem("2", "5", "13");
+        request.setProblem(problem);
+
+        MvcResult result = this.mockMvc.perform(post(POST_RUNNER)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(UtilityTestMethods.convertObjectToJsonString(request)))
+                .andDo(print()).andExpect(status().isOk())
+                .andReturn();
+
+        String response = result.getResponse().getContentAsString();
+        RunDto runDto = UtilityTestMethods.toObject(response, RunDto.class);
+        
+        // TODO: Check the RunDto expected fields.
+    }
+
+    @Test
+    public void runRequestWrongAnswer() throws Exception {
+        // TODO
+    }
+
+    @Test
+    public void runRequestErrorOccurred() throws Exception {
+        // TODO - test error portions
+    }
+
+    @Test
+    public void runRequestConsoleOutput() throws Exception {
+        // TODO - test console output portions
+    }
 }
