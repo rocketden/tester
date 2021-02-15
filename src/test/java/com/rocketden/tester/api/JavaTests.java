@@ -246,6 +246,9 @@ class JavaTests {
         String code = String.join("\n",
         "public class Solution {",
         "    public int solve(int num) {",
+        "        if (num == 13) {",
+        "            System.out.println(\"Input array is empty.\");",
+        "        }",
         "        int[] array = {1, 2, 4};",
         "        return array[num];",
         "    }",
@@ -287,7 +290,7 @@ class JavaTests {
         resultDto = runDto.getResults().get(1);
         String expectedError = String.join("\n",
             "java.lang.ArrayIndexOutOfBoundsException: 5",
-            "\tat Solution.solve(Solution.java:4)",
+            "\tat Solution.solve(Solution.java:7)",
             "\tat Driver.main(Driver.java:24)",
             ""
         );
@@ -301,19 +304,14 @@ class JavaTests {
         resultDto = runDto.getResults().get(2);
         expectedError = String.join("\n",
             "java.lang.ArrayIndexOutOfBoundsException: 13",
-            "\tat Solution.solve(Solution.java:4)",
+            "\tat Solution.solve(Solution.java:7)",
             "\tat Driver.main(Driver.java:33)",
             ""
         );
-        assertEquals("", resultDto.getConsole());
+        assertEquals("Input array is empty.\n", resultDto.getConsole());
         assertNull(resultDto.getUserOutput());
         assertEquals(expectedError, resultDto.getError());
         assertEquals("26", resultDto.getCorrectOutput());
         assertFalse(resultDto.isCorrect());
-    }
-
-    @Test
-    public void runRequestConsoleOutputErrorOccurred() throws Exception {
-        // TODO - test console output portions
     }
 }
