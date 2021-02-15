@@ -242,7 +242,74 @@ class JavaTests {
 
     @Test
     public void runRequestErrorOccurred() throws Exception {
-        // TODO - test error portions
+        // Create code that returns error for the second and third problems.
+        String code = String.join("\n",
+        "public class Solution {",
+        "    public int solve(int num) {",
+        "        int[] array = {1, 2, 4};",
+        "        return array[num];",
+        "    }",
+        "}");
+
+        RunRequest request = new RunRequest();
+		request.setCode(code);
+		request.setLanguage(LANGUAGE);
+
+		Problem problem = ProblemTestMethods.getMultiplyDoubleProblem(new String[]{"2", "4"}, new String[]{"5", "10"}, new String[]{"13", "26"});
+		request.setProblem(problem);
+
+		MvcResult result = this.mockMvc.perform(post(POST_RUNNER)
+				.contentType(MediaType.APPLICATION_JSON_VALUE)
+				.content(UtilityTestMethods.convertObjectToJsonString(request)))
+				.andDo(print()).andExpect(status().isOk())
+				.andReturn();
+
+		String response = result.getResponse().getContentAsString();
+        RunDto runDto = UtilityTestMethods.toObject(response, RunDto.class);
+
+        // Check the base fields of runDto.
+        assertEquals(1, runDto.getNumCorrect());
+        assertEquals(3, runDto.getNumTestCases());
+        assertEquals(0.0, runDto.getRuntime());
+
+        // Check the individual results within the runDto.
+        assertEquals(3, runDto.getResults().size());
+
+        // Check the first result.
+        ResultDto resultDto = runDto.getResults().get(0);
+        assertEquals("", resultDto.getConsole());
+        assertEquals("4\n", resultDto.getUserOutput());
+        assertNull(resultDto.getError());
+        assertEquals("4", resultDto.getCorrectOutput());
+        assertTrue(resultDto.isCorrect());
+
+        // Check the second result.
+        resultDto = runDto.getResults().get(1);
+        String expectedError = String.join("\n",
+            "java.lang.ArrayIndexOutOfBoundsException: 5",
+            "\tat Solution.solve(Solution.java:4)",
+            "\tat Driver.main(Driver.java:24)",
+            ""
+        );
+        assertEquals("", resultDto.getConsole());
+        assertNull(resultDto.getUserOutput());
+        assertEquals(expectedError, resultDto.getError());
+        assertEquals("10", resultDto.getCorrectOutput());
+        assertFalse(resultDto.isCorrect());
+
+        // Check the third result.
+        resultDto = runDto.getResults().get(2);
+        expectedError = String.join("\n",
+            "java.lang.ArrayIndexOutOfBoundsException: 13",
+            "\tat Solution.solve(Solution.java:4)",
+            "\tat Driver.main(Driver.java:33)",
+            ""
+        );
+        assertEquals("", resultDto.getConsole());
+        assertNull(resultDto.getUserOutput());
+        assertEquals(expectedError, resultDto.getError());
+        assertEquals("26", resultDto.getCorrectOutput());
+        assertFalse(resultDto.isCorrect());
     }
 
     @Test
