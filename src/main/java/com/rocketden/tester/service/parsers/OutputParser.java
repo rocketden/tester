@@ -17,7 +17,6 @@ import com.rocketden.tester.model.OutputSection;
 import com.rocketden.tester.model.problem.Problem;
 import com.rocketden.tester.model.problem.ProblemIOType;
 import com.rocketden.tester.model.problem.ProblemTestCase;
-import com.rocketden.tester.util.Utility;
 
 import org.springframework.stereotype.Service;
 
@@ -169,7 +168,7 @@ public class OutputParser {
         Object correctOutput = parseRawOutputOfGivenType(testCase.getOutput(), outputType.getClassType());
 
         // Check equality between arrays separately from direct object equality.
-        if (Utility.arrayTypes.contains(outputType)) {
+        if (outputType.getClassType().isArray()) {
             return Arrays.equals((Object[]) userOutput, (Object[]) correctOutput);
         }
         return userOutput.equals(correctOutput);
