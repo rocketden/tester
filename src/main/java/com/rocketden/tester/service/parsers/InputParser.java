@@ -1,7 +1,6 @@
 package com.rocketden.tester.service.parsers;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
 import com.rocketden.tester.exception.ParserError;
 import com.rocketden.tester.exception.api.ApiException;
 import com.rocketden.tester.model.problem.Problem;
@@ -40,7 +39,7 @@ public class InputParser {
     private Object parseRawInputOfGivenType(String input, Class<?> classType) {
         try {
             return gson.fromJson(input, classType);
-        } catch (JsonSyntaxException e) {
+        } catch (Exception e) {
             throw new ApiException(ParserError.INVALID_INPUT);
         }
     }

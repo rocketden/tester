@@ -42,7 +42,7 @@ public class RunnerServiceTests {
         request.setLanguage(LANGUAGE);
         request.setCode(CODE);
 
-        Problem problem = ProblemTestMethods.getFindMaxProblem("[]");
+        Problem problem = ProblemTestMethods.getFindMaxProblem(new String[]{"[]", ""});
         request.setProblem(problem);
 
         Mockito.doReturn(TEMP_FOLDER).when(setupService).createTempFolder();
@@ -58,7 +58,7 @@ public class RunnerServiceTests {
         RunRequest request = new RunRequest();
         request.setLanguage(LANGUAGE);
         request.setCode(CODE);
-        request.setProblem(ProblemTestMethods.getFindMaxProblem("[]"));
+        request.setProblem(ProblemTestMethods.getFindMaxProblem(new String[]{"[]", ""}));
 
         ApiError ERROR = DockerSetupError.WRITE_CODE_TO_DISK;
 

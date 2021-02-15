@@ -176,6 +176,10 @@ public class PythonDriverGeneratorService implements DriverGeneratorService {
             case BOOLEAN:
                 return String.format("%b", (Boolean) value);
             case ARRAY_STRING:
+                // Catch edge case of empty array, no string quotes within array.
+                if (((String[]) value).length == 0) {
+                    return "[]";
+                }
                 return String.format("[\"%s\"]", String.join("\", \"", (String[]) value));
             case ARRAY_INTEGER:
                 return String.format("[%s]", StringUtils.join((Integer[]) value, ", "));
