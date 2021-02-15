@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import com.google.gson.Gson;
@@ -164,7 +165,7 @@ public class OutputParser {
 
         // Check equality between arrays separately from direct object equality.
         if (Utility.arrayTypes.contains(outputType)) {
-            return Arrays.equals(userOutput, correctOutput);
+            return Arrays.equals((Object[]) userOutput, (Object[]) correctOutput);
         }
         return userOutput.equals(correctOutput);
     }

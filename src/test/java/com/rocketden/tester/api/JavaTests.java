@@ -171,7 +171,8 @@ class JavaTests {
         // Check the first result.
         ResultDto resultDto = runDto.getResults().get(0);
         assertEquals("", resultDto.getConsole());
-        assertEquals("[\"alphabetical\", \"journal\", \"notebook\", \"phone\"]\n", resultDto.getUserOutput());
+        // User output does not include \" for Strings.
+        assertEquals("[alphabetical, journal, notebook, phone]\n", resultDto.getUserOutput());
         assertNull(resultDto.getError());
         assertEquals("[\"alphabetical\", \"journal\", \"notebook\", \"phone\"]", resultDto.getCorrectOutput());
         assertTrue(resultDto.isCorrect());
