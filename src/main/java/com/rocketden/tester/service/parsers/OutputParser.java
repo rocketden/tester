@@ -93,7 +93,6 @@ public class OutputParser {
 
         // Throw error if more tests were captured than exist.
         if (results.size() != testCases.size()) {
-            // TODO: Should we return the current output, which may hold an error, at this point? Syntax errors can show up here.
             throw new ApiException(ParserError.MISFORMATTED_OUTPUT);
         }
 
