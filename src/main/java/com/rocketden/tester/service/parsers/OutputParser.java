@@ -40,6 +40,9 @@ public class OutputParser {
      * @return The RunDto object produced from the output.
      */
     public RunDto parseCaptureOutput(Process process, Problem problem) throws IOException {
+        // StringBuilder to hold the full output for debugging purposes.
+        StringBuilder debugger = new StringBuilder();
+
         BufferedReader stdInput = new BufferedReader(new
                 InputStreamReader(process.getInputStream()));
 
@@ -52,6 +55,7 @@ public class OutputParser {
         OutputSection outputSection = OutputSection.START;
         String s;
         while ((s = stdInput.readLine()) != null) {
+            debugger.append(s).append("\n");
             // Update the output section.
             if (s.equals(DELIMITER_TEST_CASE)) {
                 parseTestCaseOutput(outputSection,
@@ -91,6 +95,7 @@ public class OutputParser {
 
         // Throw error if more tests were captured than exist.
         if (results.size() != testCases.size()) {
+            // TODO: Should we return the current output, which may hold an error, at this point? Syntax errors can show up here.
             throw new ApiException(ParserError.MISFORMATTED_OUTPUT);
         }
 

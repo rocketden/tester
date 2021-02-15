@@ -34,14 +34,15 @@ class JavaTests {
 
     private static final Language LANGUAGE = Language.JAVA;
     private static final String CODE = String.join("\n",
-            "import java.util.Arrays;",
-            "",
-            "public class Solution {",
-            "    public int solve(int[] array) {",
-            "        System.out.println(\"Test print.\");",
-            "        return Arrays.stream(array).max().getAsInt();",
-            "    }",
-            "}");
+        "import java.util.Arrays;",
+        "",
+        "public class Solution {",
+        "    public int solve(int[] array) {",
+        "        System.out.println(\"Test print.\");",
+        "        return Arrays.stream(array).max().getAsInt();",
+        "    }",
+        "}"
+    );
 
     @Test
     public void runRequestSuccess() throws Exception {
@@ -89,11 +90,12 @@ class JavaTests {
     @Test
     public void runRequestSuccessMultipleParams() throws Exception {
         String code = String.join("\n",
-                "public class Solution {",
-                "    public int solve(int num1, int num2) {",
-                "        return num1 + num2;",
-                "    }",
-                "}");
+            "public class Solution {",
+            "    public int solve(int num1, int num2) {",
+            "        return num1 + num2;",
+            "    }",
+            "}"
+        );
 
         RunRequest request = new RunRequest();
         request.setCode(code);
@@ -132,17 +134,18 @@ class JavaTests {
     public void runRequestCorrectAnswerStringArray() throws Exception {
         // Code to sort a string array, include import to use Arrays.sort.
         String code = String.join("\n",
-        "import java.util.*;",
-        "",
-        "public class Solution {",
-        "    public String[] solve(String[] array) {",
-        "        if (array.length == 0) {",
-        "            System.out.println(\"Input array is empty.\");",
-        "        }",
-        "        Arrays.sort(array);",
-        "        return array;",
-        "    }",
-        "}");
+            "import java.util.*;",
+            "",
+            "public class Solution {",
+            "    public String[] solve(String[] array) {",
+            "        if (array.length == 0) {",
+            "            System.out.println(\"Input array is empty.\");",
+            "        }",
+            "        Arrays.sort(array);",
+            "        return array;",
+            "    }",
+            "}"
+        );
 
         RunRequest request = new RunRequest();
         request.setCode(code);
@@ -190,14 +193,15 @@ class JavaTests {
     public void runRequestWrongAnswer() throws Exception {
         // Create code that returns wrong answer for 2 + 3.
         String code = String.join("\n",
-        "public class Solution {",
-        "    public int solve(int num1, int num2) {",
-        "        if (num1 == 2 && num2 == 3) {",
-        "            return -1;",
-        "        }",
-        "        return num1 + num2;",
-        "    }",
-        "}");
+            "public class Solution {",
+            "    public int solve(int num1, int num2) {",
+            "        if (num1 == 2 && num2 == 3) {",
+            "            return -1;",
+            "        }",
+            "        return num1 + num2;",
+            "    }",
+            "}"
+        );
 
         RunRequest request = new RunRequest();
         request.setCode(code);
@@ -244,15 +248,16 @@ class JavaTests {
     public void runRequestErrorOccurred() throws Exception {
         // Create code that returns error for the second and third problems.
         String code = String.join("\n",
-        "public class Solution {",
-        "    public int solve(int num) {",
-        "        if (num == 13) {",
-        "            System.out.println(\"Input array is empty.\");",
-        "        }",
-        "        int[] array = {1, 2, 4};",
-        "        return array[num];",
-        "    }",
-        "}");
+            "public class Solution {",
+            "    public int solve(int num) {",
+            "        if (num == 13) {",
+            "            System.out.println(\"Input array is empty.\");",
+            "        }",
+            "        int[] array = {1, 2, 4};",
+            "        return array[num];",
+            "    }",
+            "}"
+        );
 
         RunRequest request = new RunRequest();
 		request.setCode(code);
