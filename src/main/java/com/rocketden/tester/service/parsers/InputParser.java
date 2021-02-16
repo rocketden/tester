@@ -1,7 +1,6 @@
 package com.rocketden.tester.service.parsers;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
 import com.rocketden.tester.exception.ParserError;
 import com.rocketden.tester.exception.api.ApiException;
 import com.rocketden.tester.model.problem.Problem;
