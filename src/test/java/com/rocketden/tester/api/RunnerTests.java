@@ -179,4 +179,14 @@ class RunnerTests {
 
         assertEquals(ERROR.getResponse(), actual);
     }
+
+    @Test
+    public void runRequestCompilationError() throws Exception {
+        // TODO for Java
+    }
+
+    @Test
+    public void runRequestMisformattedOutput() throws Exception {
+        // TODO: misformatted input ones (in output parse)
+    }
 }

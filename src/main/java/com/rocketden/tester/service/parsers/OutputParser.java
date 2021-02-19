@@ -17,8 +17,10 @@ import com.rocketden.tester.model.problem.Problem;
 import com.rocketden.tester.model.problem.ProblemIOType;
 import com.rocketden.tester.model.problem.ProblemTestCase;
 
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
+@Log4j2
 @Service
 public class OutputParser {
 
@@ -38,6 +40,8 @@ public class OutputParser {
      * @return The RunDto object produced from the output.
      */
     public RunDto parseCaptureOutput(Process process, Problem problem) throws IOException {
+        log.info("Begin capturing and parsing Docker output");
+
         // StringBuilder to hold the full output for debugging purposes.
         StringBuilder debugger = new StringBuilder();
 
@@ -95,6 +99,8 @@ public class OutputParser {
         if (results.size() != testCases.size()) {
             throw new ApiException(ParserError.MISFORMATTED_OUTPUT);
         }
+
+        log.info("Successfully captured and parsed Docker output");
 
         RunDto runDto = new RunDto();
         runDto.setResults(results);
