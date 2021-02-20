@@ -399,7 +399,81 @@ class PythonTests {
 	}
 
     @Test
-    public void runRequestCompilationErrorWrongReturnType() throws Exception {
-        // TODO for Java
+    public void runRequestRuntimeError() throws Exception {
+        String code = String.join("\n",
+                "class Solution:",
+                "    def wrong(num1, num2):",
+                "        return num1 + num2"
+        );
+
+        String error = "Traceback (most recent call last):\n" +
+                "  File \"/code/./Driver.py\", line 16, in main\n" +
+                "    solution1 = solution.solve(num11, num21)\n" +
+                "AttributeError: type object 'Solution' has no attribute 'solve'\n";
+
+        RunRequest request = new RunRequest();
+        request.setCode(code);
+        request.setLanguage(LANGUAGE);
+
+        Problem problem = ProblemTestMethods.getSumProblem(new String[]{"1\n2", "3"});
+        request.setProblem(problem);
+
+        MvcResult result = this.mockMvc.perform(post(POST_RUNNER)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(UtilityTestMethods.convertObjectToJsonString(request)))
+                .andDo(print()).andExpect(status().isOk())
+                .andReturn();
+
+        String response = result.getResponse().getContentAsString();
+        RunDto runDto = UtilityTestMethods.toObject(response, RunDto.class);
+
+        assertEquals(1, runDto.getResults().size());
+        assertEquals(0, runDto.getNumCorrect());
+        assertEquals(problem.getTestCases().size(), runDto.getNumTestCases());
+        assertNull(runDto.getCompilationError());
+
+        ResultDto resultDto = runDto.getResults().get(0);
+
+        assertEquals("3", resultDto.getCorrectOutput());
+        assertEquals(error, resultDto.getError());
+        assertNull(resultDto.getUserOutput());
+    }
+
+    @Test
+    public void runRequestWrongReturnType() throws Exception {
+        String code = String.join("\n",
+                "class Solution:",
+                "    def solve(num1, num2):",
+                "        return 'foo'"
+        );
+
+        String error = OutputParser.WRONG_RETURN_TYPE;
+
+        RunRequest request = new RunRequest();
+        request.setCode(code);
+        request.setLanguage(LANGUAGE);
+
+        Problem problem = ProblemTestMethods.getSumProblem(new String[]{"1\n2", "3"});
+        request.setProblem(problem);
+
+        MvcResult result = this.mockMvc.perform(post(POST_RUNNER)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(UtilityTestMethods.convertObjectToJsonString(request)))
+                .andDo(print()).andExpect(status().isOk())
+                .andReturn();
+
+        String response = result.getResponse().getContentAsString();
+        RunDto runDto = UtilityTestMethods.toObject(response, RunDto.class);
+
+        assertEquals(1, runDto.getResults().size());
+        assertEquals(0, runDto.getNumCorrect());
+        assertEquals(problem.getTestCases().size(), runDto.getNumTestCases());
+        assertNull(runDto.getCompilationError());
+
+        ResultDto resultDto = runDto.getResults().get(0);
+
+        assertEquals("3", resultDto.getCorrectOutput());
+        assertEquals("foo\n", resultDto.getUserOutput());
+        assertEquals(error, resultDto.getError());
     }
 }

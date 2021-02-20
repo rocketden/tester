@@ -30,6 +30,8 @@ public class OutputParser {
     public static final String DELIMITER_SUCCESS = "###########_SUCCESS_############";
     public static final String DELIMITER_FAILURE = "###########_FAILURE_############";
 
+    public static final String WRONG_RETURN_TYPE = "Return type of the user program does not match that of the problem description";
+
     /**
      * Given a process and the relevant problem, parse and produce
      * the relevant RunDto object to capture the console, solution, and
@@ -147,7 +149,20 @@ public class OutputParser {
         if (outputSection == OutputSection.TEST_CASE) {
             throw new ApiException(ParserError.MISFORMATTED_OUTPUT);
         } else if (outputSection == OutputSection.SUCCESS) {
-            // Set the result fields.
+            // Check if user output is of the correct type (for dynamic languages)
+            try {
+                parseRawOutputOfGivenType(outputStr, outputType.getClassType());
+            } catch (ApiException e) {
+                log.error("Failed to convert user output to specified output type");
+                result.setUserOutput(outputStr);
+                result.setError(WRONG_RETURN_TYPE);
+                result.setCorrectOutput(testCase.getOutput());
+                result.setCorrect(false);
+                results.add(result);
+                return;
+            }
+
+            // If return type is correct, then proceed as normal to check against the right answer
             result.setUserOutput(outputStr);
             result.setError(null);
             result.setCorrectOutput(testCase.getOutput());
