@@ -417,4 +417,9 @@ class JavaTests {
             index++;
         }
     }
+
+    @Test
+    public void runRequestCompilationError() throws Exception {
+        // TODO for Java
+    }
 }

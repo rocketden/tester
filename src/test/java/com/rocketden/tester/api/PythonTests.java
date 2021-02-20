@@ -395,4 +395,9 @@ class PythonTests {
 			index++;
 		}
 	}
+
+    @Test
+    public void runRequestCompilationError() throws Exception {
+        // TODO for Java
+    }
 }
