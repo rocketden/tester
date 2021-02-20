@@ -350,15 +350,14 @@ class PythonTests {
 		RunDto runDto = UtilityTestMethods.toObject(response, RunDto.class);
 
 		String expected = String.join("\n",
-				OutputParser.DELIMITER_TEST_CASE,
 				inputs[0], inputs[1], inputs[2], inputs[3], inputs[4],
 				inputs[5], inputs[6], inputs[7], inputs[8], inputs[9],
-				OutputParser.DELIMITER_SUCCESS,
-				"0",
 				"");
 
-		assertTrue(runDto.isStatus());
-		assertEquals(expected, runDto.getOutput());
+        assertEquals(1, runDto.getResults().size());
+
+        ResultDto resultDto = runDto.getResults().get(0);
+        assertEquals(expected, resultDto.getConsole());
 	}
 
 	@Test
@@ -387,14 +386,11 @@ class PythonTests {
 			String response = result.getResponse().getContentAsString();
 			RunDto runDto = UtilityTestMethods.toObject(response, RunDto.class);
 
-			String expected = String.join("\n",
-					OutputParser.DELIMITER_TEST_CASE,
-					OutputParser.DELIMITER_SUCCESS,
-					inputs[index],
-					"");
+            assertEquals(1, runDto.getResults().size());
 
-			assertTrue(runDto.isStatus());
-			assertEquals(expected, runDto.getOutput());
+            ResultDto resultDto = runDto.getResults().get(0);
+            assertEquals(inputs[index] + "\n", resultDto.getUserOutput());
+            assertEquals(inputs[index], resultDto.getCorrectOutput());
 
 			index++;
 		}

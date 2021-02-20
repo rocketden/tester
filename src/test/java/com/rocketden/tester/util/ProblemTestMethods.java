@@ -117,6 +117,7 @@ public class ProblemTestMethods {
         for (String input : inputs) {
             ProblemTestCase testCase = new ProblemTestCase();
             testCase.setInput(input);
+            testCase.setOutput("0");
             testCases.add(testCase);
         }
 
@@ -144,6 +145,7 @@ public class ProblemTestMethods {
         List<ProblemTestCase> testCases = new ArrayList<>();
         ProblemTestCase testCase = new ProblemTestCase();
         testCase.setInput(input);
+        testCase.setOutput(input);
         testCases.add(testCase);
 
         List<ProblemInput> problemInputs = new ArrayList<>();
