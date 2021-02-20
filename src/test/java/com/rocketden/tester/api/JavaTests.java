@@ -2,7 +2,6 @@ package com.rocketden.tester.api;
 
 import com.rocketden.tester.model.problem.ProblemIOType;
 import com.rocketden.tester.service.generators.JavaDriverGeneratorService;
-import com.rocketden.tester.service.parsers.OutputParser;
 import com.rocketden.tester.util.ProblemTestMethods;
 import com.rocketden.tester.util.UtilityTestMethods;
 import com.rocketden.tester.dto.ResultDto;
@@ -69,6 +68,7 @@ class JavaTests {
         assertEquals(2, runDto.getNumCorrect());
         assertEquals(2, runDto.getNumTestCases());
         assertEquals(0.0, runDto.getRuntime());
+        assertNull(runDto.getCompilationError());
 
         // Check the individual results within the runDto.
         assertEquals(2, runDto.getResults().size());
@@ -120,6 +120,7 @@ class JavaTests {
         assertEquals(1, runDto.getNumCorrect());
         assertEquals(1, runDto.getNumTestCases());
         assertEquals(0.0, runDto.getRuntime());
+        assertNull(runDto.getCompilationError());
 
         // Check the individual results within the runDto.
         assertEquals(1, runDto.getResults().size());
@@ -420,6 +421,43 @@ class JavaTests {
 
     @Test
     public void runRequestCompilationError() throws Exception {
-        // TODO for Java
+        String code = String.join("\n",
+                "import java.util.Arrays;",
+                "",
+                "public class Solution {",
+                "    public int wrong(int num1, int num2) {",
+                "        return num1 + num2;",
+                "    }",
+                "}"
+        );
+
+        String error = "./Driver.java:14: error: cannot find symbol\n" +
+                "\t\t\tint solution1 = new Solution().solve(num11, num21);\n" +
+                "\t\t\t                              ^\n" +
+                "  symbol:   method solve(int,int)\n" +
+                "  location: class Solution\n" +
+                "1 error\n" +
+                "Error: Could not find or load main class Driver\n";
+
+        RunRequest request = new RunRequest();
+        request.setCode(code);
+        request.setLanguage(LANGUAGE);
+
+        Problem problem = ProblemTestMethods.getSumProblem(new String[]{"1\n2", "3"});
+        request.setProblem(problem);
+
+        MvcResult result = this.mockMvc.perform(post(POST_RUNNER)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(UtilityTestMethods.convertObjectToJsonString(request)))
+                .andDo(print()).andExpect(status().isOk())
+                .andReturn();
+
+        String response = result.getResponse().getContentAsString();
+        RunDto runDto = UtilityTestMethods.toObject(response, RunDto.class);
+
+        assertTrue(runDto.getResults().isEmpty());
+        assertEquals(0, runDto.getNumCorrect());
+        assertEquals(problem.getTestCases().size(), runDto.getNumTestCases());
+        assertEquals(error, runDto.getCompilationError());
     }
 }

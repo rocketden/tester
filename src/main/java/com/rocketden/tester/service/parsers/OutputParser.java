@@ -90,6 +90,20 @@ public class OutputParser {
             }
         }
 
+        // If no delimiters were printed, there was a compilation error
+        if (outputSection == OutputSection.START) {
+            RunDto runDto = new RunDto();
+            runDto.setResults(new ArrayList<>());
+            runDto.setNumCorrect(0);
+            runDto.setNumTestCases(testCases.size());
+
+            // Set the output manually, before the runtime is calculated.
+            runDto.setRuntime(0.0);
+
+            runDto.setCompilationError(output.toString());
+            return runDto;
+        }
+
         // Add the last remaining test case output, if one exists.
         parseTestCaseOutput(outputSection,
             output.toString(), results, result,

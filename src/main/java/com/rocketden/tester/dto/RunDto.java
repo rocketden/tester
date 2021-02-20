@@ -13,4 +13,5 @@ public class RunDto {
     private Integer numCorrect;
     private Integer numTestCases;
     private Double runtime;
+    private String compilationError;
 }

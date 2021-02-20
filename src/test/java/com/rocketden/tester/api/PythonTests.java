@@ -64,6 +64,7 @@ class PythonTests {
         assertEquals(2, runDto.getNumCorrect());
         assertEquals(2, runDto.getNumTestCases());
         assertEquals(0.0, runDto.getRuntime());
+        assertNull(runDto.getCompilationError());
 
         // Check the individual results within the runDto.
         assertEquals(2, runDto.getResults().size());
@@ -113,6 +114,7 @@ class PythonTests {
         assertEquals(1, runDto.getNumCorrect());
         assertEquals(1, runDto.getNumTestCases());
         assertEquals(0.0, runDto.getRuntime());
+        assertNull(runDto.getCompilationError());
 
         // Check the individual results within the runDto.
         assertEquals(1, runDto.getResults().size());
@@ -397,7 +399,7 @@ class PythonTests {
 	}
 
     @Test
-    public void runRequestCompilationError() throws Exception {
+    public void runRequestCompilationErrorWrongReturnType() throws Exception {
         // TODO for Java
     }
 }
