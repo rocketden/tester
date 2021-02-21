@@ -20,7 +20,7 @@ jobs:
       - name: Set up Docker
         run: cd ./src/main/java/com/rocketden/tester/docker && docker-compose up
       - name: Build with Maven
-        run: sudo mvn test
+        run: sudo chown -R $USER:$USER . && mvn test
 
 #     TODO: move to deploy step once working
       - name: Update deployment on GCP
