@@ -45,6 +45,9 @@ public class PythonDriverGeneratorService implements DriverGeneratorService {
     @Override
     public void writeStartingBoilerplate(FileWriter writer, Problem problem) throws IOException {
         writer.write(String.join("\n",
+            "import sys",
+            "sys.dont_write_bytecode = True", // Prevent __pycache__ folders from generating
+            "",
             "import traceback",
             "import os",
             "os.chdir(os.getcwd())",
