@@ -11,6 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       JASYPT_ENCRYPTOR_PASSWORD: ${{secrets.JASYPT_ENCRYPTOR_PASSWORD}}
+      PYTHONDONTWRITEBYTECODE: 1
     steps:
       - uses: actions/checkout@v2
       - name: Set up JDK 11
