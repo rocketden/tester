@@ -1,56 +1,50 @@
 package com.rocketden.tester.service;
 
 import com.rocketden.tester.dto.RunDto;
+import com.rocketden.tester.exception.DockerSetupError;
+import com.rocketden.tester.exception.api.ApiException;
+import com.rocketden.tester.model.Language;
+import com.rocketden.tester.model.problem.Problem;
+import com.rocketden.tester.service.parsers.OutputParser;
+
+import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.concurrent.TimeUnit;
-
+@Log4j2
 @Service
 public class DockerService {
 
-    private static final int TIME_LIMIT = 2;
+    private final OutputParser outputParser;
 
-    public RunDto spawnAndRun(String folder) {
+    @Autowired
+    public DockerService(OutputParser outputParser) {
+        this.outputParser = outputParser;
+    }
+
+    public RunDto spawnAndRun(String folder, Language language, Problem problem) {
         try {
             // Create and run disposable docker container with the given temp folder
-            ProcessBuilder builder = new ProcessBuilder(getRunCommands(folder));
+            log.info("Creating and running Docker container");
+            String[] commands = getRunCommands(folder, language);
+            ProcessBuilder builder = new ProcessBuilder(commands);
             builder.redirectErrorStream(true);
             Process process = builder.start();
 
-            return captureOutput(process);
+            log.info("Docker creation process successfully initiated");
 
-        } catch (Exception e) {
-            // Error handling
-            System.err.println("Failed to create a docker container");
-            return null;
+            // Parse, capture, and return the newly-created RunDto object.
+            return outputParser.parseCaptureOutput(process, problem);
+        } catch (ApiException e) {
+            throw e;
+        }
+        catch (Exception e) {
+            throw new ApiException(DockerSetupError.BUILD_DOCKER_CONTAINER);
         }
     }
 
-    // Given a process, return its status, console output, and error output
-    private RunDto captureOutput(Process process) throws IOException, InterruptedException {
-        BufferedReader stdInput = new BufferedReader(new
-                InputStreamReader(process.getInputStream()));
-
-        StringBuilder output = new StringBuilder();
-        String s;
-        while ((s = stdInput.readLine()) != null) {
-            output.append(s).append("\n");
-        }
-
-        boolean exitStatus = process.waitFor(TIME_LIMIT, TimeUnit.SECONDS);
-
-        RunDto runDto = new RunDto();
-        runDto.setStatus(exitStatus);
-        runDto.setOutput(output.toString());
-
-        return runDto;
-    }
-
-    private String[] getRunCommands(String folder) {
-        String mountPath = String.format("%s:/app/code", folder);
-        return new String[] {"docker", "run", "--rm", "-v", mountPath, "-t", "rocketden/tester"};
+    private String[] getRunCommands(String folder, Language language) {
+        String mountPath = String.format("%s:/code", folder);
+        return new String[] {"docker", "run", "--rm", "-v", mountPath, "-t", language.getDockerContainer()};
     }
 }
