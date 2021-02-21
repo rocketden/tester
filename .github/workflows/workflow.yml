@@ -22,24 +22,6 @@ jobs:
       - name: Build with Maven
         run: ./mvnw test
 
-#     TODO: move to deploy step once working
-      - name: Update deployment on GCP
-        uses: fifsky/ssh-action@master
-        with:
-          command: |
-            ls
-            cd tester
-            sudo git pull
-            pm2 kill
-            # Kill hanging process on port 8080 
-            sudo kill $(sudo netstat -nlp | grep 8080 | sed -e 's/.*LISTEN *//' -e 's#/.*##')
-            pm2 start server.sh
-            
-          host: ${{ secrets.GCP_HOST }}
-          user: alan_bi326_gmail_com
-          key: ${{ secrets.GCP_PRIVATE_KEY}}
-        
-
   deploy:
     needs: test
     if: github.ref == 'refs/heads/main'
@@ -48,8 +30,18 @@ jobs:
       JASYPT_ENCRYPTOR_PASSWORD: ${{secrets.JASYPT_ENCRYPTOR_PASSWORD}}
     steps:
       - uses: actions/checkout@v2
-      - uses: akhileshns/heroku-deploy@v3.4.6
+      - name: Update deployment on GCP
+        uses: fifsky/ssh-action@master
         with:
-          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
-          heroku_app_name: "rocketden-tester"
-          heroku_email: "zpchris@seas.upenn.edu"
+          command: |
+            cd tester
+            sudo git pull
+            pm2 kill
+            # Kill hanging process on port 8080
+            sudo kill $(sudo netstat -nlp | grep 8080 | sed -e 's/.*LISTEN *//' -e 's#/.*##')
+            pm2 start server.sh
+
+          host: ${{ secrets.GCP_HOST }}
+          user: alan_bi326_gmail_com
+          key: ${{ secrets.GCP_PRIVATE_KEY}}
+
