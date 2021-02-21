@@ -43,7 +43,7 @@ public class RunnerService {
             }
         });
 
-        log.info("CHECKING THAT UPDATE WORKS");
+        log.info("CHECKING THAT UPDATE WORKS v222222222222");
         String folder = setupService.createTempFolder();
         try {
             setupService.populateTempFolder(folder, request);
