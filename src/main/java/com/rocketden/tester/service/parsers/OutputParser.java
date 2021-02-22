@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import com.google.gson.Gson;
 import com.rocketden.tester.dto.ResultDto;
@@ -44,7 +45,7 @@ public class OutputParser {
     public RunDto parseCaptureOutput(Process process, Problem problem) throws IOException {
         log.info("Begin capturing and parsing Docker output");
 
-        // StringBuilder to hold the full output for debugging purposes.
+        // StringBuilder to hold the full output for error handling and debugging purposes.
         StringBuilder debugger = new StringBuilder();
 
         BufferedReader stdInput = new BufferedReader(new
@@ -92,8 +93,20 @@ public class OutputParser {
             }
         }
 
-        // If no delimiters were printed, there was a compilation error
-        if (outputSection == OutputSection.START) {
+        log.info("All output captured from process");
+
+        // Capture the exit status of the process
+        int status;
+        try {
+            process.waitFor();
+            status = process.exitValue();
+        } catch (Exception e) {
+            log.error("Process has unexpectedly failed: " + e.getMessage());
+            throw new ApiException(ParserError.UNEXPECTED_ERROR);
+        }
+
+        // If exit status is non-zero, a compilation-type error has occurred
+        if (status != 0) {
             RunDto runDto = new RunDto();
             runDto.setResults(new ArrayList<>());
             runDto.setNumCorrect(0);
@@ -102,7 +115,17 @@ public class OutputParser {
             // Set the output manually, before the runtime is calculated.
             runDto.setRuntime(0.0);
 
-            runDto.setCompilationError(output.toString());
+            String debuggerOutput = debugger.toString();
+            int delimiterIndex = debuggerOutput.indexOf(OutputParser.DELIMITER_TEST_CASE);
+
+            // If a delimiter is printed, the actual compilation error comes before it
+            if (delimiterIndex != -1) {
+                runDto.setCompilationError(debuggerOutput.substring(0, delimiterIndex));
+            } else {
+                // Otherwise, the compilation error is simply the current output
+                runDto.setCompilationError(output.toString());
+            }
+
             return runDto;
         }
 

@@ -12,6 +12,7 @@ public enum ParserError implements ApiError {
     INVALID_INPUT(HttpStatus.BAD_REQUEST, "Please ensure each line of input is valid and is of the correct type."),
     BAD_SECTION(HttpStatus.BAD_REQUEST, "Please choose a valid ouptut section."),
     MISFORMATTED_OUTPUT(HttpStatus.INTERNAL_SERVER_ERROR, "The output from the user's code is misformatted, and thus cannot be parsed accurately."),
+    UNEXPECTED_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "The process has unexpectedly failed. Please try again later."),
     INVALID_OUTPUT(HttpStatus.INTERNAL_SERVER_ERROR, "The output from the user's code cannot be parsed into the relevant object.");
 
     private final HttpStatus status;

@@ -440,6 +440,44 @@ class PythonTests {
     }
 
     @Test
+    public void runRequestCompileError() throws Exception {
+        String code = String.join("\n",
+                "class Solution:",
+                "    def solve(num1, num2):",
+                "        return num1 +"
+        );
+
+        String error = "Traceback (most recent call last):\n" +
+                "  File \"/code/./Driver.py\", line 4, in <module>\n" +
+                "    from Solution import Solution as solution\n" +
+                "  File \"/code/Solution.py\", line 3\n" +
+                "    return num1 +\n" +
+                "                 ^\n" +
+                "SyntaxError: invalid syntax\n";
+
+        RunRequest request = new RunRequest();
+        request.setCode(code);
+        request.setLanguage(LANGUAGE);
+
+        Problem problem = ProblemTestMethods.getSumProblem(new String[]{"1\n2", "3"});
+        request.setProblem(problem);
+
+        MvcResult result = this.mockMvc.perform(post(POST_RUNNER)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(UtilityTestMethods.convertObjectToJsonString(request)))
+                .andDo(print()).andExpect(status().isOk())
+                .andReturn();
+
+        String response = result.getResponse().getContentAsString();
+        RunDto runDto = UtilityTestMethods.toObject(response, RunDto.class);
+
+        assertTrue(runDto.getResults().isEmpty());
+        assertEquals(0, runDto.getNumCorrect());
+        assertEquals(problem.getTestCases().size(), runDto.getNumTestCases());
+        assertEquals(error, runDto.getCompilationError());
+    }
+
+    @Test
     public void runRequestWrongReturnType() throws Exception {
         String code = String.join("\n",
                 "class Solution:",

@@ -460,4 +460,43 @@ class JavaTests {
         assertEquals(problem.getTestCases().size(), runDto.getNumTestCases());
         assertEquals(error, runDto.getCompilationError());
     }
+
+    @Test
+    public void runRequestCompilationErrorMissingReturn() throws Exception {
+        String code = String.join("\n",
+                "import java.util.Arrays;",
+                "",
+                "public class Solution {",
+                "    public int solve(int num1, int num2) {",
+                "        System.out.println(true);",
+                "    }",
+                "}"
+        );
+
+        String error = "./Solution.java:6: error: missing return statement\n" +
+                "    }\n" +
+                "    ^\n" +
+                "1 error\n";
+
+        RunRequest request = new RunRequest();
+        request.setCode(code);
+        request.setLanguage(LANGUAGE);
+
+        Problem problem = ProblemTestMethods.getSumProblem(new String[]{"1\n2", "3"});
+        request.setProblem(problem);
+
+        MvcResult result = this.mockMvc.perform(post(POST_RUNNER)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(UtilityTestMethods.convertObjectToJsonString(request)))
+                .andDo(print()).andExpect(status().isOk())
+                .andReturn();
+
+        String response = result.getResponse().getContentAsString();
+        RunDto runDto = UtilityTestMethods.toObject(response, RunDto.class);
+
+        assertTrue(runDto.getResults().isEmpty());
+        assertEquals(0, runDto.getNumCorrect());
+        assertEquals(problem.getTestCases().size(), runDto.getNumTestCases());
+        assertEquals(error, runDto.getCompilationError());
+    }
 }
