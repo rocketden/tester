@@ -6,6 +6,7 @@ import com.rocketden.tester.exception.ProblemError;
 import com.rocketden.tester.exception.RequestError;
 import com.rocketden.tester.exception.api.ApiError;
 import com.rocketden.tester.exception.api.ApiErrorResponse;
+import com.rocketden.tester.service.parsers.OutputParser;
 import com.rocketden.tester.util.ProblemTestMethods;
 import com.rocketden.tester.util.UtilityTestMethods;
 import com.rocketden.tester.dto.RunRequest;
@@ -167,6 +168,34 @@ class RunnerTests {
         request.setProblem(ProblemTestMethods.getSumProblem(new String[]{"5\n", "5"}));
 
         ApiError ERROR = ParserError.INCORRECT_COUNT;
+
+        MvcResult result = this.mockMvc.perform(post(POST_RUNNER)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(UtilityTestMethods.convertObjectToJsonString(request)))
+                .andDo(print()).andExpect(status().is(ERROR.getStatus().value()))
+                .andReturn();
+
+        String response = result.getResponse().getContentAsString();
+        ApiErrorResponse actual = UtilityTestMethods.toObject(response, ApiErrorResponse.class);
+
+        assertEquals(ERROR.getResponse(), actual);
+    }
+
+    @Test
+    public void runRequestMisformattedOutput() throws Exception {
+        String code = String.format(String.join("\n",
+                "class Solution:",
+                "    def solve(num1, num2):",
+                "        print('%s')",
+                "        return num1 + num2"
+        ), OutputParser.DELIMITER_SUCCESS);
+
+        RunRequest request = new RunRequest();
+        request.setLanguage(Language.PYTHON);
+        request.setCode(code);
+        request.setProblem(ProblemTestMethods.getSumProblem(new String[]{"3\n2", "5"}));
+
+        ApiError ERROR = ParserError.MISFORMATTED_OUTPUT;
 
         MvcResult result = this.mockMvc.perform(post(POST_RUNNER)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)

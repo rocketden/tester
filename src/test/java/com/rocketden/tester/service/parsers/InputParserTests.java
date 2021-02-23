@@ -143,6 +143,18 @@ public class InputParserTests {
     }
 
     @Test
+    public void parseFailsNumberStringMismatch() {
+        ProblemIOType expected = ProblemIOType.DOUBLE;
+
+        Problem problem = testCaseGenerator("hello", expected);
+        ProblemTestCase testCase = problem.getTestCases().get(0);
+
+        ApiException exception = assertThrows(ApiException.class, () -> inputParser.parseTestCase(problem, testCase));
+
+        assertEquals(ParserError.INVALID_INPUT, exception.getError());
+    }
+
+    @Test
     public void parseFailsArrayTypeMismatch() {
         ProblemIOType expected = ProblemIOType.ARRAY_CHARACTER;
 

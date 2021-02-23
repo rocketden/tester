@@ -110,4 +110,55 @@ public class ProblemTestMethods {
 
         return problem;
     }
+
+    public static Problem getAllTypesProblem(String... inputs) {
+        List<ProblemTestCase> testCases = new ArrayList<>();
+
+        for (String input : inputs) {
+            ProblemTestCase testCase = new ProblemTestCase();
+            testCase.setInput(input);
+            testCase.setOutput("0");
+            testCases.add(testCase);
+        }
+
+        List<ProblemInput> problemInputs = new ArrayList<>();
+
+        int count = 1;
+        for (ProblemIOType type : ProblemIOType.values()) {
+            ProblemInput problemInput = new ProblemInput();
+            problemInput.setType(type);
+            problemInput.setName(String.format("p%s", count));
+
+            problemInputs.add(problemInput);
+            count++;
+        }
+
+        Problem problem = new Problem();
+        problem.setTestCases(testCases);
+        problem.setProblemInputs(problemInputs);
+        problem.setOutputType(ProblemIOType.INTEGER);
+
+        return problem;
+    }
+
+    public static Problem getVariedReturnTypeProblem(ProblemIOType returnType, String input) {
+        List<ProblemTestCase> testCases = new ArrayList<>();
+        ProblemTestCase testCase = new ProblemTestCase();
+        testCase.setInput(input);
+        testCase.setOutput(input);
+        testCases.add(testCase);
+
+        List<ProblemInput> problemInputs = new ArrayList<>();
+        ProblemInput problemInput = new ProblemInput();
+        problemInput.setType(returnType);
+        problemInput.setName("param");
+        problemInputs.add(problemInput);
+
+        Problem problem = new Problem();
+        problem.setTestCases(testCases);
+        problem.setProblemInputs(problemInputs);
+        problem.setOutputType(returnType);
+
+        return problem;
+    }
 }

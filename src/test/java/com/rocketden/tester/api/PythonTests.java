@@ -1,5 +1,7 @@
 package com.rocketden.tester.api;
 
+import com.rocketden.tester.model.problem.ProblemIOType;
+import com.rocketden.tester.service.parsers.OutputParser;
 import com.rocketden.tester.util.ProblemTestMethods;
 import com.rocketden.tester.util.UtilityTestMethods;
 import com.rocketden.tester.dto.ResultDto;
@@ -62,6 +64,7 @@ class PythonTests {
         assertEquals(2, runDto.getNumCorrect());
         assertEquals(2, runDto.getNumTestCases());
         assertEquals(0.0, runDto.getRuntime());
+        assertNull(runDto.getCompilationError());
 
         // Check the individual results within the runDto.
         assertEquals(2, runDto.getResults().size());
@@ -111,6 +114,7 @@ class PythonTests {
         assertEquals(1, runDto.getNumCorrect());
         assertEquals(1, runDto.getNumTestCases());
         assertEquals(0.0, runDto.getRuntime());
+        assertNull(runDto.getCompilationError());
 
         // Check the individual results within the runDto.
         assertEquals(1, runDto.getResults().size());
@@ -256,6 +260,7 @@ class PythonTests {
 				.andReturn();
 
 		String response = result.getResponse().getContentAsString();
+
         RunDto runDto = UtilityTestMethods.toObject(response, RunDto.class);
 
         // Check the base fields of runDto.
@@ -277,13 +282,13 @@ class PythonTests {
         // Check the second result.
         resultDto = runDto.getResults().get(1);
         String expectedError = String.join("\n",
-            "Traceback (most recent call last):",
-            "  File \"/code/./Driver.py\", line 26, in main",
-            "    solution2 = solution.solve(num2)",
-            "  File \"/code/Solution.py\", line 6, in solve",
-            "    return list[num]",
-            "IndexError: list index out of range",
-            ""
+                "Traceback (most recent call last):",
+                "  File \"/code/./Driver.py\", line 26, in main",
+                "    solution2 = solution.solve(num2)",
+                "  File \"/code/Solution.py\", line 6, in solve",
+                "    return list[num]",
+                "IndexError: list index out of range",
+                ""
         );
         assertEquals("", resultDto.getConsole());
         assertNull(resultDto.getUserOutput());
@@ -294,18 +299,219 @@ class PythonTests {
         // Check the third result.
         resultDto = runDto.getResults().get(2);
         expectedError = String.join("\n",
-            "Traceback (most recent call last):",
-            "  File \"/code/./Driver.py\", line 35, in main",
-            "    solution3 = solution.solve(num3)",
-            "  File \"/code/Solution.py\", line 6, in solve",
-            "    return list[num]",
-            "IndexError: list index out of range",
-            ""
+                "Traceback (most recent call last):",
+                "  File \"/code/./Driver.py\", line 35, in main",
+                "    solution3 = solution.solve(num3)",
+                "  File \"/code/Solution.py\", line 6, in solve",
+                "    return list[num]",
+                "IndexError: list index out of range",
+                ""
         );
         assertEquals("Input array is empty.\n", resultDto.getConsole());
         assertNull(resultDto.getUserOutput());
         assertEquals(expectedError, resultDto.getError());
         assertEquals("26", resultDto.getCorrectOutput());
         assertFalse(resultDto.isCorrect());
+    }
+
+	@Test
+	public void runRequestTestAllParameterTypes() throws Exception {
+		String code = String.join("\n",
+				"class Solution:",
+				"    def solve(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10):",
+				"        print(p1)",
+				"        print(p2)",
+				"        print(p3)",
+				"        print(p4)",
+				"        print(p5)",
+				"        print(p6)",
+				"        print(p7)",
+				"        print(p8)",
+				"        print(p9)",
+				"        print(p10)",
+				"",
+				"        return 0");
+
+		RunRequest request = new RunRequest();
+		request.setCode(code);
+		request.setLanguage(LANGUAGE);
+
+		// Note: this array should match the order of the enums in ProblemIOType
+		String[] inputs = {"p1", "2", "3.0", "4", "True", "['p6']", "[7]", "[8.0]", "['9']", "[False]"};
+
+		Problem problem = ProblemTestMethods.getAllTypesProblem(String.join("\n", inputs));
+		request.setProblem(problem);
+
+		MvcResult result = this.mockMvc.perform(post(POST_RUNNER)
+				.contentType(MediaType.APPLICATION_JSON_VALUE)
+				.content(UtilityTestMethods.convertObjectToJsonString(request)))
+				.andDo(print()).andExpect(status().isOk())
+				.andReturn();
+
+		String response = result.getResponse().getContentAsString();
+		RunDto runDto = UtilityTestMethods.toObject(response, RunDto.class);
+
+		String expected = String.join("\n",
+				inputs[0], inputs[1], inputs[2], inputs[3], inputs[4],
+				inputs[5], inputs[6], inputs[7], inputs[8], inputs[9],
+				"");
+
+        assertEquals(1, runDto.getResults().size());
+
+        ResultDto resultDto = runDto.getResults().get(0);
+        assertEquals(expected, resultDto.getConsole());
+	}
+
+	@Test
+	public void runRequestTestAllReturnTypes() throws Exception {
+		String code = String.join("\n",
+				"class Solution:",
+				"    def solve(param):",
+				"        return param");
+
+		String[] inputs = {"p1", "2", "3.0", "4", "True", "['p6']", "[7]", "[8.0]", "['9']", "[False]"};
+		int index = 0;
+		for (ProblemIOType type : ProblemIOType.values()) {
+			RunRequest request = new RunRequest();
+			request.setCode(code);
+			request.setLanguage(LANGUAGE);
+
+			Problem problem = ProblemTestMethods.getVariedReturnTypeProblem(type, inputs[index]);
+			request.setProblem(problem);
+
+			MvcResult result = this.mockMvc.perform(post(POST_RUNNER)
+					.contentType(MediaType.APPLICATION_JSON_VALUE)
+					.content(UtilityTestMethods.convertObjectToJsonString(request)))
+					.andDo(print()).andExpect(status().isOk())
+					.andReturn();
+
+			String response = result.getResponse().getContentAsString();
+			RunDto runDto = UtilityTestMethods.toObject(response, RunDto.class);
+
+            assertEquals(1, runDto.getResults().size());
+
+            ResultDto resultDto = runDto.getResults().get(0);
+            assertEquals(inputs[index] + "\n", resultDto.getUserOutput());
+            assertEquals(inputs[index], resultDto.getCorrectOutput());
+
+			index++;
+		}
+	}
+
+    @Test
+    public void runRequestRuntimeError() throws Exception {
+        String code = String.join("\n",
+                "class Solution:",
+                "    def wrong(num1, num2):",
+                "        return num1 + num2"
+        );
+
+        String error = "Traceback (most recent call last):\n" +
+                "  File \"/code/./Driver.py\", line 16, in main\n" +
+                "    solution1 = solution.solve(num11, num21)\n" +
+                "AttributeError: type object 'Solution' has no attribute 'solve'\n";
+
+        RunRequest request = new RunRequest();
+        request.setCode(code);
+        request.setLanguage(LANGUAGE);
+
+        Problem problem = ProblemTestMethods.getSumProblem(new String[]{"1\n2", "3"});
+        request.setProblem(problem);
+
+        MvcResult result = this.mockMvc.perform(post(POST_RUNNER)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(UtilityTestMethods.convertObjectToJsonString(request)))
+                .andDo(print()).andExpect(status().isOk())
+                .andReturn();
+
+        String response = result.getResponse().getContentAsString();
+        RunDto runDto = UtilityTestMethods.toObject(response, RunDto.class);
+
+        assertEquals(1, runDto.getResults().size());
+        assertEquals(0, runDto.getNumCorrect());
+        assertEquals(problem.getTestCases().size(), runDto.getNumTestCases());
+        assertNull(runDto.getCompilationError());
+
+        ResultDto resultDto = runDto.getResults().get(0);
+
+        assertEquals("3", resultDto.getCorrectOutput());
+        assertEquals(error, resultDto.getError());
+        assertNull(resultDto.getUserOutput());
+    }
+
+    @Test
+    public void runRequestCompileError() throws Exception {
+        String code = String.join("\n",
+                "class Solution:",
+                "    def solve(num1, num2):",
+                "        return num1 +"
+        );
+
+        String error = "Traceback (most recent call last):\n" +
+                "  File \"/code/./Driver.py\", line 4, in <module>\n" +
+                "    from Solution import Solution as solution\n" +
+                "  File \"/code/Solution.py\", line 3\n" +
+                "    return num1 +\n" +
+                "                 ^\n" +
+                "SyntaxError: invalid syntax\n";
+
+        RunRequest request = new RunRequest();
+        request.setCode(code);
+        request.setLanguage(LANGUAGE);
+
+        Problem problem = ProblemTestMethods.getSumProblem(new String[]{"1\n2", "3"});
+        request.setProblem(problem);
+
+        MvcResult result = this.mockMvc.perform(post(POST_RUNNER)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(UtilityTestMethods.convertObjectToJsonString(request)))
+                .andDo(print()).andExpect(status().isOk())
+                .andReturn();
+
+        String response = result.getResponse().getContentAsString();
+        RunDto runDto = UtilityTestMethods.toObject(response, RunDto.class);
+
+        assertTrue(runDto.getResults().isEmpty());
+        assertEquals(0, runDto.getNumCorrect());
+        assertEquals(problem.getTestCases().size(), runDto.getNumTestCases());
+        assertEquals(error, runDto.getCompilationError());
+    }
+
+    @Test
+    public void runRequestWrongReturnType() throws Exception {
+        String code = String.join("\n",
+                "class Solution:",
+                "    def solve(num1, num2):",
+                "        return 'foo'"
+        );
+
+        String error = OutputParser.WRONG_RETURN_TYPE;
+
+        RunRequest request = new RunRequest();
+        request.setCode(code);
+        request.setLanguage(LANGUAGE);
+
+        Problem problem = ProblemTestMethods.getSumProblem(new String[]{"1\n2", "3"});
+        request.setProblem(problem);
+
+        MvcResult result = this.mockMvc.perform(post(POST_RUNNER)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(UtilityTestMethods.convertObjectToJsonString(request)))
+                .andDo(print()).andExpect(status().isOk())
+                .andReturn();
+
+        String response = result.getResponse().getContentAsString();
+        RunDto runDto = UtilityTestMethods.toObject(response, RunDto.class);
+
+        assertEquals(1, runDto.getResults().size());
+        assertEquals(0, runDto.getNumCorrect());
+        assertEquals(problem.getTestCases().size(), runDto.getNumTestCases());
+        assertNull(runDto.getCompilationError());
+
+        ResultDto resultDto = runDto.getResults().get(0);
+
+        assertEquals("3", resultDto.getCorrectOutput());
+        assertEquals("foo\n", resultDto.getUserOutput());
+        assertEquals(error, resultDto.getError());
     }
 }

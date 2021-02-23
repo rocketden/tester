@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import com.google.gson.Gson;
 import com.rocketden.tester.dto.ResultDto;
@@ -17,8 +18,10 @@ import com.rocketden.tester.model.problem.Problem;
 import com.rocketden.tester.model.problem.ProblemIOType;
 import com.rocketden.tester.model.problem.ProblemTestCase;
 
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
+@Log4j2
 @Service
 public class OutputParser {
 
@@ -27,6 +30,8 @@ public class OutputParser {
     public static final String DELIMITER_TEST_CASE = "###########_TEST_CASE_############";
     public static final String DELIMITER_SUCCESS = "###########_SUCCESS_############";
     public static final String DELIMITER_FAILURE = "###########_FAILURE_############";
+
+    public static final String WRONG_RETURN_TYPE = "Return type of the user program does not match that of the problem description";
 
     /**
      * Given a process and the relevant problem, parse and produce
@@ -38,7 +43,9 @@ public class OutputParser {
      * @return The RunDto object produced from the output.
      */
     public RunDto parseCaptureOutput(Process process, Problem problem) throws IOException {
-        // StringBuilder to hold the full output for debugging purposes.
+        log.info("Begin capturing and parsing Docker output");
+
+        // StringBuilder to hold the full output for error handling and debugging purposes.
         StringBuilder debugger = new StringBuilder();
 
         BufferedReader stdInput = new BufferedReader(new
@@ -86,6 +93,42 @@ public class OutputParser {
             }
         }
 
+        log.info("All output captured from process");
+
+        // Capture the exit status of the process
+        int status;
+        try {
+            process.waitFor();
+            status = process.exitValue();
+        } catch (Exception e) {
+            log.error("Process has unexpectedly failed: " + e.getMessage());
+            throw new ApiException(ParserError.UNEXPECTED_ERROR);
+        }
+
+        // If exit status is non-zero, a compilation-type error has occurred
+        if (status != 0) {
+            RunDto runDto = new RunDto();
+            runDto.setResults(new ArrayList<>());
+            runDto.setNumCorrect(0);
+            runDto.setNumTestCases(testCases.size());
+
+            // Set the output manually, before the runtime is calculated.
+            runDto.setRuntime(0.0);
+
+            String debuggerOutput = debugger.toString();
+            int delimiterIndex = debuggerOutput.indexOf(OutputParser.DELIMITER_TEST_CASE);
+
+            // If a delimiter is printed, the actual compilation error comes before it
+            if (delimiterIndex != -1) {
+                runDto.setCompilationError(debuggerOutput.substring(0, delimiterIndex));
+            } else {
+                // Otherwise, the compilation error is simply the current output
+                runDto.setCompilationError(output.toString());
+            }
+
+            return runDto;
+        }
+
         // Add the last remaining test case output, if one exists.
         parseTestCaseOutput(outputSection,
             output.toString(), results, result,
@@ -95,6 +138,8 @@ public class OutputParser {
         if (results.size() != testCases.size()) {
             throw new ApiException(ParserError.MISFORMATTED_OUTPUT);
         }
+
+        log.info("Successfully captured and parsed Docker output");
 
         RunDto runDto = new RunDto();
         runDto.setResults(results);
@@ -127,7 +172,20 @@ public class OutputParser {
         if (outputSection == OutputSection.TEST_CASE) {
             throw new ApiException(ParserError.MISFORMATTED_OUTPUT);
         } else if (outputSection == OutputSection.SUCCESS) {
-            // Set the result fields.
+            // Check if user output is of the correct type (for dynamic languages)
+            try {
+                parseRawOutputOfGivenType(outputStr, outputType.getClassType());
+            } catch (ApiException e) {
+                log.error("Failed to convert user output to specified output type");
+                result.setUserOutput(outputStr);
+                result.setError(WRONG_RETURN_TYPE);
+                result.setCorrectOutput(testCase.getOutput());
+                result.setCorrect(false);
+                results.add(result);
+                return;
+            }
+
+            // If return type is correct, then proceed as normal to check against the right answer
             result.setUserOutput(outputStr);
             result.setError(null);
             result.setCorrectOutput(testCase.getOutput());

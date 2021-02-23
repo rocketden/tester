@@ -6,9 +6,11 @@ import com.rocketden.tester.exception.ProblemError;
 import com.rocketden.tester.exception.RequestError;
 import com.rocketden.tester.exception.api.ApiException;
 import com.rocketden.tester.model.problem.Problem;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+@Log4j2
 @Service
 public class RunnerService {
 
@@ -41,6 +43,7 @@ public class RunnerService {
             }
         });
 
+        log.info("### BEGIN RUN REQUEST ###");
         String folder = setupService.createTempFolder();
         try {
             setupService.populateTempFolder(folder, request);
@@ -48,6 +51,7 @@ public class RunnerService {
         } finally {
             // Clean up temp folder regardless if above code throws an exception
             setupService.deleteTempFolder(folder);
+            log.info("### END RUN REQUEST ###");
         }
     }
 }
