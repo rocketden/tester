@@ -1,0 +1,47 @@
+name: Java CI/CD
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    env:
+      JASYPT_ENCRYPTOR_PASSWORD: ${{secrets.JASYPT_ENCRYPTOR_PASSWORD}}
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up JDK 11
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+      - name: Set up Docker
+        run: cd ./src/main/java/com/rocketden/tester/docker && docker-compose up
+      - name: Build with Maven
+        run: ./mvnw test
+
+  deploy:
+    needs: test
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    env:
+      JASYPT_ENCRYPTOR_PASSWORD: ${{secrets.JASYPT_ENCRYPTOR_PASSWORD}}
+    steps:
+      - uses: actions/checkout@v2
+      - name: Update deployment on GCP
+        uses: fifsky/ssh-action@master
+        with:
+          command: |
+            cd tester
+            sudo git pull
+            pm2 kill
+            # Kill hanging process on port 8080
+            sudo kill $(sudo netstat -nlp | grep 8080 | sed -e 's/.*LISTEN *//' -e 's#/.*##')
+            pm2 start server.sh
+
+          host: ${{ secrets.GCP_HOST }}
+          user: alan_bi326_gmail_com
+          key: ${{ secrets.GCP_PRIVATE_KEY}}
+

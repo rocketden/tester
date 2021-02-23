@@ -283,7 +283,7 @@ class PythonTests {
         resultDto = runDto.getResults().get(1);
         String expectedError = String.join("\n",
                 "Traceback (most recent call last):",
-                "  File \"/code/./Driver.py\", line 26, in main",
+                "  File \"/code/./Driver.py\", line 29, in main",
                 "    solution2 = solution.solve(num2)",
                 "  File \"/code/Solution.py\", line 6, in solve",
                 "    return list[num]",
@@ -300,7 +300,7 @@ class PythonTests {
         resultDto = runDto.getResults().get(2);
         expectedError = String.join("\n",
                 "Traceback (most recent call last):",
-                "  File \"/code/./Driver.py\", line 35, in main",
+                "  File \"/code/./Driver.py\", line 38, in main",
                 "    solution3 = solution.solve(num3)",
                 "  File \"/code/Solution.py\", line 6, in solve",
                 "    return list[num]",
@@ -407,7 +407,7 @@ class PythonTests {
         );
 
         String error = "Traceback (most recent call last):\n" +
-                "  File \"/code/./Driver.py\", line 16, in main\n" +
+                "  File \"/code/./Driver.py\", line 19, in main\n" +
                 "    solution1 = solution.solve(num11, num21)\n" +
                 "AttributeError: type object 'Solution' has no attribute 'solve'\n";
 
