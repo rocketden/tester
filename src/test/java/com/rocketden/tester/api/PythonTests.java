@@ -448,7 +448,7 @@ class PythonTests {
         );
 
         String error = "Traceback (most recent call last):\n" +
-                "  File \"/code/./Driver.py\", line 4, in <module>\n" +
+                "  File \"/code/./Driver.py\", line 7, in <module>\n" +
                 "    from Solution import Solution as solution\n" +
                 "  File \"/code/Solution.py\", line 3\n" +
                 "    return num1 +\n" +
